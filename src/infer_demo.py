@@ -1,9 +1,13 @@
+import os
 import joblib
 import pandas as pd
 import json
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+
 # Load artifact
-model_path = "d:/Badra/project/Alur_matematika/Marketing_Aqila/bpjs/veriklaim_model.joblib"
+model_path = os.path.join(ROOT_DIR, "models", "veriklaim_model.joblib")
 artifacts = joblib.load(model_path)
 
 bin_model = artifacts['binary_model']
@@ -13,7 +17,7 @@ feature_cols = artifacts['feature_cols']
 target_encoder = encoders['FRAUD_TYPE']
 
 # Load dataset
-df = pd.read_csv("d:/Badra/project/Alur_matematika/Marketing_Aqila/bpjs/dataset_sample_fkrtl_bpjs.csv")
+df = pd.read_csv(os.path.join(ROOT_DIR, "data", "dataset_sample_fkrtl_bpjs.csv"))
 
 # Feature Engineering
 df['COST_RATIO'] = df['BIAYA_RIIL_RS'] / (df['TARIF_INACBG'] + 1.0)

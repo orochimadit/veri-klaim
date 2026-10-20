@@ -13,9 +13,12 @@ print("=" * 70)
 print("PELATIHAN MODEL AI VERIKLAIM BERBASIS DATA RIIL BPJS FKRTL 2024")
 print("=" * 70)
 
-csv_path = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\real_fkrtl_sample_50k.csv"
-model_out_path = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\real_veriklaim_model.joblib"
-stats_out_path = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\real_veriklaim_stats.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+
+csv_path = os.path.join(ROOT_DIR, "data", "real_fkrtl_sample_50k.csv")
+model_out_path = os.path.join(ROOT_DIR, "models", "real_veriklaim_model.joblib")
+stats_out_path = os.path.join(ROOT_DIR, "data", "stats", "real_veriklaim_stats.json")
 
 # 1. Load Data
 df = pd.read_csv(csv_path)

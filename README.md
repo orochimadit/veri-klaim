@@ -113,7 +113,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # 5. Jalankan server aplikasi
-python app.py
+python -m uvicorn app.main:app --port 8000
 ```
 
 Setelah server aktif, buka peramban:
@@ -192,23 +192,39 @@ Setelah server aktif, buka peramban:
 
 ```
 veri-klaim/
-├── app.py                             # Server FastAPI dan routing layanan
-├── veriklaim_engine.py                # 3 Modul Deteksi dan kaidah regulasi
-├── export_audit_pdf.py                # Pembuat berkas cetak laporan audit PDF
-├── dashboard.html                     # Antarmuka dashboard verifikator
-├── train_real_data_model.py           # Pelatihan model pada data riil BPJS
-├── train_veriklaim_model.py           # Pelatihan model skenario simulasi
-├── explore_real_bpjs_data.py          # Analisis eksplorasi data (EDA) BPJS
-├── real_veriklaim_model.joblib        # Bobot model terlatih data riil 2024
-├── veriklaim_model.joblib             # Bobot model skenario simulasi
-├── real_fkrtl_sample_50k.csv          # 50.000 sampel data klaim nyata FKRTL
-├── dataset_sample_fkrtl_bpjs.csv      # 10.000 sampel data skenario uji
-├── precomputed_stats.json             # Agregat metrik simulasi
-├── real_veriklaim_stats.json          # Metrik evaluasi model data riil
-├── requirements.txt                   # Daftar dependensi Python
-├── README.md                          # Dokumentasi teknis sistem
-├── Proposal_Healthkathon_2026_VeriKlaim_Lengkap.pdf # Berkas proposal resmi
-└── Laporan_Resmi_Audit_VeriKlaim_BPJS.pdf           # Contoh ekspor laporan PDF
+├── app/
+│   ├── __init__.py
+│   ├── main.py                   # Server FastAPI & API routing
+│   ├── engine.py                 # Engine 3 Modul Deteksi & Explainable AI (XAI)
+│   ├── pdf_generator.py          # Generator berkas cetak laporan audit PDF
+│   └── templates/
+│       └── dashboard.html        # Antarmuka web dashboard verifikator
+├── models/
+│   ├── real_veriklaim_model.joblib # Model AI terlatih pada data riil BPJS 2024
+│   └── veriklaim_model.joblib      # Model AI terlatih pada data skenario
+├── data/
+│   ├── real_fkrtl_sample_50k.csv   # 50.000 sampel data klaim riil FKRTL 2024
+│   ├── dataset_sample_fkrtl_bpjs.csv # 10.000 sampel data skenario uji
+│   └── stats/
+│       ├── real_veriklaim_stats.json # Statistik evaluasi model riil
+│       ├── precomputed_stats.json    # Agregat metrik simulasi
+│       └── real_fkrtl_eda_stats.json # Hasil eksplorasi data riil BPJS
+├── src/
+│   ├── train_real.py             # Pelatihan model pada data riil BPJS
+│   ├── train_synth.py            # Pelatihan model skenario simulasi
+│   ├── explore_real_bpjs.py      # Analisis eksplorasi data (EDA) BPJS
+│   ├── generate_sample_data.py   # Generator data sintetis terkalibrasi
+│   └── infer_demo.py             # Contoh inferensi dan uji prediksi
+├── docs/
+│   ├── Proposal_Healthkathon_2026_VeriKlaim_Lengkap.pdf # Berkas proposal resmi
+│   ├── Laporan_Hasil_Audit_VeriKlaim.pdf               # Contoh ekspor laporan PDF
+│   ├── slides_proposal.html                            # Slide deck proposal
+│   ├── PROPOSAL_LENGKAP_VERIKLAIM_AI.md                # Naskah lengkap proposal
+│   └── assets/
+│       └── referensi_berita_kpk.png                    # Dokumentasi referensi
+├── requirements.txt              # Daftar pustaka Python pendukung
+├── .gitignore                    # Konfigurasi filter berkas Git
+└── README.md                     # Dokumentasi teknis proyek
 ```
 
 ---

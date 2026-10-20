@@ -4,9 +4,12 @@ from datetime import datetime
 import json
 import os
 
-fkrtl_path = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\Data sampel 2015-2024 (1)\2025\Data Sampel Reguler Edisi 2025\data\202403_fkrtl.dta"
-out_csv_path = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\real_fkrtl_sample_50k.csv"
-out_stats_path = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\real_fkrtl_eda_stats.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+
+fkrtl_path = os.path.join(ROOT_DIR, "Data sampel 2015-2024 (1)", "2025", "Data Sampel Reguler Edisi 2025", "data", "202403_fkrtl.dta")
+out_csv_path = os.path.join(ROOT_DIR, "data", "real_fkrtl_sample_50k.csv")
+out_stats_path = os.path.join(ROOT_DIR, "data", "stats", "real_fkrtl_eda_stats.json")
 
 print("Memulai eksplorasi aman dataset real BPJS FKRTL 2024...")
 

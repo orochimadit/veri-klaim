@@ -16,10 +16,13 @@ class VeriKlaimEngine:
 
     def __init__(self, model_path: str = None):
         base_dir = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.dirname(base_dir)
         if model_path is None:
-            model_path = os.path.join(base_dir, "real_veriklaim_model.joblib")
+            model_path = os.path.join(root_dir, "models", "real_veriklaim_model.joblib")
             if not os.path.exists(model_path):
-                model_path = os.path.join(base_dir, "veriklaim_model.joblib")
+                model_path = os.path.join(root_dir, "models", "veriklaim_model.joblib")
+            if not os.path.exists(model_path):
+                model_path = os.path.join(base_dir, "real_veriklaim_model.joblib")
 
         self.model_path = model_path
         self.artifacts = joblib.load(self.model_path) if os.path.exists(self.model_path) else None

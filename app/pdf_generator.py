@@ -10,7 +10,8 @@ from datetime import datetime
 def generate_audit_report_pdf(output_path: str = None, stats: dict = None, flagged_claims: list = None):
     if output_path is None:
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        output_path = os.path.join(base_dir, "Laporan_Resmi_Audit_VeriKlaim_BPJS.pdf")
+        root_dir = os.path.dirname(base_dir)
+        output_path = os.path.join(root_dir, "docs", "Laporan_Hasil_Audit_VeriKlaim.pdf")
 
     doc = SimpleDocTemplate(
         output_path,

@@ -6,17 +6,31 @@ import numpy as np
 import joblib
 import json
 import os
-from veriklaim_engine import VeriKlaimEngine
-from export_audit_pdf import generate_audit_report_pdf
+import sys
+import os
+
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(APP_DIR)
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+if APP_DIR not in sys.path:
+    sys.path.insert(0, APP_DIR)
+
+try:
+    from app.engine import VeriKlaimEngine
+    from app.pdf_generator import generate_audit_report_pdf
+except ImportError:
+    from engine import VeriKlaimEngine
+    from pdf_generator import generate_audit_report_pdf
 
 app = FastAPI(title="VeriKlaim - Platform Deteksi Kecurangan Klaim BPJS Kesehatan")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CSV_SYNTH_PATH = os.path.join(BASE_DIR, "dataset_sample_fkrtl_bpjs.csv")
-CSV_REAL_PATH = os.path.join(BASE_DIR, "real_fkrtl_sample_50k.csv")
-STATS_PATH = os.path.join(BASE_DIR, "precomputed_stats.json")
-REAL_STATS_PATH = os.path.join(BASE_DIR, "real_veriklaim_stats.json")
-PDF_REPORT_PATH = os.path.join(BASE_DIR, "Laporan_Hasil_Audit_VeriKlaim.pdf")
+CSV_SYNTH_PATH = os.path.join(ROOT_DIR, "data", "dataset_sample_fkrtl_bpjs.csv")
+CSV_REAL_PATH = os.path.join(ROOT_DIR, "data", "real_fkrtl_sample_50k.csv")
+STATS_PATH = os.path.join(ROOT_DIR, "data", "stats", "precomputed_stats.json")
+REAL_STATS_PATH = os.path.join(ROOT_DIR, "data", "stats", "real_veriklaim_stats.json")
+PDF_REPORT_PATH = os.path.join(ROOT_DIR, "docs", "Laporan_Hasil_Audit_VeriKlaim.pdf")
+DASHBOARD_HTML_PATH = os.path.join(APP_DIR, "templates", "dashboard.html")
 
 # Initialize Engine
 engine = VeriKlaimEngine()
@@ -148,7 +162,6 @@ def export_pdf():
         filename="Laporan_Hasil_Audit_VeriKlaim.pdf"
     )
 
-DASHBOARD_HTML_PATH = os.path.join(BASE_DIR, "dashboard.html")
 @app.get("/", response_class=HTMLResponse)
 def index():
     if os.path.exists(DASHBOARD_HTML_PATH):

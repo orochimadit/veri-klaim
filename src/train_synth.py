@@ -8,7 +8,9 @@ import xgboost as xgb
 import json
 
 # 1. Load Dataset
-data_path = "d:/Badra/project/Alur_matematika/Marketing_Aqila/bpjs/dataset_sample_fkrtl_bpjs.csv"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+data_path = os.path.join(ROOT_DIR, "data", "dataset_sample_fkrtl_bpjs.csv")
 df = pd.read_csv(data_path)
 print(f"Loaded {len(df)} records from {data_path}")
 
@@ -108,7 +110,7 @@ artifacts = {
     'classes': target_encoder.classes_.tolist()
 }
 
-model_save_path = "d:/Badra/project/Alur_matematika/Marketing_Aqila/bpjs/veriklaim_model.joblib"
+model_save_path = os.path.join(ROOT_DIR, "models", "veriklaim_model.joblib")
 joblib.dump(artifacts, model_save_path)
 print(f"\nModel berhasil disimpan di: {model_save_path}")
 
