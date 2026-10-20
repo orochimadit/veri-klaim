@@ -1,0 +1,38 @@
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Large raw BPJS Datasets & Archives (> 100MB exceeds GitHub limit)
+Data sampel 2015-2024 (1)/
+*.dta
+*.zip
+
+# Internal / Personal CV files & Event Guides
+CV-*.pdf
+*Riwayat Hidup*.pdf
+Panduan*.pdf
+Participant*.pdf
+Proposal_Healthkathon_2026_VeriKlaim.pdf
+Proposal_Healthkathon_2026_VeriKlaim_AI.pdf
+Proposal_Healthkathon_2026_VeriKlaim_Final.pdf
+
+# Temporary scripts
+homedataset.html
+check_*.py
+parse_blog.py
+read_detail.py
+test_*.py
+fetch_home.py

@@ -1,0 +1,20 @@
+{
+  "model_name": "VeriKlaim XGBoost & Isolation Forest (Real BPJS 2024)",
+  "training_samples": 40000,
+  "test_samples": 10000,
+  "roc_auc_score": 1.0,
+  "class_counts": {
+    "NORMAL": 49863,
+    "DISPUTED_CLAIM": 64,
+    "PHANTOM_BILLING": 62,
+    "UPCODING": 11
+  },
+  "top_features": {
+    "IS_RITL": 81.21,
+    "RATIO_TAGIH_VERIF": 10.38,
+    "LOS_HARI": 6.78,
+    "LOS_PER_SEVERITY": 1.34,
+    "FKL12_ENC": 0.1,
+    "TARIF_VERIFIKASI": 0.05
+  }
+}

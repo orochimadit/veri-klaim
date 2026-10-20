@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriKlaim — Platform Deteksi Kecurangan Klaim FKRTL BPJS Kesehatan</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bpjs-green: #009639;
+      --bpjs-dark: #0a2540;
+      --bpjs-navy: #0f172a;
+      --bpjs-accent: #10b981;
+      --bpjs-danger: #ef4444;
+      --bpjs-warning: #f59e0b;
+    }
+    body {
+      background-color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #334155;
+    }
+    .navbar-bpjs {
+      background: linear-gradient(135deg, #0a2540 0%, #0f172a 100%);
+      border-bottom: 3px solid var(--bpjs-green);
+    }
+    .card-kpi {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+    }
+    .card-kpi:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+    .kpi-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .badge-fraud-upcoding { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+    .badge-fraud-unbundling { background-color: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
+    .badge-fraud-phantom { background-color: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; }
+    .badge-fraud-dispute { background-color: #fef2f2; color: #991b1b; border: 1px solid #f87171; }
+    .badge-normal { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .table th {
+      background-color: #f1f5f9;
+      color: #475569;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .nav-pills .nav-link.active {
+      background-color: var(--bpjs-green);
+    }
+    .nav-pills .nav-link {
+      color: #475569;
+      font-weight: 500;
+    }
+    .module-card {
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-bpjs py-3">
+    <div class="container-fluid px-4">
+      <div class="d-flex align-items-center">
+        <div class="bg-success text-white rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
+          <i class="fa-solid fa-shield-heart fa-xl"></i>
+        </div>
+        <div>
+          <h5 class="text-white mb-0 fw-bold">VeriKlaim <span class="badge bg-success ms-2 font-monospace" style="font-size: 0.75rem;">AI ENGINE C03.04</span></h5>
+          <small class="text-slate-400 text-light opacity-75">Platform Forensik Deteksi Kecurangan Klaim FKRTL &bull; Tim Healthkathon BPJS 2026</small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a href="/api/export-pdf" class="btn btn-outline-light btn-sm fw-semibold px-3 py-2 shadow-sm" target="_blank">
+          <i class="fa-solid fa-file-pdf text-danger me-2"></i>Unduh Laporan Audit (PDF)
+        </a>
+        <span class="badge bg-dark border border-secondary px-3 py-2 text-white">
+          <i class="fa-solid fa-circle text-success me-2"></i>Aktif di VClaim &amp; VIDI
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid px-4 py-4">
+
+    <!-- Dataset Selector Switcher Banner -->
+    <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-3 border mb-4 shadow-sm">
+      <div class="d-flex align-items-center">
+        <i class="fa-solid fa-database text-success me-3 fa-lg"></i>
+        <div>
+          <span class="fw-bold text-dark">Sumber Basis Data Audit:</span>
+          <span class="badge bg-primary bg-opacity-10 text-primary ms-2 px-3 py-1 fw-bold" id="current-dataset-label">
+            Data Riil BPJS Kesehatan FKRTL 2024 (50.000 Kasus Lapangan)
+          </span>
+        </div>
+      </div>
+      <div class="btn-group btn-group-sm" role="group">
+        <button type="button" class="btn btn-success fw-bold" id="btn-mode-real" onclick="switchDataset('real')">
+          <i class="fa-solid fa-hospital me-1"></i>Data Nyata BPJS (50k)
+        </button>
+        <button type="button" class="btn btn-outline-secondary fw-semibold" id="btn-mode-synth" onclick="switchDataset('synth')">
+          <i class="fa-solid fa-flask-vial me-1"></i>Data Uji Skenario (10k)
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 Core KPI Row -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="card card-kpi p-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-muted small fw-medium">Total Klaim Teranalisis</div>
+              <h3 class="fw-bold mb-0 text-slate-800" id="kpi-total-claims">50,000</h3>
+              <small class="text-muted" id="kpi-dataset-subtitle">Kohor Longitudinal FKRTL</small>
+            </div>
+            <div class="kpi-icon bg-primary bg-opacity-10 text-primary">
+              <i class="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-kpi p-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-muted small fw-medium">Klaim Terindikasi Anomali</div>
+              <h3 class="fw-bold mb-0 text-danger" id="kpi-total-fraud">137</h3>
+              <small class="text-danger fw-semibold" id="kpi-fraud-rate">Dispute, Phantom &amp; Upcoding</small>
+            </div>
+            <div class="kpi-icon bg-danger bg-opacity-10 text-danger">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-kpi p-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-muted small fw-medium">Potensi Dana Diselamatkan</div>
+              <h3 class="fw-bold mb-0 text-success" id="kpi-funds-saved">Rp 409 Juta</h3>
+              <small class="text-success fw-semibold">Audit Selisih Tarif &amp; Penalti</small>
+            </div>
+            <div class="kpi-icon bg-success bg-opacity-10 text-success">
+              <i class="fa-solid fa-hand-holding-dollar"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-kpi p-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-muted small fw-medium">Kecepatan Inferensi AI</div>
+              <h3 class="fw-bold mb-0 text-info">&lt; 15 ms</h3>
+              <small class="text-muted">vs 14 Hari Audit Manual</small>
+            </div>
+            <div class="kpi-icon bg-info bg-opacity-10 text-info">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Core Proposal Modules Showcase Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="module-card border-start border-4 border-danger shadow-sm">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="fw-bold mb-0 text-danger"><i class="fa-solid fa-arrow-trend-up me-2"></i>Modul 1: Upcoding Engine</h6>
+            <span class="badge bg-danger bg-opacity-10 text-danger">Klinis &amp; INA-CBG</span>
+          </div>
+          <p class="small text-muted mb-0">Memvalidasi koherensi klinis antara diagnosa ICD-10, tindakan ICD-9-CM, LOS, dan Severity Level (I, II, III). Menahan klaim yang digelembungkan tanpa prosedur intensif.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="module-card border-start border-4 border-warning shadow-sm">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="fw-bold mb-0 text-warning"><i class="fa-solid fa-diagram-project me-2"></i>Modul 2: Unbundling Graph</h6>
+            <span class="badge bg-warning bg-opacity-10 text-warning">Temporal Episode</span>
+          </div>
+          <p class="small text-muted mb-0">Menganalisis graf waktu kunjungan berulang pasien dalam jendela &lt; 30 hari. Menemukan pemecahan prosedur tunggal menjadi beberapa tagihan episode terpisah.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="module-card border-start border-4 border-purple shadow-sm" style="border-left-color: #8b5cf6 !important;">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h6 class="fw-bold mb-0 text-purple" style="color: #6d28d9;"><i class="fa-solid fa-ghost me-2"></i>Modul 3: Phantom Billing Scanner</h6>
+            <span class="badge bg-secondary bg-opacity-10 text-secondary">Zero-Day Anomaly</span>
+          </div>
+          <p class="small text-muted mb-0">Mendeteksi klaim rawat inap dengan lama rawat 0 hari (pulang hari yang sama tapi ditagih rawat inap), biaya obat fiktif, serta lonjakan kuota faskes ekstrem.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Charts Row -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-5">
+        <div class="card shadow-sm border-0 rounded-3 p-3 h-100">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold text-dark mb-0"><i class="fa-solid fa-chart-pie me-2 text-success"></i>Distribusi Kategori Klaim</h6>
+            <span class="badge bg-light text-muted border">Evaluasi Model</span>
+          </div>
+          <div style="position: relative; height: 260px;">
+            <canvas id="fraudDistributionChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="card shadow-sm border-0 rounded-3 p-3 h-100">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold text-dark mb-0"><i class="fa-solid fa-hospital me-2 text-primary"></i>Tingkat Anomali Lintas Tipe Rumah Sakit</h6>
+            <span class="badge bg-light text-muted border">Profil Risiko Provider</span>
+          </div>
+          <div style="position: relative; height: 260px;">
+            <canvas id="rsBreakdownChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Claim Inspector / Simulator -->
+    <div class="card shadow-sm border-0 rounded-3 p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+        <div>
+          <h5 class="fw-bold mb-1"><i class="fa-solid fa-microchip me-2 text-success"></i>Simulator Audit Klaim Real-Time (3 Core Modules Active)</h5>
+          <small class="text-muted">Uji langsung kemampuan AI VeriKlaim dalam mendeteksi anomali sebelum klaim disetujui di VClaim</small>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="fa-solid fa-flask-vial me-1"></i>Pilih Contoh Kasus Cepat
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCase('normal')"><span class="badge bg-success me-2">Normal</span>Pneumonia Rawat Inap Wajar</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCase('upcoding')"><span class="badge bg-danger me-2">Upcoding</span>Pneumonia Severity III Tanpa Prosedur (Rp 17,4 Jt)</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCase('unbundling')"><span class="badge bg-warning text-dark me-2">Unbundling</span>Apendisitis Dipecah 2 Kunjungan Singkat &lt; 48 Jam</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCase('phantom')"><span class="badge bg-secondary me-2">Phantom</span>Hipertensi Rawat Inap LOS 0 Hari (Kasus Riil RS Kelas C)</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label small fw-semibold">Nomor SEP / Kunjungan</label>
+          <input type="text" id="inp-no-sep" class="form-control form-control-sm" value="SEP-SIM-2026-0001">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-semibold">Diagnosa Utama (ICD-10)</label>
+          <select id="inp-icd10" class="form-select form-select-sm">
+            <option value="J18.9|Pneumonia Tidak Spesifik|J-4-16|INFEKSI SALURAN PERNAPASAN">J18.9 - Pneumonia Tidak Spesifik</option>
+            <option value="I10|Hipertensi Primer|I-4-17|HIPERTENSI">I10 - Hipertensi Primer</option>
+            <option value="K35.8|Apendisitis Akut Lainnya|K-1-12|PROSEDUR APENDIKS">K35.8 - Apendisitis Akut</option>
+            <option value="H25.9|Katarak Senilis|H-1-30|PROSEDUR LENSA MATA">H25.9 - Katarak Senilis</option>
+            <option value="E11.9|Diabetes Melitus Tipe 2|E-4-10|GANGGUAN DIABETES">E11.9 - Diabetes Melitus Tipe 2</option>
+            <option value="J06|ISPA Akut Ringan|U-4-13|ISPA AKUT">J06 - ISPA Akut Ringan</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold">Severity Level</label>
+          <select id="inp-severity" class="form-select form-select-sm">
+            <option value="1">Level I (Ringan)</option>
+            <option value="2">Level II (Sedang)</option>
+            <option value="3" selected>Level III (Berat)</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold">Lama Rawat (LOS)</label>
+          <div class="input-group input-group-sm">
+            <input type="number" id="inp-los" class="form-control" value="2" min="0" max="30">
+            <span class="input-group-text">Hari</span>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold">Tipe Rumah Sakit</label>
+          <select id="inp-rs-type" class="form-select form-select-sm">
+            <option value="RS Kelas A">RS Kelas A</option>
+            <option value="RS Kelas B">RS Kelas B</option>
+            <option value="RS Kelas C" selected>RS Kelas C</option>
+            <option value="RS Kelas D">RS Kelas D</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label small fw-semibold">Biaya Riil Rumah Sakit (IDR)</label>
+          <input type="number" id="inp-biaya-riil" class="form-control form-control-sm" value="3400000">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-semibold">Nilai Tagihan Klaim Diajukan (IDR)</label>
+          <input type="number" id="inp-biaya-tagih" class="form-control form-control-sm" value="17400000">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small fw-semibold">Tindakan Medis (ICD-9-CM)</label>
+          <input type="text" id="inp-icd9" class="form-control form-control-sm" value="-">
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <button class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm" onclick="runLiveAudit()">
+            <i class="fa-solid fa-play me-2"></i>Audit Klaim dengan AI
+          </button>
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div id="audit-result-box" class="mt-4 p-3 rounded-3" style="display: none; border-left: 5px solid;">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <span id="res-badge-status" class="badge fs-6 px-3 py-2"></span>
+            <span id="res-badge-type" class="badge bg-dark ms-2 fs-6 px-3 py-2"></span>
+          </div>
+          <div class="text-end">
+            <div class="text-muted small">Skor Risiko Anomali</div>
+            <h4 class="fw-bold mb-0" id="res-confidence">0.0%</h4>
+          </div>
+        </div>
+
+        <!-- 3-Module Risk Breakdown Bars -->
+        <div class="row g-2 my-3 p-2 bg-white rounded border">
+          <div class="col-md-4">
+            <div class="small fw-semibold text-muted d-flex justify-content-between">
+              <span>Modul 1: Indikasi Upcoding</span>
+              <span id="score-mod1" class="fw-bold text-danger">0%</span>
+            </div>
+            <div class="progress" style="height: 6px;">
+              <div id="prog-mod1" class="progress-bar bg-danger" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="small fw-semibold text-muted d-flex justify-content-between">
+              <span>Modul 2: Indikasi Unbundling</span>
+              <span id="score-mod2" class="fw-bold text-warning">0%</span>
+            </div>
+            <div class="progress" style="height: 6px;">
+              <div id="prog-mod2" class="progress-bar bg-warning" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="small fw-semibold text-muted d-flex justify-content-between">
+              <span>Modul 3: Indikasi Phantom</span>
+              <span id="score-mod3" class="fw-bold text-purple" style="color: #6d28d9;">0%</span>
+            </div>
+            <div class="progress" style="height: 6px;">
+              <div id="prog-mod3" class="progress-bar bg-dark" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <h6 class="fw-bold text-dark mb-1"><i class="fa-solid fa-circle-info text-primary me-2"></i>Temuan Analisis AI:</h6>
+            <ul id="res-reasons-list" class="small mb-2 ps-3"></ul>
+
+            <h6 class="fw-bold text-dark mb-1 mt-3"><i class="fa-solid fa-scale-balanced text-warning me-2"></i>Dasar Hukum &amp; Regulasi:</h6>
+            <ul id="res-regulasi-list" class="small mb-0 ps-3 text-secondary"></ul>
+          </div>
+          <div class="col-md-6 border-start">
+            <h6 class="fw-bold text-dark mb-1"><i class="fa-solid fa-clipboard-check text-success me-2"></i>Rekomendasi Tindakan Verifikator BPJS (VClaim / AUDIA):</h6>
+            <ul id="res-recomms-list" class="small mb-2 ps-3"></ul>
+            <div class="mt-3 p-2 bg-light rounded text-success fw-bold small border" id="res-saving-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Feed Claim Explorer -->
+    <div class="card shadow-sm border-0 rounded-3 p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h5 class="fw-bold mb-0"><i class="fa-solid fa-list-check me-2 text-primary"></i>Penjelajah Berkas Klaim (Live Claim Explorer)</h5>
+          <small class="text-muted">Data tersinkronisasi langsung dengan database audit klaim FKRTL</small>
+        </div>
+        <div class="d-flex gap-2">
+          <input type="text" id="table-search" class="form-control form-control-sm" placeholder="Cari No SEP, Diagnosa, RS..." style="width: 250px;" onkeyup="handleSearch(event)">
+          <select id="table-filter-type" class="form-select form-select-sm" style="width: 180px;" onchange="loadTableClaims(1)">
+            <option value="ALL">Semua Kategori</option>
+            <option value="DISPUTED_CLAIM">Dipangkas Verifikator (Dispute)</option>
+            <option value="UPCODING">Upcoding</option>
+            <option value="UNBUNDLING">Unbundling</option>
+            <option value="PHANTOM_BILLING">Phantom Billing</option>
+            <option value="NORMAL">Klaim Wajar</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+          <thead>
+            <tr>
+              <th>Nomor SEP / Kunjungan</th>
+              <th>Pasien &amp; Faskes</th>
+              <th>Diagnosa &amp; INA-CBG</th>
+              <th>Lama Rawat</th>
+              <th>Nilai Tagihan RS</th>
+              <th>Status Audit AI</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="claims-table-body">
+            <tr><td colspan="7" class="text-center py-4 text-muted">Memuat data klaim...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <small class="text-muted" id="table-page-info">Menampilkan...</small>
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-outline-secondary" id="btn-prev" onclick="changePage(-1)">Sebelumnya</button>
+          <button class="btn btn-outline-secondary" id="btn-next" onclick="changePage(1)">Selanjutnya</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="text-center py-3 text-muted small border-top mt-5 bg-white">
+    &copy; 2026 <strong>VeriKlaim Tim Inovasi Healthkathon BPJS Kesehatan</strong> &bull; Aditya Pratama, Nurman Hariyanto, M. Ali Maulana.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    let currentDataset = 'real';
+    let currentPage = 1;
+    let totalPages = 1;
+    let fraudChart = null;
+    let rsChart = null;
+
+    async function initDashboard() {
+      await loadStats();
+      await loadTableClaims(1);
+    }
+
+    async function switchDataset(mode) {
+      currentDataset = mode;
+      if (mode === 'real') {
+        document.getElementById('btn-mode-real').className = 'btn btn-success fw-bold';
+        document.getElementById('btn-mode-synth').className = 'btn btn-outline-secondary fw-semibold';
+        document.getElementById('current-dataset-label').innerText = 'Data Riil BPJS Kesehatan FKRTL 2024 (50.000 Kasus Lapangan)';
+        document.getElementById('kpi-dataset-subtitle').innerText = 'Kohor Longitudinal FKRTL Asli';
+      } else {
+        document.getElementById('btn-mode-synth').className = 'btn btn-success fw-bold';
+        document.getElementById('btn-mode-real').className = 'btn btn-outline-secondary fw-semibold';
+        document.getElementById('current-dataset-label').innerText = 'Dataset Skenario Uji Komprehensif (10.000 Kasus Simulai)';
+        document.getElementById('kpi-dataset-subtitle').innerText = 'Distribusi Lengkap 4 Tipe Kasus';
+      }
+      await loadStats();
+      await loadTableClaims(1);
+    }
+
+    async function loadStats() {
+      const res = await fetch(`/api/stats?mode=${currentDataset}`);
+      const stats = await res.json();
+
+      document.getElementById('kpi-total-claims').innerText = Number(stats.total_claims).toLocaleString('id-ID');
+      document.getElementById('kpi-total-fraud').innerText = Number(stats.total_fraud).toLocaleString('id-ID');
+      document.getElementById('kpi-fraud-rate').innerText = `${stats.fraud_rate_pct}% dari total klaim`;
+      document.getElementById('kpi-funds-saved').innerText = `Rp ${(stats.total_fraud_saved / 1e6).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")} Juta`;
+
+      renderFraudChart(stats.type_counts);
+      renderRSChart(stats.rs_breakdown);
+    }
+
+    function renderFraudChart(counts) {
+      const ctx = document.getElementById('fraudDistributionChart').getContext('2d');
+      if (fraudChart) fraudChart.destroy();
+
+      const labels = Object.keys(counts);
+      const dataVals = Object.values(counts);
+      const colorMap = {
+        'NORMAL': '#10b981',
+        'DISPUTED_CLAIM': '#dc2626',
+        'UPCODING': '#ef4444',
+        'UNBUNDLING': '#f59e0b',
+        'PHANTOM_BILLING': '#8b5cf6'
+      };
+      const bgColors = labels.map(l => colorMap[l] || '#64748b');
+
+      fraudChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: dataVals,
+            backgroundColor: bgColors,
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right' }
+          }
+        }
+      });
+    }
+
+    function renderRSChart(rsData) {
+      const ctx = document.getElementById('rsBreakdownChart').getContext('2d');
+      if (rsChart) rsChart.destroy();
+
+      const labels = Object.keys(rsData);
+      const rates = labels.map(k => rsData[k].fraud_rate);
+
+      rsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Tingkat Anomali / Dispute (%)',
+            data: rates,
+            backgroundColor: '#009639',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: v => v + '%' } }
+          }
+        }
+      });
+    }
+
+    async function loadTableClaims(page) {
+      currentPage = page;
+      const type = document.getElementById('table-filter-type').value;
+      const search = document.getElementById('table-search').value;
+
+      const res = await fetch(`/api/claims?dataset=${currentDataset}&fraud_type=${type}&search=${encodeURIComponent(search)}&page=${page}&limit=10`);
+      const data = await res.json();
+      totalPages = data.total_pages;
+
+      const tbody = document.getElementById('claims-table-body');
+      tbody.innerHTML = '';
+
+      if (data.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Tidak ada klaim yang cocok dengan filter pencarian.</td></tr>';
+        return;
+      }
+
+      data.data.forEach(c => {
+        let badgeClass = 'badge-normal';
+        let badgeText = 'Klaim Wajar';
+        const ft = c.fraud_type_clean;
+
+        if (ft === 'UPCODING') {
+          badgeClass = 'badge-fraud-upcoding';
+          badgeText = '🚨 Upcoding';
+        } else if (ft === 'UNBUNDLING') {
+          badgeClass = 'badge-fraud-unbundling';
+          badgeText = '⚠️ Unbundling';
+        } else if (ft === 'PHANTOM_BILLING') {
+          badgeClass = 'badge-fraud-phantom';
+          badgeText = '🛑 Phantom Billing';
+        } else if (ft === 'DISPUTED_CLAIM') {
+          badgeClass = 'badge-fraud-dispute';
+          badgeText = '⚖️ Dipotong Verifikator';
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="font-monospace fw-semibold">${c.NO_SEP}</span></td>
+          <td>
+            <div class="fw-medium">${c.ID_PESERTA}</div>
+            <small class="text-muted">${c.TIPE_FASKES || 'RS Provider'}</small>
+          </td>
+          <td>
+            <div class="fw-medium text-truncate" style="max-width: 240px;" title="${c.NAMA_DIAGNOSA}">${c.NAMA_DIAGNOSA}</div>
+            <small class="badge bg-light text-dark border">${c.KODE_INACBG || '-'}</small>
+          </td>
+          <td>${c.los_clean} Hari</td>
+          <td><span class="fw-semibold">Rp ${Number(c.display_tagih).toLocaleString('id-ID')}</span></td>
+          <td><span class="badge ${badgeClass} px-2 py-1">${badgeText}</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary py-0 px-2" onclick='loadExistingClaim(${JSON.stringify(c)})'>
+              <i class="fa-solid fa-magnifying-glass me-1"></i>Audit
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('table-page-info').innerText = `Halaman ${data.page} dari ${data.total_pages} (${data.total.toLocaleString('id-ID')} Total Klaim)`;
+      document.getElementById('btn-prev').disabled = (data.page <= 1);
+      document.getElementById('btn-next').disabled = (data.page >= data.total_pages);
+    }
+
+    function changePage(delta) {
+      const target = currentPage + delta;
+      if (target >= 1 && target <= totalPages) {
+        loadTableClaims(target);
+      }
+    }
+
+    function handleSearch(e) {
+      if (e.key === 'Enter' || e.target.value.length === 0) {
+        loadTableClaims(1);
+      }
+    }
+
+    function loadCase(type) {
+      if (type === 'normal') {
+        document.getElementById('inp-no-sep').value = 'SEP-NORM-2026-0081';
+        document.getElementById('inp-icd10').value = 'J18.9|Pneumonia Tidak Spesifik|J-4-16|INFEKSI SALURAN PERNAPASAN';
+        document.getElementById('inp-severity').value = '1';
+        document.getElementById('inp-los').value = '3';
+        document.getElementById('inp-biaya-riil').value = '4600000';
+        document.getElementById('inp-biaya-tagih').value = '4800000';
+        document.getElementById('inp-icd9').value = '87.44';
+      } else if (type === 'upcoding') {
+        document.getElementById('inp-no-sep').value = 'SEP-UPC-2026-0042';
+        document.getElementById('inp-icd10').value = 'J18.9|Pneumonia Tidak Spesifik|J-4-16|INFEKSI SALURAN PERNAPASAN';
+        document.getElementById('inp-severity').value = '3';
+        document.getElementById('inp-los').value = '2';
+        document.getElementById('inp-biaya-riil').value = '3400000';
+        document.getElementById('inp-biaya-tagih').value = '17400000';
+        document.getElementById('inp-icd9').value = '-';
+      } else if (type === 'unbundling') {
+        document.getElementById('inp-no-sep').value = 'SEP-UNB-2026-0019';
+        document.getElementById('inp-icd10').value = 'K35.8|Apendisitis Akut Lainnya|K-1-12|PROSEDUR APENDIKS';
+        document.getElementById('inp-severity').value = '1';
+        document.getElementById('inp-los').value = '1';
+        document.getElementById('inp-biaya-riil').value = '6700000';
+        document.getElementById('inp-biaya-tagih').value = '7500000';
+        document.getElementById('inp-icd9').value = '47.09';
+      } else if (type === 'phantom') {
+        document.getElementById('inp-no-sep').value = '419911224V002625';
+        document.getElementById('inp-icd10').value = 'I10|Hipertensi Primer|I-4-17|HIPERTENSI';
+        document.getElementById('inp-severity').value = '1';
+        document.getElementById('inp-los').value = '0';
+        document.getElementById('inp-biaya-riil').value = '0';
+        document.getElementById('inp-biaya-tagih').value = '2223200';
+        document.getElementById('inp-icd9').value = '-';
+      }
+      runLiveAudit();
+    }
+
+    function loadExistingClaim(c) {
+      document.getElementById('inp-no-sep').value = c.NO_SEP;
+      document.getElementById('inp-los').value = c.los_clean;
+      document.getElementById('inp-rs-type').value = c.TIPE_FASKES || 'RS Kelas C';
+      document.getElementById('inp-biaya-tagih').value = c.display_tagih;
+      document.getElementById('inp-biaya-riil').value = c.BIAYA_RIIL_RS || (c.display_tagih * 0.8);
+      document.getElementById('inp-icd9').value = c.KODE_ICD9_PROSEDUR || '-';
+      window.scrollTo({ top: 380, behavior: 'smooth' });
+      runLiveAudit();
+    }
+
+    async function runLiveAudit() {
+      const icdRaw = document.getElementById('inp-icd10').value.split('|');
+      const payload = {
+        no_sep: document.getElementById('inp-no-sep').value,
+        id_peserta: 'PST-AUDIT',
+        tipe_faskes: document.getElementById('inp-rs-type').value,
+        pelayanan: 'RITL',
+        kode_icd10: icdRaw[0],
+        nama_diagnosa: icdRaw[1],
+        kode_komorbid: '-',
+        kode_icd9: document.getElementById('inp-icd9').value,
+        kode_inacbg: `${icdRaw[2]}-${['I','II','III'][document.getElementById('inp-severity').value - 1]}`,
+        nama_inacbg: icdRaw[3],
+        severity_level: parseInt(document.getElementById('inp-severity').value),
+        los_hari: parseInt(document.getElementById('inp-los').value),
+        biaya_tagih: parseFloat(document.getElementById('inp-biaya-tagih').value),
+        biaya_riil: parseFloat(document.getElementById('inp-biaya-riil').value),
+        kunjungan_terakhir_hari: document.getElementById('inp-no-sep').value.includes('UNB') ? 2 : 999
+      };
+
+      const res = await fetch('/api/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      const box = document.getElementById('audit-result-box');
+      box.style.display = 'block';
+
+      const badgeStatus = document.getElementById('res-badge-status');
+      const badgeType = document.getElementById('res-badge-type');
+
+      if (data.is_fraud === 1) {
+        box.style.backgroundColor = '#fff1f2';
+        box.style.borderColor = '#e11d48';
+        badgeStatus.className = 'badge bg-danger fs-6 px-3 py-2';
+        badgeStatus.innerText = '🚨 DITAHAN — TERDETEKSI KECURANGAN KLAIM';
+        badgeType.className = 'badge bg-dark ms-2 fs-6 px-3 py-2';
+        badgeType.innerText = `Modul: ${data.fraud_type}`;
+        document.getElementById('res-saving-text').innerText = `Potensi Penyelamatan Dana JKN: Rp ${Number(data.potensi_hemat_idr).toLocaleString('id-ID')}`;
+      } else {
+        box.style.backgroundColor = '#f0fdf4';
+        box.style.borderColor = '#16a34a';
+        badgeStatus.className = 'badge bg-success fs-6 px-3 py-2';
+        badgeStatus.innerText = '✅ LOLOS VERIFIKASI — WAJAR';
+        badgeType.className = 'badge bg-secondary ms-2 fs-6 px-3 py-2';
+        badgeType.innerText = 'Sesuai Standar INA-CBG';
+        document.getElementById('res-saving-text').innerText = 'Tidak ada selisih tarif yang perlu dipangkas.';
+      }
+
+      document.getElementById('res-confidence').innerText = `${data.risk_score}%`;
+
+      // Update 3-module bars
+      document.getElementById('score-mod1').innerText = `${data.module_scores.upcoding_score}%`;
+      document.getElementById('prog-mod1').style.width = `${data.module_scores.upcoding_score}%`;
+
+      document.getElementById('score-mod2').innerText = `${data.module_scores.unbundling_score}%`;
+      document.getElementById('prog-mod2').style.width = `${data.module_scores.unbundling_score}%`;
+
+      document.getElementById('score-mod3').innerText = `${data.module_scores.phantom_score}%`;
+      document.getElementById('prog-mod3').style.width = `${data.module_scores.phantom_score}%`;
+
+      // Reasons
+      const reasonsUl = document.getElementById('res-reasons-list');
+      reasonsUl.innerHTML = '';
+      data.audit_findings.forEach(r => {
+        const li = document.createElement('li');
+        li.innerText = r;
+        reasonsUl.appendChild(li);
+      });
+
+      // Regulasi
+      const regUl = document.getElementById('res-regulasi-list');
+      regUl.innerHTML = '';
+      data.dasar_regulasi.forEach(r => {
+        const li = document.createElement('li');
+        li.innerText = r;
+        regUl.appendChild(li);
+      });
+
+      // Recommendations
+      const recommsUl = document.getElementById('res-recomms-list');
+      recommsUl.innerHTML = '';
+      data.rekomendasi_verifikator.forEach(r => {
+        const li = document.createElement('li');
+        li.innerText = r;
+        recommsUl.appendChild(li);
+      });
+    }
+
+    window.onload = initDashboard;
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+{
+  "total_scanned_claims": 100000,
+  "service_distribution": {
+    "Rawat Jalan (RJTL)": 84905,
+    "Rawat Inap (RITL)": 15095
+  },
+  "financials": {
+    "total_biaya_tagih_rs": 98539425510,
+    "total_biaya_verifikasi_bpjs": 98418921154,
+    "total_koreksi_dispute_idr": 120504356
+  },
+  "audit_findings": {
+    "total_klaim_dikoreksi_bpjs": 103,
+    "dispute_rate_pct": 0.1,
+    "top_dispute_diagnoses": {
+      "Acute upper respiratory infection, unspecified": 12,
+      "Viral infection, unspecified": 9,
+      "Typhoid fever": 6,
+      "Dyspepsia": 5,
+      "Other and unspecified abdominal pain": 4,
+      "Other and unspecified gastroenteritis and colitis of infectious origin": 4,
+      "Preterm labour without delivery": 2,
+      "Observation for other suspected diseases and conditions": 2,
+      "Other chronic osteomyelitis, lower leg": 1,
+      "Aortic (valve) insufficiency": 1
+    }
+  },
+  "severity_distribution": {
+    "Rawat Jalan": 84905,
+    "Ringan (rawat inap keparahan 1)": 12532,
+    "Sedang (rawat inap keparahan 2)": 2033,
+    "Berat (rawat inap keparahan 3)": 530
+  },
+  "hospital_distribution": {
+    "RS Kelas B": 17326,
+    "RS Kelas C": 27678,
+    "RS Swasta Setara Type C": 22401,
+    "RS Swasta Setara Type D": 4208,
+    "RS Kelas A": 4713,
+    "RS Kelas D": 3153,
+    "RS TNI Polri Kelas IV": 1384,
+    "Khusus Ibu dan Anak": 1340,
+    "RS TNI Polri Kelas II": 1615,
+    "Missing": 2166,
+    "RS TNI Polri Kelas III": 2423,
+    "RS Swasta Setara Type B": 8397,
+    "Khusus Mata": 2119,
+    "Khusus Jiwa": 145,
+    "Khusus Jantung": 54,
+    "RS Swasta Setara Type A": 759,
+    "Khusus Kanker Onkologi": 1,
+    "Khusus Bedah": 47,
+    "Khusus Paru": 71
+  },
+  "top_10_diagnoses": {
+    "Follow-up examination after other treatment for other conditions": 45871,
+    "Extracorporeal dialysis": 4172,
+    "Other physical therapy": 1780,
+    "Fever, unspecified": 1260,
+    "Typhoid fever": 1155,
+    "Follow-up examination after unspecified treatment for other conditions": 1132,
+    "Observation for other suspected diseases and conditions": 1028,
+    "Examination of eyes and vision": 840,
+    "Issue of repeat prescription": 645,
+    "Dyspepsia": 638
+  }
+}

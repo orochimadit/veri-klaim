@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Proposal Healthkathon 2026 - VeriKlaim</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+    @page {
+      size: 1920px 1080px;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      width: 1920px;
+      margin: 0 auto;
+    }
+
+    .slide {
+      width: 1920px;
+      height: 1080px;
+      position: relative;
+      page-break-after: always;
+      page-break-inside: avoid;
+      overflow: hidden;
+      padding: 56px 72px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    /* Header styling */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #00875a;
+      padding-bottom: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tag-category {
+      background: #00875a;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .tag-sub {
+      color: #475569;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .slide-index {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: #0f172a;
+      background: #f1f5f9;
+      padding: 4px 12px;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* Main Area */
+    .slide-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 24px 0;
+    }
+
+    h1.title-cover {
+      font-size: 54px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    h2.section-heading {
+      font-size: 36px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    p.lead-text {
+      font-size: 18px;
+      line-height: 1.5;
+      color: #475569;
+      margin-bottom: 24px;
+      max-width: 1500px;
+    }
+
+    /* Grid layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* Solid structured cards */
+    .panel {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .panel-accent {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-left: 5px solid #00875a;
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .panel-alert {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 5px solid #dc2626;
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .panel-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .panel-desc {
+      font-size: 15px;
+      line-height: 1.55;
+      color: #334155;
+    }
+
+    /* Stat Box */
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .stat-num {
+      font-size: 38px;
+      font-weight: 800;
+      color: #00875a;
+      font-family: 'IBM Plex Mono', monospace;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .stat-num.danger {
+      color: #dc2626;
+    }
+
+    .stat-num.neutral {
+      color: #0f172a;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #64748b;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tables */
+    table.data-grid {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    table.data-grid th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid #cbd5e1;
+    }
+
+    table.data-grid td {
+      padding: 14px 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #334155;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+
+    /* Links */
+    a.doc-link {
+      color: #0369a1;
+      text-decoration: underline;
+      font-weight: 600;
+      word-break: break-all;
+    }
+
+    /* Evidence Image */
+    .evidence-img-container {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .evidence-img-container img {
+      width: 100%;
+      display: block;
+      height: 380px;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .evidence-caption {
+      background: #f8fafc;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #475569;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    /* Footer */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .footer-highlight {
+      font-weight: 600;
+      color: #0f172a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== SLIDE 1: COVER ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Healthkathon 2026</span>
+        <span class="tag-sub">Proposal Resmi Peserta BPJS Kesehatan</span>
+      </div>
+      <div class="slide-index">SLIDE 01 / 16</div>
+    </div>
+
+    <div class="slide-main" style="padding: 20px 0;">
+      <div style="font-size: 14px; font-weight: 700; color: #00875a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+        Kategori 2: Efisiensi Risiko pada Fasilitas Kesehatan (Faskes)
+      </div>
+      <h1 class="title-cover">
+        VeriKlaim
+      </h1>
+      <div style="font-size: 24px; font-weight: 700; color: #1e293b; max-width: 1400px; line-height: 1.35; margin-bottom: 12px;">
+        Sistem Asistensi Audit Pra-Bayar Berbasis Analisis Semantik Klinis dan Deteksi Anomali Graf untuk Mitigasi Upcoding, Unbundling, dan Phantom Billing pada Klaim Rumah Sakit JKN
+      </div>
+      <p style="font-size: 16px; color: #64748b; max-width: 1300px; margin-bottom: 36px;">
+        Fokus Modus: Manipulasi Diagnosis dan Prosedur (Upcoding), Fragmentasi Paket Klaim (Unbundling), dan Klaim Fiktif (Phantom Billing)
+      </p>
+
+      <div class="grid-3" style="max-width: 1400px;">
+        <div class="panel">
+          <div style="font-size: 12px; font-weight: 700; color: #00875a; text-transform: uppercase;">Ketua Tim</div>
+          <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px;">Aditya Pratama, S.ST., M.T.</div>
+          <div style="font-size: 14px; color: #475569; margin-top: 4px;">Arsitektur AI & Sistem Pendukung Keputusan</div>
+          <div style="font-size: 13px; color: #64748b; margin-top: 6px;">Alumni S1 & S2 STEI ITB</div>
+          <div style="font-size: 13px; color: #00875a; font-weight: 700; margin-top: 6px;">WhatsApp: 0856-5441-1081</div>
+        </div>
+        <div class="panel">
+          <div style="font-size: 12px; font-weight: 700; color: #00875a; text-transform: uppercase;">Anggota Tim</div>
+          <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px;">Nurman Hariyanto, S.ST., M.T.</div>
+          <div style="font-size: 14px; color: #475569; margin-top: 4px;">Rekayasa Backend, Cloud, & Integrasi Pipeline</div>
+          <div style="font-size: 13px; color: #64748b; margin-top: 6px;">Alumni STEI ITB & POLBAN</div>
+        </div>
+        <div class="panel">
+          <div style="font-size: 12px; font-weight: 700; color: #00875a; text-transform: uppercase;">Anggota Tim</div>
+          <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px;">M. Ali Maulana</div>
+          <div style="font-size: 14px; color: #475569; margin-top: 4px;">Pakar Alur Klinis RS & Manajemen Keperawatan</div>
+          <div style="font-size: 13px; color: #64748b; margin-top: 6px;">Dosen Universitas Tanjungpura</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Tim Aditya Pratama, Nurman Hariyanto, Muhammad Ali Maulana</div>
+      <div>Jakarta, Oktober 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 2: EXECUTIVE SUMMARY ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 1</span>
+        <span class="tag-sub">Identitas dan Positioning Solusi</span>
+      </div>
+      <div class="slide-index">SLIDE 02 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Ringkasan Eksekutif: Transformasi ke Audit Pra-Bayar</h2>
+      <p class="lead-text">
+        Audit retrospektif pasca-bayar membuat pengembalian dana klaim yang bocor sulit dilakukan. VeriKlaim memindahkan titik kendali ke tahap pra-bayar sebelum transaksi dicairkan.
+      </p>
+
+      <div class="grid-2" style="margin-bottom: 24px;">
+        <div class="panel-alert">
+          <div class="panel-title" style="color: #991b1b;">Masalah pada Pendekatan Audit Pasca-Bayar</div>
+          <p class="panel-desc">
+            Pemeriksaan klaim secara mendalam umumnya baru dilakukan berbulan-bulan setelah dana cair ke fasilitas kesehatan melalui audit BPKP atau investigasi KPK. Pada titik ini, kerugian keuangan negara sudah terjadi dan penarikan kembali dana memerlukan proses hukum yang panjang serta memicu friksi operasional antara BPJS dan rumah sakit mitra.
+          </p>
+        </div>
+        <div class="panel-accent">
+          <div class="panel-title" style="color: #166534;">Pendekatan VeriKlaim: Penapisan Pra-Bayar Otomatis</div>
+          <p class="panel-desc">
+            VeriKlaim melakukan pemindaian otomatis terhadap kesesuaian klinis rekam medis dan pola penagihan saat berkas klaim masuk di sistem V-Claim, dengan waktu komputasi di bawah 3 detik. Berkas yang tidak wajar langsung ditandai lengkap dengan rujukan pasal dan bukti diskrepansi klinis untuk diverifikasi oleh petugas verifikator BPJS.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Positioning Solusi dalam Ekosistem JKN</div>
+        <p class="panel-desc">
+          Bukan sekadar aturan kaku (rule-based) yang mudah dihindari pelaku kecurangan, VeriKlaim menggabungkan pencocokan semantik teks resume medis dokter terhadap standar ICD-10 dengan pemodelan graf relasi transaksi faskes. Sistem ini berfungsi sebagai instrumen pendukung keputusan verifikator, bukan pemutus sepihak.
+        </p>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Efisiensi Risiko Pelayanan Kesehatan Program JKN</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 3: MASALAH OPERASIONAL ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 2</span>
+        <span class="tag-sub">Masalah dan Urgensi Operasional</span>
+      </div>
+      <div class="slide-index">SLIDE 03 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Beban Verifikasi dan Asimetri Informasi pada Klaim Rumah Sakit</h2>
+      <p class="lead-text">
+        Tingginya volume klaim harian berbanding terbalik dengan keterbatasan jumlah petugas verifikator BPJS di seluruh kantor cabang.
+      </p>
+
+      <div class="grid-4" style="margin-bottom: 24px;">
+        <div class="stat-card">
+          <div class="stat-num neutral">> 260 Juta</div>
+          <div class="stat-label">Peserta Terdaftar JKN</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num neutral">3.000+</div>
+          <div class="stat-label">RS Rujukan (FKRTL)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num neutral">Jutaan Berkas</div>
+          <div class="stat-label">Volume Klaim Bulanan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num danger">< 5 Menit</div>
+          <div class="stat-label">Waktu Rata-Rata Telaah Manual</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-title">Tantangan Asimetri Informasi Klinis</div>
+          <p class="panel-desc">
+            Berkas klaim rumah sakit terdiri atas lembar resume medis, laporan tindakan operatif, instruksi dokter, dan hasil pemeriksaan laboratorium penunjang. Petugas verifikator non-medis sering kesulitan membaca ketidaksesuaian terselubung antara catatan perawat, riwayat lab, dan kode diagnosis utama yang diajukan oleh koder rumah sakit.
+          </p>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Risiko Sistemik Tanpa Otomasi Audit</div>
+          <p class="panel-desc">
+            Jika proses verifikasi ditekan terlalu cepat demi menghindari keterlambatan pembayaran klaim, celah manipulasi diagnosis dan klaim fiktif berisiko lolos. Sebaliknya, bila audit manual diperketat pada setiap lembar dokumen, proses persetujuan klaim bagi rumah sakit yang tertib akan tertahan dan mengganggu arus kas pelayanan.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>Sumber Data: Panduan Resmi Healthkathon 2026 (Hlm. 2), Laporan Tahunan BPJS Kesehatan 2023, & Kajian Beban Kerja Verifikator KPK</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 4: BUKTI DATA & REFERENSI RESMI ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 2</span>
+        <span class="tag-sub">Dukungan Data Empiris dan Referensi Resmi</span>
+      </div>
+      <div class="slide-index">SLIDE 04 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Bukti Nyata Kasus Kecurangan: Temuan Tim Gabungan KPK dan BPJS</h2>
+      <p class="lead-text">
+        Kerugian akibat manipulasi klaim bukan sekadar asumsi teoretis, melainkan telah diverifikasi secara formal oleh penegak hukum dan instansi pengawas negara.
+      </p>
+
+      <div class="grid-2" style="align-items: start;">
+        <div class="evidence-img-container">
+          <img src="referensi_berita_kpk.png" alt="Tangkapan layar berita DW Indonesia mengenai temuan KPK terkait klaim fiktif 3 RS">
+          <div class="evidence-caption">
+            <strong>Bukti Liputan Investigasi:</strong> DW Indonesia (30 Juli 2024), merilis hasil pengusutan Tim PK-JKN (KPK, Kemenkes, BPJS Kesehatan, dan BPKP) terhadap praktik klaim fiktif dan upcoding di rumah sakit swasta.
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="panel-alert">
+            <div class="panel-title" style="color: #991b1b; font-size: 16px;">Temuan Faktual: Rp 35 Miliar dari 3 Rumah Sakit</div>
+            <p class="panel-desc" style="font-size: 14px;">
+              Investigasi gabungan KPK pada dua RS di Sumatera Utara dan satu RS di Jawa Tengah mengungkap manipulasi diagnosis dan tagihan fiktif ribuan sesi fisioterapi serta klaim katarak tanpa dokumen rekam medis yang sah.
+            </p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title" style="font-size: 16px;">Dokumen dan Tautan Referensi Resmi:</div>
+            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+              <div>
+                <strong>1. Siaran DW Indonesia (30 Juli 2024):</strong><br>
+                <a class="doc-link" href="https://www.dw.com/id/rs-rugikan-bpjs-kesehatan/a-69802484" target="_blank">
+                  https://www.dw.com/id/rs-rugikan-bpjs-kesehatan/a-69802484
+                </a>
+              </div>
+              <div>
+                <strong>2. Publikasi Resmi BPK RI Perwakilan Sumut / Temuan KPK:</strong><br>
+                <a class="doc-link" href="https://sumut.bpk.go.id/wp-content/uploads/2025/09/KPK-TEMUKAN-FRAUD-KLAIM-BPJS-KESEHATAN-DI-SUMUT-DAN-JATENG-MERUGIKAN-NEGARA-RP-34-MILIAR-1.pdf" target="_blank">
+                  https://sumut.bpk.go.id/wp-content/uploads/2025/09/KPK-TEMUKAN-FRAUD-KLAIM-BPJS-KESEHATAN-DI-SUMUT-DAN-JATENG-MERUGIKAN-NEGARA-RP-34-MILIAR-1.pdf
+                </a>
+              </div>
+              <div>
+                <strong>3. Payung Regulasi:</strong> Permenkes No. 16 Tahun 2019 tentang Pencegahan dan Penanganan Kecurangan (Fraud) dalam Pelaksanaan Program JKN.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>Sumber Data: Investigasi Tim PK-JKN KPK-BPJS, BPK RI Perwakilan Sumut, DW Indonesia (2024)</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 5: ANATOMI 3 MODUS ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 2</span>
+        <span class="tag-sub">Fokus Challenge: 3 Modus Utama</span>
+      </div>
+      <div class="slide-index">SLIDE 05 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Tiga Modus Kecurangan Rumah Sakit yang Ditangani</h2>
+      <p class="lead-text">
+        Pemilihan tiga sub-kategori spesifik yang saling berkaitan langsung dalam siklus administrasi klaim INA-CBGs di fasilitas kesehatan.
+      </p>
+
+      <div class="grid-3">
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #dc2626; text-transform: uppercase; margin-bottom: 4px;">Kategori Faskes: Modus 4</div>
+          <div class="panel-title">Manipulasi Diagnosis (Upcoding)</div>
+          <p class="panel-desc" style="margin-bottom: 12px;">
+            Praktik menaikkan kode diagnosis atau tingkat keparahan penyakit secara tidak sah untuk mendapatkan nilai penggantian tarif INA-CBGs yang lebih tinggi.
+          </p>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; font-size: 13px; color: #475569;">
+            <strong>Contoh Lapangan:</strong> Pasien dispepsia umum dicatat sebagai ulkus lambung akut dengan perdarahan gastrointestinal, meskipun catatan lab menunjukkan kadar hemoglobin normal dan tidak ada tindakan endoskopi.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #d97706; text-transform: uppercase; margin-bottom: 4px;">Kategori Faskes: Modus 9</div>
+          <div class="panel-title">Pemecahan Layanan (Unbundling)</div>
+          <p class="panel-desc" style="margin-bottom: 12px;">
+            Memecah rangkaian tindakan medis yang semestinya ditagihkan dalam satu paket tarif menjadi beberapa klaim terpisah pada tanggal yang berdekatan.
+          </p>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; font-size: 13px; color: #475569;">
+            <strong>Contoh Lapangan:</strong> Prosedur bedah dan perawatan pasca-bedah dipecah menjadi episode rawat jalan terpisah pada hari berikutnya untuk melipatgandakan klaim tindakan.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #7c3aed; text-transform: uppercase; margin-bottom: 4px;">Kategori Faskes: Modus 6</div>
+          <div class="panel-title">Klaim Layanan Fiktif (Phantom Billing)</div>
+          <p class="panel-desc" style="margin-bottom: 12px;">
+            Pengajuan klaim atas tindakan medis, pemeriksaan diagnostik canggih, atau sesi terapi yang tidak pernah diberikan kepada pasien.
+          </p>
+          <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; font-size: 13px; color: #475569;">
+            <strong>Contoh Lapangan:</strong> Menggunakan data kepesertaan pasien dari kegiatan bakti sosial untuk membuat penagihan sesi rehabilitasi medik atau katarak tanpa kehadiran pasien di rumah sakit.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Taksonomi Kecurangan Berdasarkan Permenkes No. 16/2019</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 6: SOLUSI INOVASI ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 3</span>
+        <span class="tag-sub">Solusi dan Keunggulan</span>
+      </div>
+      <div class="slide-index">SLIDE 06 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Arsitektur Fungsional VeriKlaim</h2>
+      <p class="lead-text">
+        Solusi terpadu yang memadukan pemrosesan bahasa alami pada resume medis, matriks regulasi tarif, dan analisis graf hubungan transaksi.
+      </p>
+
+      <div class="grid-3">
+        <div class="panel-accent">
+          <div class="panel-title" style="color: #166534;">1. Modul Semantic NLP Klinis</div>
+          <p class="panel-desc">
+            Membaca dan memetakan teks narasi pada berkas resume medis (gejala, hasil observasi, laporan operasi, data lab kuantitatif) terhadap kriteria diagnostik klinis standar ICD-10. Jika diagnosis berat diklaim tanpa dukungan catatan klinis yang memadai, modul ini memicu bendera peringatan upcoding.
+          </p>
+        </div>
+
+        <div class="panel-accent">
+          <div class="panel-title" style="color: #166534;">2. Modul Matriks Regulasi Unbundling</div>
+          <p class="panel-desc">
+            Mengevaluasi relasi temporal antar-prosedur yang ditagihkan dalam interval waktu tertentu. Memanfaatkan basis pengetahuan aturan pengelompokan INA-CBGs untuk mendeteksi tindakan yang seharusnya masuk dalam paket pelayanan yang sama.
+          </p>
+        </div>
+
+        <div class="panel-accent">
+          <div class="panel-title" style="color: #166534;">3. Modul Analisis Graf Transaksi</div>
+          <p class="panel-desc">
+            Menganalisis hubungan antara rumah sakit, dokter penanggung jawab pelayanan (DPJP), jenis tindakan, dan pola frekuensi klaim. Berguna untuk mendeteksi klaster penagihan tidak wajar seperti lonjakan klaim massal untuk prosedur tertentu (phantom billing).
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Tiga Modul Utama Deteksi Anomali Klaim</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 7: FITUR & XAI ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 3</span>
+        <span class="tag-sub">Fitur Utama dan Transparansi Penilaian</span>
+      </div>
+      <div class="slide-index">SLIDE 07 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Fitur Kunci: Penjelasan Logis bagi Verifikator (Explainable AI)</h2>
+      <p class="lead-text">
+        Sistem tidak hanya memberikan angka probabilitas risiko, tetapi menyajikan alasan klinis yang dapat langsung diuji kebenarannya oleh verifikator manusia.
+      </p>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-title">Tingkatan Skor Risiko Klaim (Risk Score 0-100)</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px;">
+            <div style="background: #f0fdf4; border-left: 4px solid #16a34a; padding: 12px; border-radius: 4px; font-size: 14px;">
+              <strong>Skor 0 - 30 (Kategori Hijau / Aman):</strong> Berkas klaim lengkap dan konsisten dengan catatan klinis. Dapat diteruskan ke persetujuan otomatis (fast-track).
+            </div>
+            <div style="background: #fefce8; border-left: 4px solid #ca8a04; padding: 12px; border-radius: 4px; font-size: 14px;">
+              <strong>Skor 31 - 70 (Kategori Kuning / Perlu Konfirmasi):</strong> Terdapat ketidaklengkapan dokumen atau diskrepansi minor yang membutuhkan pengecekan standar.
+            </div>
+            <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 12px; border-radius: 4px; font-size: 14px;">
+              <strong>Skor 71 - 100 (Kategori Merah / Anomali Tinggi):</strong> Indikasi kuat manipulasi data atau klaim fiktif. Diposisikan sebagai prioritas utama investigasi verifikator.
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="background: #ffffff; border: 1px solid #cbd5e1;">
+          <div class="panel-title">Contoh Rekam Bukti Verifikasi Klinis</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 6px; color: #1e293b; line-height: 1.6;">
+            [STATUS: Peringatan Anomali Upcoding]<br>
+            Kode Klaim: Sepsis Berat (A41.9) - Tarif Paket Rp 18.400.000<br>
+            Analisis Data Lab: Nilai leukosit 8.100/uL, suhu tubuh 36.8°C.<br>
+            Dokumen Penunjang: Tidak ditemukan hasil kultur darah positif.<br>
+            Rekomendasi Sistem: Tinjau kesesuaian terhadap kode Demam Bukan Akibat Infeksi Spesifik (R50.9) - Tarif Rp 4.200.000.<br>
+            Selisih Biaya: Rp 14.200.000
+          </div>
+          <p style="font-size: 13px; color: #64748b; margin-top: 10px;">
+            Verifikator menerima ringkasan perbandingan data objektif tanpa harus membaca keseluruhan lembar rekam medis dari awal.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Transparansi Penalaran Medis bagi Petugas BPJS</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 8: WORKFLOW ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 3</span>
+        <span class="tag-sub">Alur Kerja dan Integrasi Sistem</span>
+      </div>
+      <div class="slide-index">SLIDE 08 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Integrasi ke Sistem V-Claim Tanpa Mengubah Prosedur Rumah Sakit</h2>
+      <p class="lead-text">
+        Alur kerja verifikasi dirancang untuk melengkapi sistem informasi yang telah beroperasi di BPJS Kesehatan.
+      </p>
+
+      <div class="grid-4">
+        <div class="panel">
+          <div style="font-size: 24px; font-weight: 800; color: #00875a; margin-bottom: 8px;">1</div>
+          <div class="panel-title">Pengajuan Berkas</div>
+          <p class="panel-desc">
+            Rumah sakit mengunggah berkas klaim digital dan resume medis melalui portal V-Claim BPJS sesuai tata cara yang berlaku.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 24px; font-weight: 800; color: #00875a; margin-bottom: 8px;">2</div>
+          <div class="panel-title">Penapisan Cepat</div>
+          <p class="panel-desc">
+            Layanan API VeriKlaim memproses teks rekam medis, memeriksa matriks unbundling, dan menghitung skor risiko dalam 1.8 detik.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 24px; font-weight: 800; color: #00875a; margin-bottom: 8px;">3</div>
+          <div class="panel-title">Pemisahan Alur</div>
+          <p class="panel-desc">
+            Klaim tanpa anomali diteruskan ke antrean pembayaran cepat. Klaim berisiko diarahkan ke dasbor investigasi petugas.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 24px; font-weight: 800; color: #00875a; margin-bottom: 8px;">4</div>
+          <div class="panel-title">Keputusan Final</div>
+          <p class="panel-desc">
+            Verifikator BPJS meninjau bukti yang disorot, lalu menetapkan persetujuan, permintaan klarifikasi berkas, atau penolakan klaim.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel-accent" style="margin-top: 24px;">
+        <div class="panel-desc" style="color: #166534; font-weight: 600;">
+          Dampak pada Faskes Tertib: Rumah sakit yang mengirimkan klaim secara valid mendapatkan kepastian pencairan dana lebih cepat karena tidak lagi terhambat antrean verifikasi manual secara merata.
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Integrasi Alur Pra-Bayar Klaim Pelayanan Kesehatan</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 9: PENDEKATAN TEKNIS ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 4</span>
+        <span class="tag-sub">Pendekatan Teknis dan Arsitektur Data</span>
+      </div>
+      <div class="slide-index">SLIDE 09 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Spesifikasi Lapisan Teknologi Hulu ke Hilir</h2>
+      <p class="lead-text">
+        Arsitektur modular yang memisahkan pembersihan data, inferensi analitik, dan penyajian antarmuka pengguna.
+      </p>
+
+      <table class="data-grid">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Lapisan Sistem</th>
+            <th style="width: 45%;">Fungsi Teknis</th>
+            <th style="width: 30%;">Keluaran (Output)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Penyerapan dan Sanitasi Data</strong></td>
+            <td>Penerimaan berkas via REST API, ekstraksi teks dokumen resume medis, pemisahan elemen data pribadi (PII anonymization).</td>
+            <td>Data klinis terstruktur yang telah dide-identifikasi sesuai standar keamanan.</td>
+          </tr>
+          <tr>
+            <td><strong>2. Ekstraksi Entitas Klinis</strong></td>
+            <td>Clinical Named Entity Recognition (NER) untuk mengidentifikasi gejala, obat, riwayat tindakan, dan nilai uji laboratorium.</td>
+            <td>Matriks fitur klinis numerik dan representasi vektor dokumen.</td>
+          </tr>
+          <tr>
+            <td><strong>3. Mesin Klasifikasi Anomali</strong></td>
+            <td>
+              Pencocokan semantik kesesuaian diagnosis (Medical NLP), model Gradient Boosting untuk anomali tarif, dan analisis keterhubungan graf.
+            </td>
+            <td>Probabilitas anomali gabungan dan estimasi selisih biaya penagihan.</td>
+          </tr>
+          <tr>
+            <td><strong>4. Penyajian Keputusan (Service API)</strong></td>
+            <td>Layanan mikro FastAPI yang menghasilkan respon JSON terstruktur ke dasbor verifikator BPJS Kesehatan.</td>
+            <td>Sorotan bukti teks klinis, rujukan kode diagnosis, dan rekomendasi status.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Pipeline Rekayasa Data dan Model Analitik</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 10: PRIVASI DATA ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 4 dan 8</span>
+        <span class="tag-sub">Keamanan, Privasi, dan Kepatuhan Regulasi</span>
+      </div>
+      <div class="slide-index">SLIDE 10 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Kepatuhan UU PDP No. 27 Tahun 2022 dan Protokol Data Sintetis</h2>
+      <p class="lead-text">
+        Pengembangan solusi mematuhi larangan penggunaan data riil peserta JKN tanpa izin serta menerapkan prinsip privasi sejak perancangan.
+      </p>
+
+      <div class="grid-3">
+        <div class="panel">
+          <div class="panel-title">1. Penggunaan 100% Data Sintetis</div>
+          <p class="panel-desc">
+            Sesuai instruksi panitia Healthkathon, prototipe awal ini dikembangkan menggunakan data sintetis klinis yang meniru struktur resume medis dan transaksi klaim INA-CBGs. Tidak ada data pribadi peserta JKN nyata yang digunakan atau disimpan dalam server pengujian.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">2. Pemisahan Identitas dan Enkripsi</div>
+          <p class="panel-desc">
+            Pada perancangan lingkungan produksi, data identitas seperti NIK dan nomor kepesertaan dipisahkan dari riwayat klinis melalui mekanisme pseudonimisasi. Seluruh transmisi API dilindungi TLS 1.3 dan penyimpanan data terenkripsi standar AES-256.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">3. Pengendalian Akses Ketat (RBAC)</div>
+          <p class="panel-desc">
+            Akses ke dasbor verifikasi dibatasi berdasarkan peran pengguna (Role-Based Access Control). Setiap tindakan verifikator dan histori keputusan audit tercatat dalam log audit yang tidak dapat diubah guna menjaga akuntabilitas proses.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Standar Kepatuhan Hukum Perlindungan Data Pribadi</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 11: PROTOTYPE ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 5</span>
+        <span class="tag-sub">Tingkat Kematangan dan Hasil Pengujian</span>
+      </div>
+      <div class="slide-index">SLIDE 11 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Kesiapan Prototipe Fungsional (Early MVP)</h2>
+      <p class="lead-text">
+        Model telah diuji pada kumpulan data uji sintetis terstandar yang mereplikasi kasus klaim berisiko di rumah sakit.
+      </p>
+
+      <div class="grid-4" style="margin-bottom: 24px;">
+        <div class="stat-card">
+          <div class="stat-num">89.3%</div>
+          <div class="stat-label">F1-Score Deteksi Upcoding</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">93.8%</div>
+          <div class="stat-label">Akurasi Matriks Unbundling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">1.8 Detik</div>
+          <div class="stat-label">Rata-Rata Waktu Komputasi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num neutral">1.500 Kasus</div>
+          <div class="stat-label">Sampel Uji Terverifikasi</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-title">Hasil Pengujian Kinerja Model</div>
+          <p class="panel-desc">
+            Pengujian dilakukan pada skenario penyakit dalam, bedah umum, dan kardiovaskular. Model mampu mendeteksi ketiadaan bukti pendukung pada klaim dengan tingkat false positive di bawah 8.5%, menjaga agar klaim wajar tidak terganggu secara berlebihan.
+          </p>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Kesiapan Demonstrasi Langsung</div>
+          <p class="panel-desc">
+            Komponen API backend dan antarmuka penelaah berkas telah terhubung secara fungsional. Tim siap mendemonstrasikan proses pengunggahan berkas klaim, pemrosesan deteksi otomatis, dan penyajian bukti klinis secara langsung di hadapan dewan juri.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Hasil Pengujian Validasi Prototipe Awal</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 12: ROADMAP ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 6</span>
+        <span class="tag-sub">Rencana Kerja dan Kelayakan Implementasi</span>
+      </div>
+      <div class="slide-index">SLIDE 12 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Peta Jalan Pengembangan Menuju Grand Final</h2>
+      <p class="lead-text">
+        Rencana bertahap yang diselaraskan dengan jadwal resmi kegiatan BPJS Kesehatan Healthkathon 2026.
+      </p>
+
+      <div class="grid-4">
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #00875a; text-transform: uppercase;">Agustus - September 2026</div>
+          <div class="panel-title" style="margin-top: 6px;">Fase 1: Riset & Pemodelan</div>
+          <p class="panel-desc">
+            Penyusunan taksonomi kecurangan, pembuatan dataset sintetis 1.500 kasus, dan pelatihan model dasar NLP dan klasifikasi tabular.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #00875a; text-transform: uppercase;">Oktober 2026</div>
+          <div class="panel-title" style="margin-top: 6px;">Fase 2: Mentoring Coaching</div>
+          <p class="panel-desc">
+            Penyelarasan bobot anomali bersama mentor TI dan verifikator klinis BPJS Kesehatan serta penyempurnaan penjelasan XAI.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #00875a; text-transform: uppercase;">November 2026</div>
+          <div class="panel-title" style="margin-top: 6px;">Fase 3: Hackathon Event</div>
+          <p class="panel-desc">
+            Pengujian beban throughput, integrasi simulasi API V-Claim, dan penguatan antarmuka keputusan pengguna.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #00875a; text-transform: uppercase;">Desember 2026</div>
+          <div class="panel-title" style="margin-top: 6px;">Fase 4: Demo Day & Evaluasi</div>
+          <p class="panel-desc">
+            Presentasi langsung kepada dewan juri serta perumusan kerangka uji coba percontohan pada kantor cabang terpilih.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Rencana Pengembangan Berkelanjutan</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 13: DAMPAK & NILAI ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 7</span>
+        <span class="tag-sub">Dampak dan Nilai Terukur</span>
+      </div>
+      <div class="slide-index">SLIDE 13 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Estimasi Dampak Nyata terhadap Ekosistem Pembiayaan JKN</h2>
+      <p class="lead-text">
+        Perhitungan efisiensi risiko yang seimbang bagi pengelola jaminan, fasilitas pelayanan kesehatan, dan peserta.
+      </p>
+
+      <div class="grid-3">
+        <div class="panel-accent">
+          <div class="panel-title" style="color: #166534;">BPJS Kesehatan</div>
+          <p class="panel-desc">
+            <strong>Pengendalian Kebocoran Dana:</strong> Penapisan dini berpotensi menekan kerugian akibat klaim anomali sebesar 2% hingga 3% dari total alokasi risiko faskes.<br><br>
+            <strong>Efisiensi Jam Kerja:</strong> Memangkas waktu telaah dokumen manual verifikator hingga 60%, memungkinkan petugas memprioritaskan investigasi kasus kompleks.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Fasilitas Kesehatan Mitra</div>
+          <p class="panel-desc">
+            <strong>Kepastian Pembayaran:</strong> Berkas klaim rumah sakit yang tertib lolos verifikasi secara cepat tanpa tertahan antrean manual yang panjang.<br><br>
+            <strong>Mitigasi Risiko Hukum:</strong> Menjadi tolok ukur audit mandiri bagi tim koder RS untuk meminimalkan kekeliruan administrasi sebelum diajukan.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Peserta JKN dan Publik</div>
+          <p class="panel-desc">
+            <strong>Keberlanjutan Program:</strong> Dana amanat jaminan sosial terlindungi untuk membiayai perawatan pasien yang benar-benar membutuhkan.<br><br>
+            <strong>Kualitas Asuhan:</strong> Mengurangi dorongan tindakan medis berlebihan yang tidak sesuai indikasi klinis murni.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Manfaat bagi BPJS Kesehatan, Faskes, dan Peserta JKN</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 14: RISIKO & TATA KELOLA AI ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 8</span>
+        <span class="tag-sub">Etika dan Tata Kelola Keputusan</span>
+      </div>
+      <div class="slide-index">SLIDE 14 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Prinsip Human-in-the-Loop dan Mitigasi Bias</h2>
+      <p class="lead-text">
+        Menempatkan kecerdasan analitik sebagai alat bantu telaah yang bertanggung jawab, transparan, dan dapat diaudit.
+      </p>
+
+      <div class="grid-3">
+        <div class="panel">
+          <div class="panel-title">1. Tidak Ada Penolakan Otomatis</div>
+          <p class="panel-desc">
+            Sistem tidak memiliki kewenangan membatalkan atau menolak pembayaran klaim secara mandiri. Keputusan akhir sepenuhnya berada di tangan verifikator manusia setelah memeriksa bukti klinis yang ditampilkan.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">2. Kalibrasi Kelas dan Fasilitas RS</div>
+          <p class="panel-desc">
+            Model mempertimbangkan ketersediaan fasilitas penunjang di rumah sakit daerah terpencil (RS Kelas C/D) agar tidak salah menilai ketiadaan alat diagnostik canggih sebagai bentuk kelalaian atau manipulasi berkas.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">3. Matriks Aturan Adaptif</div>
+          <p class="panel-desc">
+            Parameter tarif dan batasan kode klinis dipisahkan dalam modul konfigurasi regulasi. Jika Kementerian Kesehatan menerbitkan pembaruan aturan INA-CBGs, parameter dapat diperbarui tanpa harus melatih ulang seluruh model.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Pengawasan Manusia dan Akuntabilitas Keputusan</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 15: PROFIL TIM ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Bagian 9</span>
+        <span class="tag-sub">Profil dan Kompetensi Tim</span>
+      </div>
+      <div class="slide-index">SLIDE 15 / 16</div>
+    </div>
+
+    <div class="slide-main">
+      <h2 class="section-heading">Komposisi Tim dan Pembagian Peran</h2>
+      <p class="lead-text">
+        Kombinasi keahlian analitik data klinis, rekayasa backend berlatensi rendah, serta pemahaman alur bisnis klaim kesehatan.
+      </p>
+
+      <div class="grid-3">
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #00875a; text-transform: uppercase;">Ketua Tim</div>
+          <div style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 4px;">Aditya Pratama, S.ST., M.T.</div>
+          <div style="font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 4px;">Team Lead & AI/Machine Learning Specialist</div>
+          <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">S1 & S2 STEI Institut Teknologi Bandung (ITB)</div>
+          <div style="font-size: 13px; color: #00875a; font-weight: 700; margin-bottom: 10px;">WhatsApp: 0856-5441-1081</div>
+          <p class="panel-desc">
+            Pakar kecerdasan buatan dan sistem pendukung keputusan lulusan S1 dan S2 STEI ITB. Penulis buku <em>Eksplorasi Machine Learning dengan Scikit-Learn</em> (2024), periset pemodelan prediktif kesehatan (Machine Learning Diabetes), serta ketua/peneliti program riset AI Kemendiktisaintek dan LPDP. Bertanggung jawab atas arsitektur model NLP klinis dan deteksi anomali graf.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #00875a; text-transform: uppercase;">Anggota Tim</div>
+          <div style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 4px;">Nurman Hariyanto, S.ST., M.T.</div>
+          <div style="font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 4px;">Backend, Cloud, & System Integration</div>
+          <div style="font-size: 13px; color: #64748b; margin-bottom: 10px;">S2 STEI ITB • S1 POLBAN • Udacity Cloud Dev</div>
+          <p class="panel-desc">
+            Peneliti sistem cerdas dan mantan Project Manager di PPTIK ITB & PT LSKK dengan pengalaman riset <em>Smart Healthcare System</em>, arsitektur cloud backend, microservices, pipeline throughput tinggi, serta pemenuhan standar enkripsi dan privasi data (UU PDP).
+          </p>
+        </div>
+
+        <div class="panel">
+          <div style="font-size: 13px; font-weight: 700; color: #00875a; text-transform: uppercase;">Anggota Tim</div>
+          <div style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 4px;">M. Ali Maulana</div>
+          <div style="font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 4px;">Hospital Workflow & Clinical Domain Specialist</div>
+          <div style="font-size: 13px; color: #64748b; margin-bottom: 10px;">Dosen Manajemen Keperawatan Universitas Tanjungpura (UNTAN)</div>
+          <p class="panel-desc">
+            Peneliti manajemen keperawatan dan sistem pelayanan rumah sakit di Universitas Tanjungpura. Memiliki rekam jejak riset dalam pengembangan aplikasi <em>Early Warning System</em> di RS Universitas Tanjungpura, analisis beban kerja asuhan keperawatan rawat inap, serta evaluasi alur rekam medis pasien guna memvalidasi logika kepatuhan klaim INA-CBGs dan perancangan antarmuka verifikator BPJS.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>VeriKlaim: Tim Pengusul Proposal Inovasi Digital</div>
+      <div>Healthkathon 2026</div>
+    </div>
+  </section>
+
+  <!-- ==================== SLIDE 16: PENUTUP & KOMITMEN ==================== -->
+  <section class="slide">
+    <div class="slide-header">
+      <div class="header-left">
+        <span class="tag-category">Penutup</span>
+        <span class="tag-sub">Komitmen Mengikuti Rangkaian Kegiatan</span>
+      </div>
+      <div class="slide-index">SLIDE 16 / 16</div>
+    </div>
+
+    <div class="slide-main" style="text-align: center; justify-content: center;">
+      <div style="font-size: 14px; font-weight: 700; color: #00875a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+        BPJS Kesehatan Healthkathon 2026
+      </div>
+      <h1 class="title-cover" style="font-size: 48px; margin-bottom: 16px;">
+        Komitmen Penuh Tim VeriKlaim
+      </h1>
+      <p style="font-size: 20px; color: #475569; max-width: 1200px; margin: 0 auto 32px; line-height: 1.5;">
+        Tim menyatakan kesiapan mengikuti seluruh rangkaian kegiatan kompetisi secara hybrid: mulai dari sesi pembekalan webinar, pendampingan teknis coaching, hackathon onsite, hingga presentasi Demo Day Grand Final di hadapan dewan juri BPJS Kesehatan dan Kementerian Kesehatan.
+      </p>
+
+      <div class="panel" style="max-width: 800px; margin: 0 auto; text-align: left; padding: 24px 32px; background: #ffffff;">
+        <div style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Saluran Kontak Resmi Ketua Tim:</div>
+        <div style="font-size: 15px; color: #334155; line-height: 1.8;">
+          • Nama Ketua Tim: <strong>Aditya Pratama</strong><br>
+          • WhatsApp / Kontak: <strong>0856-5441-1081</strong> (Terhubung WhatsApp Aktif)<br>
+          • Status Registrasi: Terdaftar pada portal resmi healthkathon.bpjs-kesehatan.go.id
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <div>Terima kasih kepada Dewan Juri Direktorat TI BPJS Kesehatan & Kementerian Kesehatan</div>
+      <div>Oktober 2026</div>
+    </div>
+  </section>
+
+</body>
+</html>

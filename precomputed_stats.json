@@ -1,0 +1,41 @@
+{
+  "total_claims": 10000,
+  "total_fraud": 1805,
+  "total_normal": 8195,
+  "fraud_rate_pct": 18.05,
+  "total_claim_amount": 75549000000,
+  "total_fraud_saved": 14340957729,
+  "type_counts": {
+    "NORMAL": 8195,
+    "UPCODING": 988,
+    "UNBUNDLING": 538,
+    "PHANTOM_BILLING": 279
+  },
+  "type_savings": {
+    "UPCODING": 10819037729,
+    "UNBUNDLING": 262620000,
+    "PHANTOM_BILLING": 3259300000
+  },
+  "rs_breakdown": {
+    "RS Tipe D": {
+      "total": 2005,
+      "fraud": 372,
+      "fraud_rate": 18.55
+    },
+    "RS Tipe B": {
+      "total": 2280,
+      "fraud": 401,
+      "fraud_rate": 17.59
+    },
+    "RS Tipe C": {
+      "total": 3046,
+      "fraud": 545,
+      "fraud_rate": 17.89
+    },
+    "RS Tipe A": {
+      "total": 2669,
+      "fraud": 487,
+      "fraud_rate": 18.25
+    }
+  }
+}
