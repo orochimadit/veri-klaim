@@ -7,15 +7,15 @@
 ---
 
 ## SUSUNAN ANGGOTA TIM INOVASI
-1. **Aditya Pratama, S.ST., M.T. (Ketua Tim)**  
+1. **Aditya Pratama, S.T., M.T. (Ketua Tim)**  
    *Peran:* Team Lead & AI/Machine Learning Specialist (WhatsApp: 0856-5441-1081)  
-   *Kredensial & Afiliasi:* Lulusan S1 dan S2 Sekolah Teknik Elektro dan Informatika (STEI), Institut Teknologi Bandung (ITB). Penulis buku *Eksplorasi Machine Learning dengan Scikit-Learn* (2024), ketua/peneliti program riset AI Kemendiktisaintek & LPDP, periset machine learning prediksi penyakit diabetes, serta penanggung jawab arsitektur model NLP klinis dan deteksi anomali graf.
+   *Kredensial & Afiliasi:* Dosen Program Studi Sistem Informasi, Universitas Nahdlatul Ulama Kalimantan Barat (UNU Kalbar) | Alumni S1 dan S2 Sekolah Teknik Elektro dan Informatika (STEI), Institut Teknologi Bandung (ITB). Penulis buku *Eksplorasi Machine Learning dengan Scikit-Learn* (2024), ketua/peneliti program riset AI Kemendiktisaintek & LPDP, periset machine learning prediksi penyakit diabetes, serta penanggung jawab arsitektur model NLP klinis dan deteksi anomali graf.
 2. **Nurman Hariyanto, S.ST., M.T. (Anggota Tim)**  
-   *Peran:* Backend, Cloud, & System Integration Engineer (S2 STEI ITB, S1 POLBAN, Udacity Cloud Developer)  
-   *Tanggung Jawab:* Peneliti sistem cerdas dan mantan Project Manager PPTIK ITB & PT LSKK, rekayasa pipeline data berlatensi rendah (< 2 detik/klaim), integrasi REST API V-Claim BPJS, arsitektur cloud microservices, serta enkripsi dan privasi data (UU PDP).
-3. **M. Ali Maulana (Anggota Tim)**  
-   *Peran:* Hospital Workflow & Clinical Domain Specialist (Dosen Manajemen Keperawatan, Universitas Tanjungpura)  
-   *Tanggung Jawab:* Peneliti manajemen keperawatan dan alur pelayanan rumah sakit, periset aplikasi *Early Warning System* di RS Universitas Tanjungpura, penanggung jawab validasi logika kepatuhan medis pada koding INA-CBGs & Permenkes No. 16/2019, serta perancangan antarmuka verifikator BPJS.
+   *Peran:* Backend, Cloud, & System Integration Engineer  
+   *Kredensial & Afiliasi:* Dosen Program Studi Sistem Informasi, Universitas Nahdlatul Ulama Kalimantan Barat (UNU Kalbar) | Alumni S2 STEI ITB, S1 POLBAN, Udacity Cloud Developer. Peneliti sistem cerdas dan mantan Project Manager PPTIK ITB & PT LSKK, rekayasa pipeline data berlatensi rendah (< 2 detik/klaim), integrasi REST API V-Claim BPJS, arsitektur cloud microservices, serta enkripsi dan privasi data (UU PDP).
+3. **M. Ali Maulana, M.Kep. (Anggota Tim)**  
+   *Peran:* Hospital Workflow & Clinical Domain Specialist  
+   *Kredensial & Afiliasi:* Dosen Program Studi Keperawatan, Fakultas Kedokteran, Universitas Tanjungpura (UNTAN). Peneliti manajemen keperawatan dan alur pelayanan rumah sakit, periset aplikasi *Early Warning System* di RS Universitas Tanjungpura, penanggung jawab validasi logika kepatuhan medis pada koding INA-CBGs & Permenkes No. 16/2019, serta perancangan antarmuka verifikator BPJS.
 
 ---
 

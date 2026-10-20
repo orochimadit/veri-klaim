@@ -16,7 +16,7 @@ CSV_SYNTH_PATH = os.path.join(BASE_DIR, "dataset_sample_fkrtl_bpjs.csv")
 CSV_REAL_PATH = os.path.join(BASE_DIR, "real_fkrtl_sample_50k.csv")
 STATS_PATH = os.path.join(BASE_DIR, "precomputed_stats.json")
 REAL_STATS_PATH = os.path.join(BASE_DIR, "real_veriklaim_stats.json")
-PDF_REPORT_PATH = os.path.join(BASE_DIR, "Laporan_Resmi_Audit_VeriKlaim_BPJS.pdf")
+PDF_REPORT_PATH = os.path.join(BASE_DIR, "Laporan_Hasil_Audit_VeriKlaim.pdf")
 
 # Initialize Engine
 engine = VeriKlaimEngine()
@@ -145,7 +145,7 @@ def export_pdf():
     return FileResponse(
         pdf_path,
         media_type="application/pdf",
-        filename="Laporan_Resmi_Audit_VeriKlaim_BPJS.pdf"
+        filename="Laporan_Hasil_Audit_VeriKlaim.pdf"
     )
 
 DASHBOARD_HTML_PATH = os.path.join(BASE_DIR, "dashboard.html")

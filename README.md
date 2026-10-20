@@ -217,16 +217,18 @@ veri-klaim/
 
 * **Aditya Pratama, S.T., M.T.**  
   Ketua Tim / Lead AI & Arsitektur Sistem  
-  Magister Teknik Elektro (Teknologi Informasi), STEI Institut Teknologi Bandung (ITB)  
+  Dosen Program Studi Sistem Informasi, Universitas Nahdlatul Ulama Kalimantan Barat (UNU Kalbar)  
+  Alumni Magister Teknik Elektro (Teknologi Informasi), STEI Institut Teknologi Bandung (ITB)  
   Kontak: 0856-5441-1081
 
 * **Nurman Hariyanto, S.ST., M.T.**  
   Lead Rekayasa Data & Infrastruktur  
-  Teknik Media Digital dan Game, STEI Institut Teknologi Bandung (ITB) / Politeknik Negeri Bandung
+  Dosen Program Studi Sistem Informasi, Universitas Nahdlatul Ulama Kalimantan Barat (UNU Kalbar)  
+  Alumni Magister Teknik Media Digital dan Game, STEI Institut Teknologi Bandung (ITB) / Politeknik Negeri Bandung
 
 * **M. Ali Maulana, M.Kep.**  
   Lead Domain Klinis & Kepatuhan Layanan Kesehatan  
-  Fakultas Kedokteran / Manajemen Keperawatan, Universitas Tanjungpura (UNTAN)
+  Dosen Program Studi Keperawatan, Fakultas Kedokteran, Universitas Tanjungpura (UNTAN)
 
 ---
 

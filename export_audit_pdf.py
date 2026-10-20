@@ -219,7 +219,7 @@ def generate_audit_report_pdf(output_path: str = None, stats: dict = None, flagg
     sig_data = [
         [
             Paragraph("<b>Diverifikasi Oleh Engine:</b><br/>VeriKlaim AI Platform v1.2<br/>Healthkathon BPJS Kesehatan 2026", body_style),
-            Paragraph("<b>Tim Pengusul Inovasi:</b><br/>• Aditya Pratama, S.T., M.T. (Lead AI / STEI ITB)<br/>• Nurman Hariyanto, S.ST., M.T. (IoT / Data Lead)<br/>• M. Ali Maulana, M.Kep. (Clinical Domain Lead / UNTAN)", body_style)
+            Paragraph("<b>Tim Pengusul Inovasi:</b><br/>• Aditya Pratama, S.T., M.T. (Dosen Sistem Informasi UNU Kalbar / Alumni ITB)<br/>• Nurman Hariyanto, S.ST., M.T. (Dosen Sistem Informasi UNU Kalbar / Alumni ITB)<br/>• M. Ali Maulana, M.Kep. (Dosen Keperawatan FK UNTAN)", body_style)
         ]
     ]
     sig_table = Table(sig_data, colWidths=[260, 260])
