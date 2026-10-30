@@ -1,8 +1,10 @@
-# Environments
+# Environments & Secrets
 .venv/
 env/
 venv/
 ENV/
+.env
+.env.*
 
 # Python cache
 __pycache__/
@@ -15,12 +17,23 @@ __pycache__/
 Thumbs.db
 desktop.ini
 
+# Templates and UI reference directories
+tailwindadmin-*/
+template*/
+fitur/
+
+# Internal task specs, color palettes, and changelog markdown (keep only README.md)
+CHANGELOG.md
+palet_warna_*.md
+spesifikasi_*.md
+
 # Large raw BPJS Datasets & Archives (> 100MB exceeds GitHub limit)
+Data sampel 2015-2024 /
 Data sampel 2015-2024 (1)/
 *.dta
 *.zip
 
-# Internal / Personal CV files & Event Guides
+# Internal / Personal CV files, Event Guides, and Reference Documents
 CV-*.pdf
 *Riwayat Hidup*.pdf
 Panduan*.pdf
@@ -28,6 +41,7 @@ Participant*.pdf
 Proposal_Healthkathon_2026_VeriKlaim.pdf
 Proposal_Healthkathon_2026_VeriKlaim_AI.pdf
 Proposal_Healthkathon_2026_VeriKlaim_Final.pdf
+Laporan_Rencana_Peningkatan_Model_VeriKlaim.pdf
 
 # Temporary scripts
 homedataset.html

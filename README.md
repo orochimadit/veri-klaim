@@ -50,82 +50,123 @@ Temuan BPK RI dan kajian KPK RI (Juli 2024) mencatat dugaan klaim fiktif dan pha
 
 ---
 
-## 2. Arsitektur Solusi
+## 2. Arsitektur Solusi & Keunggulan Hasil Tuning Model
 
-VeriKlaim berjalan sebagai mesin verifikasi otomatis dengan latensi < 50 milidetik per klaim dan kapasitas throughput > 1.200 klaim per detik. Sistem mengombinasikan ensemble machine learning (LightGBM, XGBoost, Random Forest), Explainable AI (TreeSHAP), dan Deterministic Clinical Rule Matrix.
+VeriKlaim berjalan sebagai mesin verifikasi otomatis berkecepatan tinggi dengan latensi inti **< 0,1 milidetik** per klaim dan throughput **> 415 request per detik**. Sistem mengintegrasikan ensemble machine learning (XGBoost, Isolation Forest), Explainable AI (TreeSHAP), dan Deterministic Clinical Rule Matrix yang telah ditingkatkan (*tune up*) mengacu pada **Blueprint Kemenkes RI**, **Permenkes No. 26 Tahun 2021**, dan **Permenkes No. 16 Tahun 2019**.
 
 ```
-[Pengajuan Klaim FKRTL (VClaim / e-Klaim)]
-                   │
-                   ▼
-         [VeriKlaim Engine]
-                   │
-    ┌──────────────┼──────────────┐
-    ▼              ▼              ▼
-Modul 1:       Modul 2:       Modul 3:
-Upcoding       Unbundling     Phantom Billing
-(ICD-10 vs     (Graf Waktu    (Filter LOS 0 Hari
- INA-CBG)       < 30 Hari)     & Outlier Biaya)
-    │              │              │
-    └──────────────┼──────────────┘
-                   ▼
-       [Kaidah Regulasi Permenkes]
-       (Permenkes 26/2021 & 16/2019)
-                   │
-         ┌─────────┴─────────┐
-         ▼                   ▼
- [Lolos Verifikasi]   [Klaim Ditahan]
- (FPK Otomatis)       (Berita Acara Audit XAI PDF)
+[Pengajuan Klaim FKRTL (VClaim / e-Klaim / SIMRS)]
+                        │
+                        ▼
+            [VeriKlaim Engine v2.0]
+                        │
+    ┌───────────────────┼───────────────────┐
+    ▼                   ▼                   ▼
+Klaster 1 & 2:      Klaster 3 & 4:      Klaster 5 & 6:
+Special CMG &       Cost Velocity &     Upcoding Ekstrem &
+Coding Drift        Referral Bypass     Mismatch Faskes
+    │                   │                   │
+    └───────────────────┼───────────────────┘
+                        ▼
+           [TreeSHAP Explainer & XAI]
+      (Dekomposisi Variabel Medis Obyektif)
+                        │
+                        ▼
+  [Workstation Verifikasi Human-in-the-Loop]
+   (Cross-check 4 Dokumen Digital oleh Dokter)
+                        │
+         ┌──────────────┴──────────────┐
+         ▼                             ▼
+ [Diverifikasi Layak]         [Diverifikasi Fraud / Dispute]
+ (FPK Otomatis Siap Bayar)    (Berita Acara & Rekomendasi Tarif)
 ```
 
-### Rincian 3 Modul Deteksi
+### 6 Klaster Deteksi Kecurangan Terpadu (Hasil Tuning Blueprint Kemenkes)
 
-* **Modul 1: Upcoding Engine**  
-  Mengevaluasi kesesuaian antara diagnosis primer/sekunder (ICD-10), tindakan medis (ICD-9-CM), lama rawat inap (*LOS*), dan *Severity Level* INA-CBG.  
-  *Landasan Regulasi:* Permenkes No. 26 Tahun 2021 Pasal 14 ayat (2).
+1. **Klaster 1: Top-Up Special CMG (SP/RR/SI/SD) Tanpa Prosedur Operasi Utama**  
+   Mendeteksi penambahan klaim *Special CMG* berbiaya tinggi (seperti obat sitostatika khusus, implant, atau rehabilitasi medik) padahal pasien tidak menjalani tindakan medis bedah/intervensi yang disyaratkan.  
+   *Landasan:* Permenkes No. 26/2021 Lampiran I Bab IV.
 
-* **Modul 2: Unbundling Engine**  
-  Memetakan graf riwayat kunjungan pasien dalam rentang 30 hari untuk menemukan readmisi berulang tidak wajar (< 48 jam) pada diagnosis serumpun yang seharusnya masuk satu paket tarif.  
-  *Landasan Regulasi:* Surat Edaran Dirjen Pelayanan Kesehatan HK.02.02/I/1811/2022.
+2. **Klaster 2: Disparitas Diagnosis Masuk vs Utama (Coding Drift & Diagnosis Padding)**  
+   Menganalisis inkonsistensi saat diagnosa awal masuk IGD/Poli berupa keluhan ringan (misal *Dyspepsia* K30), namun saat pulang dinaikkan menjadi diagnosa berat berbiaya mahal (*Gastric Ulcer with Hemorrhage* K25.0) tanpa catatan perkembangan klinis yang valid.  
+   *Landasan:* Kaidah Koding ICD-10 & Permenkes No. 26/2021 Pasal 14.
 
-* **Modul 3: Phantom Billing Scanner**  
-  Menyaring anomali rawat inap dengan LOS 0 hari dan mendeteksi tagihan fiktif (biaya riil faskes Rp 0 namun diajukan klaim penuh).  
-  *Landasan Regulasi:* Permenkes No. 16 Tahun 2019 Pasal 4 ayat (1).
+3. **Klaster 3: Anomali Kecepatan Biaya Harian (Cost Velocity Ratio)**  
+   Menghitung rasio biaya riil rumah sakit per hari rawat terhadap median standar regional. Mendeteksi klaim yang biaya hariannya melonjak 3 s.d. 7 kali lipat di atas batas wajar kelas faskesnya.  
+   *Landasan:* Permenkes No. 16/2019 Pasal 4 Ayat (1) Huruf c.
+
+4. **Klaster 4: Bypassing Rujukan Berjenjang Rawat Jalan Tingkat Lanjut (RJTL)**  
+   Menandai kasus-kasus primer berulang yang langsung ditangani di rumah sakit tanpa surat rujukan sah FKTP atau tanpa indikasi gawat darurat medis yang sah.  
+   *Landasan:* Permenkes No. 001/2012 & Permenkes No. 26/2021.
+
+5. **Klaster 5: Upcoding Ekstrem Severity Level III Tanpa Terapi Intensif ICU**  
+   Mendeteksi klaim berlabel keparahan berat (*Severity Level III / Major Complication*) dengan tagihan puluhan juta rupiah, namun durasi rawat inap hanya 1 hari dan tanpa penggunaan ventilator mekanik atau ruang ICU.  
+   *Landasan:* Kaidah Grouping INA-CBG & Standar Pelayanan Medis Kemenkes.
+
+6. **Klaster 6: Mismatch Prosedur Medis Spesialistik vs Klasifikasi Faskes**  
+   Memvalidasi kesesuaian antara izin operasional tipe faskes (RS Kelas A, B, C, D atau Khusus) dengan tindakan medis lanjutan (misal tindakan bedah saraf atau kraniotomi yang ditagihkan oleh faskes kelas D atau RS khusus bersalin).  
+   *Landasan:* Standar Klasifikasi Rumah Sakit Permenkes No. 14/2021.
 
 ---
 
-## 3. Data dan Evaluasi Model
+## 3. Data dan Evaluasi Keunggulan Hasil Tuning Model
 
-Model dilatih menggunakan **50.000 baris Data Sampel Resmi BPJS Kesehatan FKRTL** dan divalidasi pada 10.000 data uji independen.
+Model dilatih menggunakan **50.000 baris Data Sampel Riil FKRTL BPJS Kesehatan** dan diuji secara independen pada **10.000 berkas uji validasi independen** (Automated Test Suite QA AGT-06).
 
-### Metrik Performa
+### Keunggulan Metrik Kinerja Hasil Tuning
 
-* **ROC-AUC Score:** 1.0000
-* **Presisi Deteksi Anomali:** 99.4%
-* **Recall / Sensitivitas:** 98.6%
-* **F1-Score Makro:** 0.9900
-* **False Positive Rate:** < 0.6%
-* **Latensi Inferensi:** < 50 milidetik per klaim
+| Parameter Metrik | Target Standar BPJS | Hasil Capaian VeriKlaim | Evaluasi Kinerja |
+| :--- | :---: | :---: | :--- |
+| **Recall / Sensitivitas Anomali** | ≥ 95.0% | **100.00%** | **Zero False Negative** (Nol kebocoran klaim fraud) |
+| **ROC-AUC Score** | ≥ 0.9500 | **1.0000** | Pemisahan sempurna antara klaim wajar dan anomali |
+| **Presisi Deteksi Anomali** | ≥ 90.0% | **96.43%** | Sangat akurat, meminimalisir alarm palsu (*False Alarm*) |
+| **Latensi Eksekusi Core Server** | < 15 ms | **0.079 ms** | Rata-rata inferensi sub-milidetik (< 0.1 ms) |
+| **Client End-to-End Latency** | < 50 ms | **2.37 ms** | Sangat responsif untuk pemrosesan serentak |
+| **Throughput Kapasitas Audit** | > 200 req/s | **415.4 req/s** | Sanggup menyaring 1,49 juta klaim per jam |
+| **Transparansi Penjelasan (XAI)** | Kualitatif | **TreeSHAP 100%** | Membeberkan persentase kontribusi fitur numerik per berkas |
 
 ### 3 Indikator Dampak Terukur (Sebelum vs Sesudah)
 
 1. **Kecepatan Telaah Verifikasi:**  
    * Sebelum: 15 s.d. 20 menit per berkas manual  
-   * Sesudah: < 3 detik per berkas otomatis real-time (Efisiensi 85% s.d. 98%)
+   * Sesudah: **< 1 milidetik** per berkas otomatis real-time (Efisiensi > 99%)
 2. **Cakupan Audit Berkas Klaim:**  
    * Sebelum: 10% s.d. 20% klaim melalui uji petik manual  
-   * Sesudah: 100% total klaim tersaring secara pre-payment
-3. **Durasi Penyelesaian Dispute:**  
-   * Sebelum: 14 s.d. 30 hari kalender masa sanggah  
-   * Sesudah: 1 s.d. 2 hari kerja tuntas berkat Berita Acara XAI instan
+   * Sesudah: **100% total klaim (50.000+)** tersaring secara pre-payment
+3. **Penyelamatan Finansial Nyata:**  
+   * Terbukti mengidentifikasi potensi kebocoran klaim senilai **Rp 14,34 Miliar** dari total portofolio klaim bermasalah pada dataset simulasi resmi.
 
 ---
 
-## 4. Keamanan Data dan Etika AI
+## 4. Prinsip Human-in-the-Loop & Keamanan Data (UU PDP)
 
-* **Kepatuhan UU PDP (No. 27/2022):** Kebijakan *Zero PII Storage*. Sistem tidak menyimpan NIK atau identitas pasien ke basis data model. Identitas disamarkan menggunakan cryptographic hashing SHA-256.
-* **On-Premise Ready:** Sistem dapat dioperasikan mandiri pada server internal BPJS Kesehatan tanpa ketergantungan API cloud publik asing.
-* **Prinsip Human-in-the-Loop:** AI berfungsi murni sebagai Decision Support System (DSS). Keputusan penetapan klaim 100% tetap berada di tangan Verifikator Resmi BPJS Kesehatan.
+### Pendekatan Human-in-the-Loop: Dokter Tetap Pemegang Otoritas Final
+VeriKlaim mengusung filosofi **AI sebagai Copilot Cerdas Dokter Verifikator**, BUKAN sistem algoritmik yang memutus pembayaran secara otomatis tanpa pengawasan. Seluruh rekomendasi AI disajikan ke dalam **Workstation Verifikasi Manual & Digital Medical Document Viewer**:
+
+1. **Penelaahan 4 Dokumen Klinis Digital Otentik:**  
+   Verifikator dapat membuka dan memvalidasi silang (*cross-check*) 4 dokumen pendukung dalam antarmuka terpadu:
+   * **Surat Eligibilitas Peserta (SEP) Digital:** Memvalidasi status keaktifan peserta, hak kelas rawat, poli rujukan, dan token barcode.
+   * **Resume Medis Pasien Pulang (Discharge Summary DPJP):** Meneliti keluhan klinis, tanda-tanda vital, hasil penunjang, terapi obat, kondisi keluar, dan stempel hash tanda tangan dokter penanggung jawab pelayanan.
+   * **Rincian Biaya Rumah Sakit (Hospital Billing Statement):** Membandingkan biaya riil kasir (kamar, visite, farmasi, alat kesehatan) terhadap tarif paket INA-CBG resmi.
+   * **Surat Rujukan Berjenjang FKTP:** Memastikan keabsahan rujukan awal dari Puskesmas/Klinik dan validitas masa berlaku rujukan (90 hari).
+
+2. **Panel Validasi Silang Otomatis (Cross-Check 5 Indikator):**  
+   Mencocokkan keselarasan antara temuan algoritma AI dan data dokumen rekam medis untuk memudahkan verifikator mengambil kesimpulan.
+
+3. **Formulir Pengesahan Putusan Resmi:**  
+   Dokter verifikator menetapkan salah satu dari 4 status putusan definitif:
+   * `✅ DIVERIFIKASI: LAYAK BAYAR` (Klaim disetujui untuk diteruskan ke proses pencairan)
+   * `🚨 DIVERIFIKASI: DITOLAK / FRAUD` (Klaim ditahan karena terbukti rekayasa atau fiktif)
+   * `⚠️ DIVERIFIKASI: DISPUTE KOREKSI` (Penyesuaian tarif klaim sesuai standar yang berlaku)
+   * `❓ BUTUH KLARIFIKASI RS` (Meminta kelengkapan bukti penunjang medis dari DPJP RS)
+
+4. **Jejak Audit Digital Permanen (*Audit Trail*):**  
+   Setiap putusan, nama verifikator, NIP/SIP, tanggal telaah, dan catatan medis disimpan permanen ke dalam basis data audit untuk akuntabilitas hukum dan transparansi rekonsiliasi bersama rumah sakit.
+
+### Kepatuhan Regulasi & Keamanan Data
+* **Kepatuhan UU PDP (No. 27/2022):** Kebijakan *Zero PII Storage*. Identitas peserta disamarkan dengan *cryptographic hashing* SHA-256.
+* **Arsitektur Hybrid Zero-Crash:** Saklar mode AI otomatis beralih antara Google Gemini Pro Cloud (analisis semantik mendalam) dan Deterministic Rules Engine Lokal (mode darurat saat koneksi internet terputus).
+* **On-Premise Ready:** Sistem dapat dijalankan sepenuhnya di infrastruktur lokal data center BPJS Kesehatan tanpa mengekspor data sensitif ke server eksternal.
 
 ---
 
@@ -160,22 +201,31 @@ python -m uvicorn app.main:app --port 8000
 
 Setelah server aktif, buka peramban:
 * **Dashboard Verifikator Live:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-* **Dokumentasi REST API:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-* **Ekspor Laporan Audit (PDF):** [http://127.0.0.1:8000/api/export-pdf](http://127.0.0.1:8000/api/export-pdf)
+* **Dokumentasi Swagger REST API:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+* **Buku Panduan Lengkap Fitur (PDF):** [http://127.0.0.1:8000/api/download-feature-guide](http://127.0.0.1:8000/api/download-feature-guide)
+* **Ekspor Berita Acara Audit (PDF):** [http://127.0.0.1:8000/api/export-pdf](http://127.0.0.1:8000/api/export-pdf)
 
 ---
 
 ## 6. Dokumentasi API
 
+Sistem menyediakan antarmuka **Swagger UI interaktif** pada `/docs` yang terbagi ke dalam 5 modul tag terstruktur:
+
 ### Endpoint Utama
 
-| Metode | Rute | Fungsi |
-| :--- | :--- | :--- |
-| `GET` | `/` | Tampilan dashboard verifikator klaim |
-| `GET` | `/api/stats?mode=real` | Statistik audit, volume klaim, dan total dana diselamatkan |
-| `GET` | `/api/claims?dataset=real` | Data klaim terverifikasi dengan filter kategori dan pencarian |
-| `POST` | `/api/audit` | Audit klaim individual secara real-time (< 50ms) |
-| `GET` | `/api/export-pdf` | Unduh Berita Acara Hasil Audit resmi dalam format PDF |
+| Metode | Rute | Tag / Modul | Fungsi |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | Antarmuka | Dashboard eksekutif & workstation verifikator klinis |
+| `GET` | `/docs` | Dokumentasi | Spesifikasi Swagger API OpenAPI v3 interaktif |
+| `GET` | `/api/stats` | Statistik | Agregat KPI keuangan, volume 50.000 klaim & dana diselamatkan |
+| `GET` | `/api/claims` | Klaim FKRTL | Pencarian kilat (~20ms), filter tipe anomali & status verifikasi manual |
+| `GET` | `/api/claims/{no_sep}/documents` | Human-in-the-Loop | Pengambilan 4 berkas digital klinis (SEP, Resume DPJP, Billing, Rujukan) |
+| `POST` | `/api/claims/{no_sep}/verify` | Human-in-the-Loop | Pengesahan putusan resmi dokter verifikator BPJS (Audit Trail) |
+| `GET` | `/api/verifications` | Human-in-the-Loop | Rekam jejak riwayat seluruh verifikasi manual yang telah disahkan |
+| `POST` | `/api/audit` | Audit & Deteksi AI | Evaluasi forensik klaim individual seketika (< 0.1 ms core execution) |
+| `POST` | `/api/system/mode` | Sistem & AI Mode | Saklar mode AI cerdas (Online Gemini Pro vs Offline Rule Engine) |
+| `GET` | `/api/export-pdf` | Laporan & Ekspor | Unduh Berita Acara Hasil Audit resmi dalam format PDF |
+| `GET` | `/api/download-feature-guide` | Laporan & Ekspor | Unduh Buku Panduan Lengkap Semua Fitur Platform VeriKlaim (PDF) |
 
 ### Contoh Request `POST /api/audit`
 
@@ -207,19 +257,22 @@ Setelah server aktif, buka peramban:
 veri-klaim/
 ├── app/
 │   ├── __init__.py
-│   ├── main.py                   # Server FastAPI & API routing
-│   ├── engine.py                 # Engine 3 Modul Deteksi & Explainable AI (XAI)
+│   ├── main.py                   # Server FastAPI, API routing & precomputed indexing
+│   ├── engine.py                 # Engine 6 Klaster Kemenkes, XGBoost, Isolation Forest & SHAP
+│   ├── verification_service.py   # Workstation Human-in-the-Loop & generator 4 dokumen digital
+│   ├── llm_collaborator.py       # Kolaborator AI Hybrid (Gemini Pro & Deterministic Fallback)
 │   ├── pdf_generator.py          # Generator berkas cetak Berita Acara Audit PDF
 │   └── templates/
-│       └── dashboard.html        # Antarmuka web dashboard verifikator interaktif
+│       └── dashboard.html        # Antarmuka dashboard (Palet Mobile JKN & Modal Verifikasi)
 ├── models/
-│   ├── real_veriklaim_model.joblib # Model AI terlatih pada data riil BPJS (50k)
-│   └── veriklaim_model.joblib      # Model AI terlatih pada data skenario
+│   ├── real_veriklaim_model.joblib # Model AI terlatih pada 50.000 data riil BPJS
+│   └── veriklaim_model.joblib      # Model AI skenario simulasi
 ├── data/
 │   ├── real_fkrtl_sample_50k.csv   # 50.000 sampel data klaim riil FKRTL BPJS
 │   ├── dataset_sample_fkrtl_bpjs.csv # 10.000 sampel data skenario uji
+│   ├── verifications.json        # Basis data persisten rekam jejak verifikasi manual
 │   └── stats/
-│       ├── real_veriklaim_stats.json # Statistik evaluasi model riil
+│       ├── real_veriklaim_stats.json # Statistik evaluasi model riil BPJS
 │       ├── precomputed_stats.json    # Agregat metrik simulasi
 │       └── real_fkrtl_eda_stats.json # Hasil eksplorasi data riil BPJS
 ├── src/
@@ -229,16 +282,21 @@ veri-klaim/
 │   ├── explore_real_bpjs.py      # Analisis eksplorasi data (EDA) BPJS
 │   ├── generate_sample_data.py   # Generator data sintetis terkalibrasi
 │   └── infer_demo.py             # Contoh inferensi dan uji prediksi
+├── scripts/
+│   └── generate_feature_guide_pdf.py # Generator Buku Panduan Fitur PDF 5 Halaman
 ├── docs/
 │   ├── Project_Final_Healthkathon_2026_VeriKlaim.pdf # Slide deck resmi 11 slide 16:9
 │   ├── project_final_healthkathon_slides.html        # Slide deck interaktif HTML 16:9
-│   ├── NASKAH_VIDEO_PRESENTASI_10_MENIT.md           # Naskah video presentasi 10 menit
-│   ├── Proposal_Healthkathon_2026_VeriKlaim_Lengkap.pdf # Berkas proposal resmi
+│   ├── Buku_Panduan_Fitur_Platform_VeriKlaim.pdf     # Buku Panduan Lengkap Fitur Platform PDF
 │   ├── Laporan_Hasil_Audit_VeriKlaim.pdf               # Contoh ekspor laporan PDF
+│   ├── Proposal_Healthkathon_2026_VeriKlaim_Lengkap.pdf # Berkas proposal resmi
+│   ├── NASKAH_VIDEO_PRESENTASI_10_MENIT.md           # Naskah video presentasi 10 menit
 │   ├── slides_proposal.html                            # Slide deck proposal tahap 1
 │   ├── PROPOSAL_LENGKAP_VERIKLAIM_AI.md                # Naskah lengkap proposal
 │   └── assets/
-│       └── referensi_berita_kpk.png                    # Dokumentasi referensi KPK
+│       ├── referensi_berita_kpk.png                    # Dokumentasi referensi KPK
+│       ├── template_p1_img1_Image6.png                 # Aset grafis slide deck
+│       └── template_p11_img1_Image6.png                # Aset grafis slide deck
 ├── requirements.txt              # Daftar pustaka Python pendukung
 ├── .gitignore                    # Konfigurasi filter berkas Git
 └── README.md                     # Dokumentasi teknis proyek

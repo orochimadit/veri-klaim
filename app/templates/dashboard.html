@@ -1,467 +1,1459 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VeriKlaim — Platform Deteksi Kecurangan Klaim FKRTL BPJS Kesehatan</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- Google Fonts: Plus Jakarta Sans & DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Icons: Tabler Icons, Solar Icons (Iconify), and FontAwesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+
+  <!-- Tailwind CSS Play CDN with JKN Official Palette -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            jkn: {
+              green: '#008D4C',
+              'green-dark': '#00733E',
+              'green-light': '#E8F8F0',
+              blue: '#0B4F6C',
+              'blue-light': '#EBF3F6',
+              success: '#27AE60',
+              warning: '#F39C12',
+              danger: '#D32F2F',
+              info: '#2980B9',
+              bg: '#F5F7FA',
+              card: '#FFFFFF',
+              text: '#1F2937',
+              muted: '#6B7280',
+              border: '#E5E7EB',
+            },
+            brand: {
+              DEFAULT: '#008D4C',
+              dark: '#00733E',
+              navy: '#0B4F6C',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          boxShadow: {
+            'card': '0 1px 3px 0 rgba(11, 79, 108, 0.04), 0 1px 2px -1px rgba(11, 79, 108, 0.04)',
+            'card-hover': '0 10px 25px -5px rgba(11, 79, 108, 0.08), 0 8px 10px -6px rgba(11, 79, 108, 0.04)',
+            'brand-glow': '0 0 20px rgba(0, 141, 76, 0.3)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     :root {
-      --bpjs-green: #009639;
-      --bpjs-dark: #0a2540;
-      --bpjs-navy: #0f172a;
-      --bpjs-accent: #10b981;
-      --bpjs-danger: #ef4444;
-      --bpjs-warning: #f59e0b;
+      --jkn-green-primary: #008D4C;
+      --jkn-green-dark: #00733E;
+      --jkn-blue-secondary: #0B4F6C;
+      --jkn-status-success: #27AE60;
+      --jkn-status-warning: #F39C12;
+      --jkn-status-danger: #D32F2F;
+      --jkn-status-info: #2980B9;
+      --jkn-bg-base: #F5F7FA;
+      --jkn-surface-card: #FFFFFF;
+      --jkn-text-primary: #1F2937;
+      --jkn-text-secondary: #6B7280;
+      --jkn-border-subtle: #E5E7EB;
     }
     body {
-      background-color: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: #334155;
+      background-color: var(--jkn-bg-base);
+      color: var(--jkn-text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    .navbar-bpjs {
-      background: linear-gradient(135deg, #0a2540 0%, #0f172a 100%);
-      border-bottom: 3px solid var(--bpjs-green);
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
     }
-    .card-kpi {
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      background: #ffffff;
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
     }
-    .card-kpi:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
     }
-    .kpi-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
     }
-    .badge-fraud-upcoding { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-    .badge-fraud-unbundling { background-color: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
-    .badge-fraud-phantom { background-color: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; }
-    .badge-fraud-dispute { background-color: #fef2f2; color: #991b1b; border: 1px solid #f87171; }
-    .badge-normal { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-    .table th {
-      background-color: #f1f5f9;
-      color: #475569;
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .nav-pills .nav-link.active {
-      background-color: var(--bpjs-green);
-    }
-    .nav-pills .nav-link {
-      color: #475569;
-      font-weight: 500;
-    }
-    .module-card {
-      background-color: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 14px;
+    .sidebar-active {
+      background: linear-gradient(135deg, rgba(0, 141, 76, 0.12) 0%, rgba(11, 79, 108, 0.08) 100%);
+      color: var(--jkn-green-primary) !important;
+      font-weight: 700;
+      border-left: 4px solid var(--jkn-green-primary);
     }
   </style>
 </head>
-<body>
 
-  <!-- Top Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark navbar-bpjs py-3">
-    <div class="container-fluid px-4">
-      <div class="d-flex align-items-center">
-        <div class="bg-success text-white rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-          <i class="fa-solid fa-shield-heart fa-xl"></i>
-        </div>
-        <div>
-          <h5 class="text-white mb-0 fw-bold">VeriKlaim <span class="badge bg-success ms-2 font-monospace" style="font-size: 0.75rem;">AI ENGINE C03.04</span></h5>
-          <small class="text-slate-400 text-light opacity-75">Platform Forensik Deteksi Kecurangan Klaim FKRTL &bull; Tim Healthkathon BPJS 2026</small>
-        </div>
-      </div>
-      <div class="d-flex align-items-center gap-2">
-        <a href="/api/export-pdf" class="btn btn-outline-light btn-sm fw-semibold px-3 py-2 shadow-sm" target="_blank">
-          <i class="fa-solid fa-file-pdf text-danger me-2"></i>Unduh Laporan Audit (PDF)
-        </a>
-        <span class="badge bg-dark border border-secondary px-3 py-2 text-white">
-          <i class="fa-solid fa-circle text-success me-2"></i>Aktif di VClaim &amp; VIDI
-        </span>
-      </div>
-    </div>
-  </nav>
+<body class="bg-[#F5F7FA] text-[#1F2937] antialiased">
+  <div class="flex min-h-screen">
 
-  <div class="container-fluid px-4 py-4">
-
-    <!-- Dataset Selector Switcher Banner -->
-    <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-3 border mb-4 shadow-sm">
-      <div class="d-flex align-items-center">
-        <i class="fa-solid fa-database text-success me-3 fa-lg"></i>
-        <div>
-          <span class="fw-bold text-dark">Sumber Basis Data Audit:</span>
-          <span class="badge bg-primary bg-opacity-10 text-primary ms-2 px-3 py-1 fw-bold" id="current-dataset-label">
-            Data Riil BPJS Kesehatan FKRTL 2024 (50.000 Kasus Lapangan)
-          </span>
+    <!-- ========================================================================= -->
+    <!-- 1. LEFT SIDEBAR (TailwindAdmin Vertical Navigation) -->
+    <!-- ========================================================================= -->
+    <aside id="main-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-[#E5E7EB] transition-transform duration-300 transform -translate-x-full lg:translate-x-0 flex flex-col shadow-sm">
+      
+      <!-- Brand Logo Header -->
+      <div class="h-16 px-5 flex items-center justify-between border-b border-[#E5E7EB] bg-gradient-to-r from-white via-white to-emerald-50/40">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#008D4C] to-[#0B4F6C] flex items-center justify-center text-white shadow-md">
+            <i class="fa-solid fa-shield-halved text-lg"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-base tracking-tight text-[#0B4F6C]">VeriKlaim</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#008D4C] text-white">v2.0</span>
+            </div>
+            <p class="text-[11px] text-[#6B7280] font-medium leading-none">BPJS Kesehatan FKRTL</p>
+          </div>
         </div>
-      </div>
-      <div class="btn-group btn-group-sm" role="group">
-        <button type="button" class="btn btn-success fw-bold" id="btn-mode-real" onclick="switchDataset('real')">
-          <i class="fa-solid fa-hospital me-1"></i>Data Nyata BPJS (50k)
-        </button>
-        <button type="button" class="btn btn-outline-secondary fw-semibold" id="btn-mode-synth" onclick="switchDataset('synth')">
-          <i class="fa-solid fa-flask-vial me-1"></i>Data Uji Skenario (10k)
+        <button onclick="toggleSidebar()" class="lg:hidden text-gray-500 hover:text-gray-700">
+          <i class="ti ti-x text-xl"></i>
         </button>
       </div>
-    </div>
 
-    <!-- 4 Core KPI Row -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-3">
-        <div class="card card-kpi p-3">
-          <div class="d-flex align-items-center justify-content-between">
-            <div>
-              <div class="text-muted small fw-medium">Total Klaim Teranalisis</div>
-              <h3 class="fw-bold mb-0 text-slate-800" id="kpi-total-claims">50,000</h3>
-              <small class="text-muted" id="kpi-dataset-subtitle">Kohor Longitudinal FKRTL</small>
-            </div>
-            <div class="kpi-icon bg-primary bg-opacity-10 text-primary">
-              <i class="fa-solid fa-file-invoice-dollar"></i>
+      <!-- Auditor / User Profile Badge -->
+      <div class="p-4 mx-3 my-3 rounded-xl bg-gradient-to-br from-emerald-50/70 to-blue-50/60 border border-[#E5E7EB]">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-[#008D4C] text-white flex items-center justify-center font-bold text-sm shadow">
+            <i class="fa-solid fa-user-doctor"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-xs font-bold text-[#1F2937] truncate">dr. Verifikator Senior</p>
+            <div class="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
+              <span class="w-2 h-2 rounded-full bg-[#27AE60] animate-pulse"></span>
+              <span>Online • BPJS FKRTL</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="card card-kpi p-3">
-          <div class="d-flex align-items-center justify-content-between">
-            <div>
-              <div class="text-muted small fw-medium">Klaim Terindikasi Anomali</div>
-              <h3 class="fw-bold mb-0 text-danger" id="kpi-total-fraud">137</h3>
-              <small class="text-danger fw-semibold" id="kpi-fraud-rate">Dispute, Phantom &amp; Upcoding</small>
-            </div>
-            <div class="kpi-icon bg-danger bg-opacity-10 text-danger">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card card-kpi p-3">
-          <div class="d-flex align-items-center justify-content-between">
-            <div>
-              <div class="text-muted small fw-medium">Potensi Dana Diselamatkan</div>
-              <h3 class="fw-bold mb-0 text-success" id="kpi-funds-saved">Rp 409 Juta</h3>
-              <small class="text-success fw-semibold">Audit Selisih Tarif &amp; Penalti</small>
-            </div>
-            <div class="kpi-icon bg-success bg-opacity-10 text-success">
-              <i class="fa-solid fa-hand-holding-dollar"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card card-kpi p-3">
-          <div class="d-flex align-items-center justify-content-between">
-            <div>
-              <div class="text-muted small fw-medium">Kecepatan Inferensi AI</div>
-              <h3 class="fw-bold mb-0 text-info">&lt; 15 ms</h3>
-              <small class="text-muted">vs 14 Hari Audit Manual</small>
-            </div>
-            <div class="kpi-icon bg-info bg-opacity-10 text-info">
-              <i class="fa-solid fa-bolt"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- 3 Core Proposal Modules Showcase Cards -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-4">
-        <div class="module-card border-start border-4 border-danger shadow-sm">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="fw-bold mb-0 text-danger"><i class="fa-solid fa-arrow-trend-up me-2"></i>Modul 1: Upcoding Engine</h6>
-            <span class="badge bg-danger bg-opacity-10 text-danger">Klinis &amp; INA-CBG</span>
-          </div>
-          <p class="small text-muted mb-0">Memvalidasi koherensi klinis antara diagnosa ICD-10, tindakan ICD-9-CM, LOS, dan Severity Level (I, II, III). Menahan klaim yang digelembungkan tanpa prosedur intensif.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="module-card border-start border-4 border-warning shadow-sm">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="fw-bold mb-0 text-warning"><i class="fa-solid fa-diagram-project me-2"></i>Modul 2: Unbundling Graph</h6>
-            <span class="badge bg-warning bg-opacity-10 text-warning">Temporal Episode</span>
-          </div>
-          <p class="small text-muted mb-0">Menganalisis graf waktu kunjungan berulang pasien dalam jendela &lt; 30 hari. Menemukan pemecahan prosedur tunggal menjadi beberapa tagihan episode terpisah.</p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="module-card border-start border-4 border-purple shadow-sm" style="border-left-color: #8b5cf6 !important;">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h6 class="fw-bold mb-0 text-purple" style="color: #6d28d9;"><i class="fa-solid fa-ghost me-2"></i>Modul 3: Phantom Billing Scanner</h6>
-            <span class="badge bg-secondary bg-opacity-10 text-secondary">Zero-Day Anomaly</span>
-          </div>
-          <p class="small text-muted mb-0">Mendeteksi klaim rawat inap dengan lama rawat 0 hari (pulang hari yang sama tapi ditagih rawat inap), biaya obat fiktif, serta lonjakan kuota faskes ekstrem.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Visual Charts Row -->
-    <div class="row g-4 mb-4">
-      <div class="col-lg-5">
-        <div class="card shadow-sm border-0 rounded-3 p-3 h-100">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="fw-bold text-dark mb-0"><i class="fa-solid fa-chart-pie me-2 text-success"></i>Distribusi Kategori Klaim</h6>
-            <span class="badge bg-light text-muted border">Evaluasi Model</span>
-          </div>
-          <div style="position: relative; height: 260px;">
-            <canvas id="fraudDistributionChart"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-7">
-        <div class="card shadow-sm border-0 rounded-3 p-3 h-100">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="fw-bold text-dark mb-0"><i class="fa-solid fa-hospital me-2 text-primary"></i>Tingkat Anomali Lintas Tipe Rumah Sakit</h6>
-            <span class="badge bg-light text-muted border">Profil Risiko Provider</span>
-          </div>
-          <div style="position: relative; height: 260px;">
-            <canvas id="rsBreakdownChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Live Claim Inspector / Simulator -->
-    <div class="card shadow-sm border-0 rounded-3 p-4 mb-4">
-      <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+      <!-- Navigation Links (Scrollable) -->
+      <nav class="flex-1 px-3 py-2 space-y-6 overflow-y-auto custom-scrollbar text-sm">
+        
+        <!-- Section: Menu Utama -->
         <div>
-          <h5 class="fw-bold mb-1"><i class="fa-solid fa-microchip me-2 text-success"></i>Simulator Audit Klaim Real-Time (3 Core Modules Active)</h5>
-          <small class="text-muted">Uji langsung kemampuan AI VeriKlaim dalam mendeteksi anomali sebelum klaim disetujui di VClaim</small>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="fa-solid fa-flask-vial me-1"></i>Pilih Contoh Kasus Cepat
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCase('normal')"><span class="badge bg-success me-2">Normal</span>Pneumonia Rawat Inap Wajar</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCase('upcoding')"><span class="badge bg-danger me-2">Upcoding</span>Pneumonia Severity III Tanpa Prosedur (Rp 17,4 Jt)</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCase('unbundling')"><span class="badge bg-warning text-dark me-2">Unbundling</span>Apendisitis Dipecah 2 Kunjungan Singkat &lt; 48 Jam</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="loadCase('phantom')"><span class="badge bg-secondary me-2">Phantom</span>Hipertensi Rawat Inap LOS 0 Hari (Kasus Riil RS Kelas C)</a></li>
+          <div class="px-3 mb-2 text-[11px] font-bold tracking-wider text-gray-400 uppercase">Menu Utama</div>
+          <ul class="space-y-1">
+            <li>
+              <a href="#section-kpi" class="sidebar-active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#008D4C] transition">
+                <i class="ti ti-layout-dashboard text-lg"></i>
+                <span class="font-semibold">Dashboard &amp; KPI</span>
+              </a>
+            </li>
+            <li>
+              <a href="#section-simulator" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <i class="ti ti-stethoscope text-lg"></i>
+                <span>Simulator Forensik</span>
+              </a>
+            </li>
+            <li>
+              <a href="#section-claims" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <i class="ti ti-database text-lg"></i>
+                <span>Penjelajah Klaim</span>
+                <span class="ms-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-[#008D4C]">50k Data</span>
+              </a>
+            </li>
           </ul>
         </div>
-      </div>
 
-      <div class="row g-3">
-        <div class="col-md-3">
-          <label class="form-label small fw-semibold">Nomor SEP / Kunjungan</label>
-          <input type="text" id="inp-no-sep" class="form-control form-control-sm" value="SEP-SIM-2026-0001">
+        <!-- Section: Blueprint 6 Klaster Permenkes -->
+        <div>
+          <div class="px-3 mb-2 text-[11px] font-bold tracking-wider text-[#0B4F6C] uppercase flex items-center justify-between">
+            <span>6 Klaster Permenkes</span>
+            <span class="text-[9px] bg-blue-100 text-[#0B4F6C] px-1.5 py-0.5 rounded">v2.0</span>
+          </div>
+          <ul class="space-y-1 text-xs">
+            <li>
+              <a href="javascript:void(0)" onclick="loadCase('klaster1')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <span class="w-5 h-5 rounded flex items-center justify-center bg-red-100 text-[#D32F2F] font-bold text-[10px]">K1</span>
+                <span class="truncate">Top-Up Special CMG (RR/SD)</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="loadCase('klaster2')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <span class="w-5 h-5 rounded flex items-center justify-center bg-red-100 text-[#D32F2F] font-bold text-[10px]">K2</span>
+                <span class="truncate">Coding Drift (IGD vs Keluar)</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="loadCase('klaster3')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <span class="w-5 h-5 rounded flex items-center justify-center bg-amber-100 text-[#F39C12] font-bold text-[10px]">K3</span>
+                <span class="truncate">Cost Velocity Ratio Harian</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="loadCase('klaster4')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <span class="w-5 h-5 rounded flex items-center justify-center bg-blue-100 text-[#2980B9] font-bold text-[10px]">K4</span>
+                <span class="truncate">Rujukan Berjenjang FKTP</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="loadCase('klaster5')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <span class="w-5 h-5 rounded flex items-center justify-center bg-purple-100 text-purple-700 font-bold text-[10px]">K5</span>
+                <span class="truncate">Multi-Komorbiditas (CC/MCC)</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" onclick="loadCase('klaster6')" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <span class="w-5 h-5 rounded flex items-center justify-center bg-slate-100 text-slate-700 font-bold text-[10px]">K6</span>
+                <span class="truncate">Kesesuaian Tipe Faskes</span>
+              </a>
+            </li>
+          </ul>
         </div>
-        <div class="col-md-3">
-          <label class="form-label small fw-semibold">Diagnosa Utama (ICD-10)</label>
-          <select id="inp-icd10" class="form-select form-select-sm">
-            <option value="J18.9|Pneumonia Tidak Spesifik|J-4-16|INFEKSI SALURAN PERNAPASAN">J18.9 - Pneumonia Tidak Spesifik</option>
-            <option value="I10|Hipertensi Primer|I-4-17|HIPERTENSI">I10 - Hipertensi Primer</option>
-            <option value="K35.8|Apendisitis Akut Lainnya|K-1-12|PROSEDUR APENDIKS">K35.8 - Apendisitis Akut</option>
-            <option value="H25.9|Katarak Senilis|H-1-30|PROSEDUR LENSA MATA">H25.9 - Katarak Senilis</option>
-            <option value="E11.9|Diabetes Melitus Tipe 2|E-4-10|GANGGUAN DIABETES">E11.9 - Diabetes Melitus Tipe 2</option>
-            <option value="J06|ISPA Akut Ringan|U-4-13|ISPA AKUT">J06 - ISPA Akut Ringan</option>
-          </select>
+
+        <!-- Section: Integrasi & Arsitektur -->
+        <div>
+          <div class="px-3 mb-2 text-[11px] font-bold tracking-wider text-gray-400 uppercase">Integrasi &amp; Mesin</div>
+          <ul class="space-y-1">
+            <li>
+              <button onclick="openArchitectureModal()" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition text-left">
+                <i class="ti ti-server-2 text-lg text-emerald-600"></i>
+                <span>4 Pilar Arsitektur</span>
+              </button>
+            </li>
+            <li>
+              <a href="/docs" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <div class="flex items-center gap-3">
+                  <i class="ti ti-api-app text-lg text-blue-600"></i>
+                  <span>Swagger API Docs</span>
+                </div>
+                <i class="ti ti-external-link text-xs text-gray-400"></i>
+              </a>
+            </li>
+            <li>
+              <a href="/api/export-pdf" target="_blank" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition">
+                <i class="ti ti-file-text text-lg text-red-500"></i>
+                <span>Unduh Laporan PDF</span>
+              </a>
+            </li>
+            <li>
+              <a href="/api/download-feature-guide" target="_blank" class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#6B7280] hover:text-[#008D4C] hover:bg-emerald-50/60 transition" title="Unduh Buku Panduan Lengkap Semua Fitur VeriKlaim AI (PDF)">
+                <i class="ti ti-book text-lg text-[#0B4F6C]"></i>
+                <span>Panduan Fitur PDF</span>
+              </a>
+            </li>
+          </ul>
         </div>
-        <div class="col-md-2">
-          <label class="form-label small fw-semibold">Severity Level</label>
-          <select id="inp-severity" class="form-select form-select-sm">
-            <option value="1">Level I (Ringan)</option>
-            <option value="2">Level II (Sedang)</option>
-            <option value="3" selected>Level III (Berat)</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <label class="form-label small fw-semibold">Lama Rawat (LOS)</label>
-          <div class="input-group input-group-sm">
-            <input type="number" id="inp-los" class="form-control" value="2" min="0" max="30">
-            <span class="input-group-text">Hari</span>
+      </nav>
+
+      <!-- Sidebar Footer Badge -->
+      <div class="p-3 border-t border-[#E5E7EB] bg-gray-50/70 text-center">
+        <p class="text-[10px] text-gray-500 font-semibold">Healthkathon BPJS Kesehatan 2026</p>
+        <p class="text-[9px] text-gray-400">Kode C03.04 &bull; Multi-Agent MAS</p>
+      </div>
+    </aside>
+
+    <!-- Sidebar Backdrop on Mobile -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 z-30 bg-gray-900/40 backdrop-blur-sm hidden lg:hidden"></div>
+
+    <!-- ========================================================================= -->
+    <!-- 2. MAIN CONTENT WRAPPER -->
+    <!-- ========================================================================= -->
+    <div class="flex-1 lg:ml-64 flex flex-col min-h-screen">
+      
+      <!-- Top Sticky Header Bar (TailwindAdmin Style) -->
+      <header class="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] px-4 lg:px-8 flex items-center justify-between shadow-sm">
+        
+        <!-- Left: Toggle & Title -->
+        <div class="flex items-center gap-3">
+          <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition">
+            <i class="ti ti-menu-2 text-xl"></i>
+          </button>
+          <div>
+            <h1 class="text-base lg:text-lg font-extrabold text-[#1F2937] leading-tight flex items-center gap-2">
+              <span>Audit Forensik Klaim FKRTL</span>
+              <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-[#008D4C]">Live Engine</span>
+            </h1>
+            <p class="text-xs text-[#6B7280] hidden sm:block">Pencegahan Fraud INA-CBG Berbasis Regulasi Permenkes &amp; Explainable AI</p>
           </div>
         </div>
-        <div class="col-md-2">
-          <label class="form-label small fw-semibold">Tipe Rumah Sakit</label>
-          <select id="inp-rs-type" class="form-select form-select-sm">
-            <option value="RS Kelas A">RS Kelas A</option>
-            <option value="RS Kelas B">RS Kelas B</option>
-            <option value="RS Kelas C" selected>RS Kelas C</option>
-            <option value="RS Kelas D">RS Kelas D</option>
-          </select>
+
+        <!-- Right: Actions & AI Toggle -->
+        <div class="flex items-center gap-2 lg:gap-3">
+          
+          <!-- Dataset Switcher Buttons -->
+          <div class="hidden md:flex items-center p-1 bg-gray-100 rounded-xl border border-gray-200">
+            <button id="btn-mode-real" onclick="switchDataset('real')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition">
+              <i class="ti ti-shield-check me-1"></i>Data Riil (50k)
+            </button>
+            <button id="btn-mode-synth" onclick="switchDataset('synth')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition">
+              Simulasi (10k)
+            </button>
+          </div>
+
+          <!-- Manual AI Mode Toggle Switch -->
+          <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+            <div class="flex items-center">
+              <input type="checkbox" id="nav-llm-toggle" checked onchange="toggleLLMMode(this.checked)" class="sr-only peer">
+              <label for="nav-llm-toggle" class="relative inline-flex items-center cursor-pointer">
+                <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#008D4C]"></div>
+              </label>
+            </div>
+            <span id="nav-toggle-label" class="text-xs font-bold text-[#008D4C] hidden sm:inline">AI Online</span>
+          </div>
+
+          <!-- Latency Badge -->
+          <span class="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-[#008D4C] border border-emerald-200">
+            <i class="ti ti-bolt text-sm"></i>
+            <span>&lt; 0.1 ms SLA</span>
+          </span>
+
+          <!-- Swagger API Button -->
+          <a href="/docs" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-50 border border-blue-200 text-[#0B4F6C] hover:bg-blue-100 transition shadow-sm" title="Buka Dokumentasi Swagger API Interaktif">
+            <i class="ti ti-api text-sm"></i>
+            <span class="hidden sm:inline">Swagger API</span>
+          </a>
+
+          <!-- Panduan Fitur PDF Button -->
+          <a href="/api/download-feature-guide" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 border border-emerald-200 text-[#008D4C] hover:bg-emerald-100 transition shadow-sm" title="Unduh Buku Panduan & Penjelasan Lengkap Fitur Platform VeriKlaim (PDF)">
+            <i class="ti ti-book text-sm"></i>
+            <span class="hidden md:inline">Panduan Fitur</span>
+          </a>
+
+          <!-- Export PDF CTA -->
+          <a href="/api/export-pdf" target="_blank" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#008D4C] hover:bg-[#00733E] text-white shadow-sm transition">
+            <i class="ti ti-download text-sm"></i>
+            <span class="hidden sm:inline">Laporan PDF</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Body Content Canvas -->
+      <main class="flex-1 p-4 lg:p-8 space-y-6">
+
+        <!-- ========================================================================= -->
+        <!-- 3. WELCOME HERO BANNER (TailwindAdmin Styled Card) -->
+        <!-- ========================================================================= -->
+        <div class="relative bg-gradient-to-r from-[#008D4C] via-[#00733E] to-[#0B4F6C] text-white rounded-2xl p-6 lg:p-7 shadow-sm overflow-hidden">
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div class="space-y-1.5">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-white text-xs font-bold backdrop-blur">
+                <i class="ti ti-shield-check text-emerald-300"></i>
+                <span>Platform VeriKlaim v2.0 Aktif &bull; Terhubung ke 50.000 Rekor Klaim</span>
+              </div>
+              <h2 class="text-xl lg:text-2xl font-extrabold tracking-tight">Konsol Deteksi &amp; Audit Forensik Klaim BPJS Kesehatan</h2>
+              <p class="text-emerald-100 text-xs lg:text-sm max-w-3xl leading-relaxed">
+                Dioptimalkan untuk verifikasi Upcoding, Unbundling, Phantom Billing, dan 6 Klaster Blueprint Kemenkes 
+                (Permenkes No. 26/2021, No. 3/2023, No. 16/2019, dan SE HK.02.02/1811/2022).
+              </p>
+            </div>
+            <div class="flex items-center gap-2.5 flex-shrink-0">
+              <button onclick="document.getElementById('section-simulator').scrollIntoView({behavior:'smooth'})" class="px-4 py-2.5 rounded-xl bg-white text-[#008D4C] hover:bg-emerald-50 font-bold text-xs shadow-md transition flex items-center gap-1.5">
+                <i class="ti ti-stethoscope text-base"></i>
+                <span>Uji Simulator</span>
+              </button>
+              <button onclick="openArchitectureModal()" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-xs border border-white/20 transition flex items-center gap-1.5">
+                <i class="ti ti-cpu text-base"></i>
+                <span>Arsitektur 4 Pilar</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="col-md-3">
-          <label class="form-label small fw-semibold">Biaya Riil Rumah Sakit (IDR)</label>
-          <input type="number" id="inp-biaya-riil" class="form-control form-control-sm" value="3400000">
+        <!-- ========================================================================= -->
+        <!-- 4. TOP KPI CARDS (TailwindAdmin 4-Card Modern Grid) -->
+        <!-- ========================================================================= -->
+        <div id="section-kpi" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+          
+          <!-- Card 1: Total Klaim -->
+          <div class="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-card hover:shadow-card-hover transition">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Total Klaim Terverifikasi</span>
+              <div class="w-11 h-11 rounded-xl bg-emerald-50 text-[#008D4C] flex items-center justify-center text-xl shadow-sm">
+                <i class="ti ti-files"></i>
+              </div>
+            </div>
+            <h3 id="kpi-total-claims" class="text-2xl lg:text-3xl font-extrabold text-[#1F2937]">50.000</h3>
+            <p id="kpi-dataset-subtitle" class="text-xs text-[#6B7280] mt-1.5 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-[#27AE60]"></span>
+              <span>Kohor Longitudinal FKRTL 2024</span>
+            </p>
+          </div>
+
+          <!-- Card 2: Klaim Anomali/Dispute -->
+          <div class="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-card hover:shadow-card-hover transition">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Klaim Anomali &amp; Ditahan</span>
+              <div class="w-11 h-11 rounded-xl bg-red-50 text-[#D32F2F] flex items-center justify-center text-xl shadow-sm">
+                <i class="ti ti-alert-triangle"></i>
+              </div>
+            </div>
+            <h3 id="kpi-total-fraud" class="text-2xl lg:text-3xl font-extrabold text-[#D32F2F]">137</h3>
+            <p id="kpi-fraud-rate" class="text-xs text-[#6B7280] mt-1.5 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-[#D32F2F]"></span>
+              <span>Tingkat Anomali: 0.27%</span>
+            </p>
+          </div>
+
+          <!-- Card 3: Penyelamatan Dana JKN -->
+          <div class="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-card hover:shadow-card-hover transition">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-[#6B7280] uppercase tracking-wider">Penyelamatan Dana JKN</span>
+              <div class="w-11 h-11 rounded-xl bg-blue-50 text-[#0B4F6C] flex items-center justify-center text-xl shadow-sm">
+                <i class="ti ti-shield-dollar"></i>
+              </div>
+            </div>
+            <h3 id="kpi-funds-saved" class="text-2xl lg:text-3xl font-extrabold text-[#0B4F6C]">Rp 448 Juta</h3>
+            <p class="text-xs text-[#27AE60] font-bold mt-1.5 flex items-center gap-1">
+              <i class="ti ti-trending-up"></i>
+              <span>Pencegahan Kebocoran Biaya RS</span>
+            </p>
+          </div>
+
+          <!-- Card 4: SLA Latensi Inferensi -->
+          <div class="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-card hover:shadow-card-hover transition">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-[#6B7280] uppercase tracking-wider">SLA Latensi Komputasi</span>
+              <div class="w-11 h-11 rounded-xl bg-amber-50 text-[#F39C12] flex items-center justify-center text-xl shadow-sm">
+                <i class="ti ti-bolt"></i>
+              </div>
+            </div>
+            <h3 class="text-2xl lg:text-3xl font-extrabold text-[#1F2937]">0.08 ms</h3>
+            <p class="text-xs text-[#27AE60] font-bold mt-1.5 flex items-center gap-1">
+              <i class="ti ti-check text-xs"></i>
+              <span>Target SLA BPJS (&lt; 15 ms) Terpenuhi</span>
+            </p>
+          </div>
         </div>
-        <div class="col-md-3">
-          <label class="form-label small fw-semibold">Nilai Tagihan Klaim Diajukan (IDR)</label>
-          <input type="number" id="inp-biaya-tagih" class="form-control form-control-sm" value="17400000">
+
+        <!-- ========================================================================= -->
+        <!-- 5. ANALYTICS CHARTS (TailwindAdmin Dual Column Grid) -->
+        <!-- ========================================================================= -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          <!-- Chart 1: Distribusi Kategori Anomali -->
+          <div class="lg:col-span-5 bg-white rounded-2xl p-5 lg:p-6 border border-[#E5E7EB] shadow-card">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h4 class="font-extrabold text-sm text-[#1F2937]">Proporsi Kategori Klaim</h4>
+                <p class="text-xs text-[#6B7280]">Distribusi Normal vs Upcoding vs Phantom vs Dispute</p>
+              </div>
+              <span class="p-2 rounded-xl bg-gray-50 text-gray-500 text-sm"><i class="ti ti-chart-pie"></i></span>
+            </div>
+            <div class="relative h-64 flex items-center justify-center">
+              <canvas id="fraudDistributionChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Anomali per Tipe Rumah Sakit -->
+          <div class="lg:col-span-7 bg-white rounded-2xl p-5 lg:p-6 border border-[#E5E7EB] shadow-card">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h4 class="font-extrabold text-sm text-[#1F2937]">Tingkat Anomali per Tipe Faskes</h4>
+                <p class="text-xs text-[#6B7280]">Perbandingan Persentase Dispute RS Kelas A, B, C, D</p>
+              </div>
+              <span class="p-2 rounded-xl bg-gray-50 text-gray-500 text-sm"><i class="ti ti-chart-bar"></i></span>
+            </div>
+            <div class="relative h-64">
+              <canvas id="rsBreakdownChart"></canvas>
+            </div>
+          </div>
         </div>
-        <div class="col-md-3">
-          <label class="form-label small fw-semibold">Tindakan Medis (ICD-9-CM)</label>
-          <input type="text" id="inp-icd9" class="form-control form-control-sm" value="-">
+
+        <!-- ========================================================================= -->
+        <!-- 6. SIMULATOR AUDIT FORENSIK WORKSTATION (TailwindAdmin Form Layout) -->
+        <!-- ========================================================================= -->
+        <div id="section-simulator" class="bg-white rounded-2xl border border-[#E5E7EB] shadow-card overflow-hidden">
+          
+          <!-- Simulator Header -->
+          <div class="p-5 lg:p-6 border-b border-[#E5E7EB] bg-gradient-to-r from-white via-white to-emerald-50/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-[#008D4C] flex items-center justify-center text-base">
+                  <i class="ti ti-stethoscope"></i>
+                </span>
+                <h3 class="font-extrabold text-base lg:text-lg text-[#1F2937]">Simulator Audit Forensik &bull; 6 Klaster Blueprint</h3>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-[#008D4C]">Permenkes Engine</span>
+              </div>
+              <p class="text-xs text-[#6B7280]">Uji kepatuhan regulasi, disparitas koding, rasio biaya, rujukan berjenjang, dan kewenangan faskes secara interaktif.</p>
+            </div>
+
+            <!-- Quick Preset Dropdown & Generator Pill -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="sim-llm-status-pill" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 text-[#008D4C] border border-emerald-200">
+                <i class="ti ti-cloud text-sm"></i>
+                <span>AI Online (Gemini Active)</span>
+              </span>
+
+              <!-- Preset Cases Dropdown -->
+              <div class="relative">
+                <button type="button" onclick="togglePresetDropdown()" class="px-3.5 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-xs font-bold text-gray-700 shadow-sm flex items-center gap-1.5 transition">
+                  <i class="ti ti-flask text-[#008D4C]"></i>
+                  <span>Contoh Kasus 6 Klaster</span>
+                  <i class="ti ti-chevron-down text-xs"></i>
+                </button>
+                <div id="preset-dropdown-menu" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50 text-xs">
+                  <div class="px-3 py-1 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Kasus Standar</div>
+                  <button onclick="selectCase('normal')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#27AE60]"></span>
+                    <span class="font-semibold text-gray-700">Normal: Pneumonia Rawat Inap Wajar</span>
+                  </button>
+                  <button onclick="selectCase('upcoding')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#D32F2F]"></span>
+                    <span class="font-semibold text-gray-700">Upcoding: Pneumonia Level III (Rp 17,4 Jt)</span>
+                  </button>
+                  <button onclick="selectCase('unbundling')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#F39C12]"></span>
+                    <span class="font-semibold text-gray-700">Unbundling: Kunjungan Berulang &lt; 48 Jam</span>
+                  </button>
+                  <button onclick="selectCase('phantom')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+                    <span class="font-semibold text-gray-700">Phantom: Hipertensi RITL LOS 0 Hari</span>
+                  </button>
+
+                  <div class="border-t border-gray-100 my-1"></div>
+                  <div class="px-3 py-1 font-bold text-[10px] text-[#008D4C] uppercase tracking-wider">Blueprint 6 Klaster Permenkes</div>
+                  <button onclick="selectCase('klaster1')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="px-1 py-0.5 rounded bg-red-100 text-red-600 font-bold text-[9px]">K1</span>
+                    <span class="font-medium text-gray-700">Top-Up Implan Platina Tanpa ORIF</span>
+                  </button>
+                  <button onclick="selectCase('klaster2')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="px-1 py-0.5 rounded bg-red-100 text-red-600 font-bold text-[9px]">K2</span>
+                    <span class="font-medium text-gray-700">Coding Drift (Dispepsia &rarr; Tukak Akut)</span>
+                  </button>
+                  <button onclick="selectCase('klaster3')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="px-1 py-0.5 rounded bg-amber-100 text-amber-600 font-bold text-[9px]">K3</span>
+                    <span class="font-medium text-gray-700">Cost Velocity Ekstrem (1 Hari Rp 18,5 Jt)</span>
+                  </button>
+                  <button onclick="selectCase('klaster4')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="px-1 py-0.5 rounded bg-blue-100 text-blue-600 font-bold text-[9px]">K4</span>
+                    <span class="font-medium text-gray-700">Bypass Rujukan RJTL Poli Mata</span>
+                  </button>
+                  <button onclick="selectCase('klaster5')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="px-1 py-0.5 rounded bg-purple-100 text-purple-600 font-bold text-[9px]">K5</span>
+                    <span class="font-medium text-gray-700">Diagnosis Padding Sesar (Non-CC)</span>
+                  </button>
+                  <button onclick="selectCase('klaster6')" class="w-full px-3 py-2 text-left hover:bg-emerald-50 flex items-center gap-2">
+                    <span class="px-1 py-0.5 rounded bg-slate-100 text-slate-700 font-bold text-[9px]">K6</span>
+                    <span class="font-medium text-gray-700">Mismatch Kraniotomi di RS Bersalin</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulator 3-Column Structured Grid -->
+          <div class="p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-3 gap-5">
+            
+            <!-- Kolom 1: Berkas & Diagnosa Medis -->
+            <div class="bg-gray-50/70 p-4 rounded-xl border border-[#E5E7EB] space-y-3.5">
+              <div class="flex items-center gap-2 text-xs font-bold text-[#0B4F6C] uppercase tracking-wider pb-2 border-b border-[#E5E7EB]">
+                <i class="ti ti-notes text-base text-[#008D4C]"></i>
+                <span>1. Berkas &amp; Diagnosa (ICD-10)</span>
+              </div>
+              
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Nomor SEP / Kunjungan</label>
+                <input type="text" id="inp-no-sep" value="SEP-SIM-2026-0001" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] focus:ring-1 focus:ring-[#008D4C] font-mono bg-white">
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="text-xs font-semibold text-gray-700">Diagnosa Masuk IGD (FKL15A)</label>
+                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-red-100 text-[#D32F2F]">Klaster 2</span>
+                </div>
+                <select id="inp-diag-masuk" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] focus:ring-1 focus:ring-[#008D4C] bg-white font-mono">
+                  <option value="-" selected>- Sesuai Diagnosa Utama (Normal) -</option>
+                  <option value="K30">K30 - Dispepsia Ringan (Keluhan Maag)</option>
+                  <option value="R10">R10 - Nyeri Abdomen Akut Ringan</option>
+                  <option value="J06.9">J06.9 - Infeksi Saluran Pernapasan Akut Ringan</option>
+                  <option value="A09">A09 - Diare &amp; Gastroenteritis Ringan</option>
+                  <option value="R05">R05 - Batuk / Gejala Respirasi Umum</option>
+                  <option value="H52.1">H52.1 - Miopia / Gangguan Refraksi Mata</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Diagnosa Utama Keluar (ICD-10 FKL17A)</label>
+                <select id="inp-icd10" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] focus:ring-1 focus:ring-[#008D4C] bg-white">
+                  <option value="J18.9|Pneumonia Tidak Spesifik|J-4-16|INFEKSI SALURAN PERNAPASAN">J18.9 - Pneumonia Tidak Spesifik</option>
+                  <option value="I10|Hipertensi Primer|I-4-17|HIPERTENSI">I10 - Hipertensi Primer</option>
+                  <option value="E11.0|Diabetes Melitus Koma|E-1-20|DIABETES DENGAN KOMA">E11.0 - Diabetes Melitus Tipe 2 Koma</option>
+                  <option value="K35.8|Apendisitis Akut Lainnya|K-1-12|APENDISITIS">K35.8 - Apendisitis Akut Lainnya</option>
+                  <option value="O82.0|Persalinan Sesar Elektif|O-1-20|SECTIO CAESAREA">O82.0 - Persalinan Sesar Elektif</option>
+                  <option value="A41.9|Sepsis Tidak Spesifik|A-4-10|SEPSIS">A41.9 - Sepsis Tidak Spesifik</option>
+                  <option value="H25.9|Katarak Senilis|H-1-30|OPERASI KATARAK">H25.9 - Katarak Senilis</option>
+                  <option value="K25.0|Tukak Lambung Akut Pendarahan|K-4-10|TUKAK LAMBUNG BERAT">K25.0 - Tukak Lambung Akut Pendarahan</option>
+                  <option value="S72.0|Fraktur Leher Femur Paha|M-1-40|PROSEDUR SENDI & TULANG PAHA">S72.0 - Fraktur Leher Femur Paha</option>
+                  <option value="A90|Dengue Fever / Demam Berdarah|A-4-14|DEMAM BERDARAH">A90 - Dengue Fever / Demam Berdarah</option>
+                  <option value="H52.1|Miopia / Kelainan Refraksi|H-3-13|PELAYANAN MATA RJTL">H52.1 - Miopia / Kelainan Refraksi</option>
+                  <option value="S06.2|Cedera Otak Difus Mayor|G-1-10|PROSEDUR KRANIOTOMI MAYOR">S06.2 - Cedera Otak Difus Mayor</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Tindakan Medis (ICD-9-CM)</label>
+                <input type="text" id="inp-icd9" value="-" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] focus:ring-1 focus:ring-[#008D4C] bg-white">
+              </div>
+            </div>
+
+            <!-- Kolom 2: Profil Faskes & Severity -->
+            <div class="bg-gray-50/70 p-4 rounded-xl border border-[#E5E7EB] space-y-3.5">
+              <div class="flex items-center gap-2 text-xs font-bold text-[#0B4F6C] uppercase tracking-wider pb-2 border-b border-[#E5E7EB]">
+                <i class="ti ti-building-hospital text-base text-[#F39C12]"></i>
+                <span>2. Faskes &amp; Tingkat Keparahan</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Pelayanan</label>
+                  <select id="inp-pelayanan" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white font-bold">
+                    <option value="RITL" selected>RITL (Rawat Inap)</option>
+                    <option value="RJTL">RJTL (Rawat Jalan)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Kelas RS</label>
+                  <select id="inp-rs-type" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white">
+                    <option value="RS Kelas A">RS Kelas A</option>
+                    <option value="RS Kelas B">RS Kelas B</option>
+                    <option value="RS Kelas C" selected>RS Kelas C</option>
+                    <option value="RS Kelas D">RS Kelas D</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="text-xs font-semibold text-gray-700">Jenis Faskes</label>
+                    <span class="text-[9px] font-bold px-1 rounded bg-slate-200 text-slate-700">K6</span>
+                  </div>
+                  <select id="inp-faskes-jenis" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white">
+                    <option value="RS Umum" selected>RS Umum</option>
+                    <option value="RS Khusus Bersalin">RS Bersalin / RSIA</option>
+                    <option value="RS Khusus Jiwa">RS Jiwa</option>
+                    <option value="Klinik Utama">Klinik Utama</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="text-xs font-semibold text-gray-700">Rujukan FKTP</label>
+                    <span class="text-[9px] font-bold px-1 rounded bg-blue-100 text-[#2980B9]">K4</span>
+                  </div>
+                  <select id="inp-rujukan" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white">
+                    <option value="VALID" selected>Rujukan FKTP Sah</option>
+                    <option value="BYPASS">Bypass / Tanpa Surat</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Severity (INA-CBG)</label>
+                  <select id="inp-severity" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white font-semibold">
+                    <option value="1">Level I (Ringan)</option>
+                    <option value="2">Level II (Sedang)</option>
+                    <option value="3" selected>Level III (Berat)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Lama Rawat (LOS)</label>
+                  <div class="flex items-center">
+                    <input type="number" id="inp-los" value="2" min="0" max="30" class="w-full px-3 py-2 text-xs rounded-l-lg border border-gray-300 focus:border-[#008D4C] bg-white font-bold">
+                    <span class="px-2.5 py-2 text-xs bg-gray-200 text-gray-600 rounded-r-lg border border-l-0 border-gray-300">Hari</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Kolom 3: Finansial & Top-Up Tarif Khusus -->
+            <div class="bg-gray-50/70 p-4 rounded-xl border border-[#E5E7EB] flex flex-col justify-between space-y-3.5">
+              <div class="space-y-3.5">
+                <div class="flex items-center gap-2 text-xs font-bold text-[#0B4F6C] uppercase tracking-wider pb-2 border-b border-[#E5E7EB]">
+                  <i class="ti ti-cash text-base text-[#27AE60]"></i>
+                  <span>3. Finansial &amp; Top-Up Tarif Khusus</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Biaya Riil RS (Rp)</label>
+                    <input type="number" id="inp-biaya-riil" value="3400000" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white font-mono font-bold">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Tagihan Total (Rp)</label>
+                    <input type="number" id="inp-biaya-tagih" value="17400000" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white font-mono font-bold text-[#0B4F6C]">
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="text-xs font-semibold text-gray-700">Special CMG Top-Up</label>
+                    <span class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-red-100 text-[#D32F2F]">Klaster 1</span>
+                  </div>
+                  <select id="inp-topup-type" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white">
+                    <option value="-" selected>- Tidak Ada Top-Up (-) -</option>
+                    <option value="RR - Special Prosthesis (Implan Platina Femur)">RR - Prosthesis (Implan Platina Femur)</option>
+                    <option value="SD - Special Drugs (Faktor Hemofilia/Kanker)">SD - Special Drugs (Hemofilia / Kanker)</option>
+                    <option value="SI - Special Investigation (MRI Canggih)">SI - Investigation (MRI Canggih)</option>
+                    <option value="SP - Special Procedure (Tindakan Subspesialis)">SP - Special Procedure</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Nominal Top-Up Khusus (Rp)</label>
+                  <input type="number" id="inp-topup-biaya" value="0" class="w-full px-3 py-2 text-xs rounded-lg border border-gray-300 focus:border-[#008D4C] bg-white font-mono">
+                </div>
+              </div>
+
+              <!-- CTA Submit Button -->
+              <div class="pt-2">
+                <button onclick="runLiveAudit()" class="w-full py-2.5 rounded-xl bg-[#008D4C] hover:bg-[#00733E] text-white font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2">
+                  <i class="ti ti-scan text-lg"></i>
+                  <span>Eksekusi Audit Klaim AI</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========================================================================= -->
+          <!-- 7. AUDIT FORENSIC RESULT BOX (Clean Tailwind Card with 6-Cluster Matrix) -->
+          <!-- ========================================================================= -->
+          <div id="audit-result-box" class="p-6 border-t border-[#E5E7EB] bg-gray-50/50 space-y-5" style="display: none;">
+            
+            <!-- Verdict Banner -->
+            <div id="verdict-banner-container" class="p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 border shadow-sm">
+              <div>
+                <div class="flex items-center gap-2 mb-1 flex-wrap">
+                  <span id="res-badge-status" class="px-3 py-1 rounded-lg text-xs font-extrabold shadow-sm"></span>
+                  <span id="res-badge-type" class="px-3 py-1 rounded-lg text-xs font-bold bg-gray-900 text-white shadow-sm"></span>
+                </div>
+                <p id="res-saving-text" class="text-xs font-bold text-[#008D4C]"></p>
+              </div>
+              <div class="bg-white px-4 py-2.5 rounded-xl border border-gray-200 text-right shadow-sm">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Tingkat Risiko Klaim</p>
+                <h3 id="res-confidence" class="text-2xl font-black text-gray-900">0.0%</h3>
+              </div>
+            </div>
+
+            <!-- Doctor / Verifikator Narrative Box (ML + LLM Collaboration) -->
+            <div class="p-4 rounded-xl bg-gradient-to-r from-emerald-50/90 to-blue-50/90 border border-emerald-200 space-y-2">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <span class="text-xs font-bold text-gray-800 flex items-center gap-2">
+                  <i class="fa-solid fa-clipboard-user text-[#008D4C] text-sm"></i>
+                  <span>Catatan Telaah Medis &amp; Verifikator BPJS</span>
+                </span>
+                <span id="res-llm-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold shadow-sm"></span>
+              </div>
+              <p id="res-clinical-narrative" class="text-xs text-gray-800 font-medium leading-relaxed"></p>
+              <div class="pt-2 border-t border-emerald-200/60 flex items-center justify-between text-[11px] text-gray-500 flex-wrap gap-2">
+                <span id="res-llm-provider">Sumber Narasi: -</span>
+                <span id="res-execution-latency" class="font-mono font-semibold">Latensi Inferensi: -</span>
+              </div>
+            </div>
+
+            <!-- 6 Klaster Blueprint Matrix Cards -->
+            <div class="p-4 rounded-xl bg-white border border-[#E5E7EB] space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                  <i class="ti ti-layout-grid text-emerald-600 text-sm"></i>
+                  <span>Evaluasi 6 Klaster Regulasi Kemenkes (Blueprint v2.0)</span>
+                </span>
+                <span class="text-[10px] text-gray-400 font-mono">Permenkes 26/2021 &bull; 3/2023 &bull; 16/2019</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-center">
+                <div class="p-2.5 rounded-xl border border-gray-100 bg-gray-50/70">
+                  <p class="text-[10px] font-bold text-gray-500">K-1: Top-Up CMG</p>
+                  <p id="badge-k1" class="text-base font-black text-[#27AE60] mt-0.5">0%</p>
+                  <span class="text-[9px] text-gray-400">SP/RR/SI/SD</span>
+                </div>
+                <div class="p-2.5 rounded-xl border border-gray-100 bg-gray-50/70">
+                  <p class="text-[10px] font-bold text-gray-500">K-2: Coding Drift</p>
+                  <p id="badge-k2" class="text-base font-black text-[#27AE60] mt-0.5">0%</p>
+                  <span class="text-[9px] text-gray-400">IGD vs Keluar</span>
+                </div>
+                <div class="p-2.5 rounded-xl border border-gray-100 bg-gray-50/70">
+                  <p class="text-[10px] font-bold text-gray-500">K-3: Cost Velocity</p>
+                  <p id="badge-k3" class="text-base font-black text-[#27AE60] mt-0.5">1.0x</p>
+                  <span class="text-[9px] text-gray-400">Biaya per Hari</span>
+                </div>
+                <div class="p-2.5 rounded-xl border border-gray-100 bg-gray-50/70">
+                  <p class="text-[10px] font-bold text-gray-500">K-4: Rujukan FKTP</p>
+                  <p id="badge-k4" class="text-base font-black text-[#27AE60] mt-0.5">0%</p>
+                  <span class="text-[9px] text-gray-400">Alur Berjenjang</span>
+                </div>
+                <div class="p-2.5 rounded-xl border border-gray-100 bg-gray-50/70">
+                  <p class="text-[10px] font-bold text-gray-500">K-5: Komorbiditas</p>
+                  <p id="badge-k5" class="text-base font-black text-[#27AE60] mt-0.5">0%</p>
+                  <span class="text-[9px] text-gray-400">Matriks CC/MCC</span>
+                </div>
+                <div class="p-2.5 rounded-xl border border-gray-100 bg-gray-50/70">
+                  <p class="text-[10px] font-bold text-gray-500">K-6: Izin Faskes</p>
+                  <p id="badge-k6" class="text-base font-black text-[#27AE60] mt-0.5">0%</p>
+                  <span class="text-[9px] text-gray-400">Kewenangan RS</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Explainable AI (TreeSHAP Feature Contributions) -->
+            <div class="p-4 rounded-xl bg-white border border-[#E5E7EB] space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                  <i class="ti ti-chart-dots text-emerald-600 text-sm"></i>
+                  <span>Explainable AI: Dekomposisi Pembobotan Fitur (TreeSHAP)</span>
+                </span>
+                <span class="text-[10px] text-gray-500">Transparansi Kontribusi Variabel</span>
+              </div>
+              <div id="res-shap-container" class="grid grid-cols-1 md:grid-cols-2 gap-2"></div>
+            </div>
+
+            <!-- 3-Module Risk Breakdown Bars -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 rounded-xl bg-white border border-[#E5E7EB]">
+              <div>
+                <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                  <span>Modul 1: Indikasi Upcoding</span>
+                  <span id="score-mod1" class="font-bold text-[#D32F2F]">0%</span>
+                </div>
+                <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div id="prog-mod1" class="bg-[#D32F2F] h-2 rounded-full transition-all duration-300" style="width: 0%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                  <span>Modul 2: Indikasi Unbundling</span>
+                  <span id="score-mod2" class="font-bold text-[#F39C12]">0%</span>
+                </div>
+                <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div id="prog-mod2" class="bg-[#F39C12] h-2 rounded-full transition-all duration-300" style="width: 0%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                  <span>Modul 3: Indikasi Phantom</span>
+                  <span id="score-mod3" class="font-bold text-purple-700">0%</span>
+                </div>
+                <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div id="prog-mod3" class="bg-purple-700 h-2 rounded-full transition-all duration-300" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Split Forensic Details: Temuan vs Regulasi vs Rekomendasi -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white p-4 rounded-xl border border-[#E5E7EB] space-y-3">
+                <div>
+                  <h5 class="text-xs font-bold text-gray-800 flex items-center gap-1.5 mb-2">
+                    <i class="ti ti-info-circle text-[#0B4F6C]"></i>
+                    <span>Temuan Analisis Medis:</span>
+                  </h5>
+                  <ul id="res-reasons-list" class="list-disc list-inside text-xs text-gray-700 space-y-1"></ul>
+                </div>
+                <div class="pt-2 border-t border-gray-100">
+                  <h5 class="text-xs font-bold text-gray-800 flex items-center gap-1.5 mb-2">
+                    <i class="ti ti-scale text-[#F39C12]"></i>
+                    <span>Dasar Hukum &amp; Regulasi:</span>
+                  </h5>
+                  <ul id="res-regulasi-list" class="list-disc list-inside text-xs text-gray-600 space-y-1"></ul>
+                </div>
+              </div>
+              
+              <div class="bg-white p-4 rounded-xl border border-[#E5E7EB] flex flex-col justify-between">
+                <div>
+                  <h5 class="text-xs font-bold text-gray-800 flex items-center gap-1.5 mb-2">
+                    <i class="ti ti-checklist text-[#27AE60]"></i>
+                    <span>Rekomendasi Tindakan Verifikator:</span>
+                  </h5>
+                  <ul id="res-recomms-list" class="list-disc list-inside text-xs text-gray-700 space-y-1.5"></ul>
+                </div>
+                <div class="p-3 mt-4 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-[#008D4C] flex items-center gap-2">
+                  <i class="ti ti-shield-check text-base"></i>
+                  <span>Terintegrasi langsung dengan modul FPK &amp; aplikasi AUDIA BPJS Kesehatan.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <div class="col-md-3 d-flex align-items-end">
-          <button class="btn btn-success btn-sm w-100 fw-bold py-2 shadow-sm" onclick="runLiveAudit()">
-            <i class="fa-solid fa-play me-2"></i>Audit Klaim dengan AI
+
+        <!-- ========================================================================= -->
+        <!-- 8. LIVE CLAIM EXPLORER TABLE (TailwindAdmin Clean Data Table) -->
+        <!-- ========================================================================= -->
+        <div id="section-claims" class="bg-white rounded-2xl border border-[#E5E7EB] shadow-card overflow-hidden">
+          
+          <!-- Table Controls Header -->
+          <div class="p-5 lg:p-6 border-b border-[#E5E7EB] flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-blue-50 text-[#0B4F6C] flex items-center justify-center text-base">
+                  <i class="ti ti-list-search"></i>
+                </span>
+                <h3 class="font-extrabold text-base lg:text-lg text-[#1F2937]">Penjelajah Berkas Klaim FKRTL</h3>
+              </div>
+              <p class="text-xs text-[#6B7280]">Sinkronisasi 50.000 rekam jejak klaim rumah sakit dengan status inferensi AI dan verifikasi manual.</p>
+            </div>
+
+            <!-- Search & Filters -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <div class="relative w-56">
+                <i class="ti ti-search absolute left-3 top-2.5 text-gray-400"></i>
+                <input type="text" id="table-search" placeholder="Cari No SEP, Diagnosa, RS..." onkeyup="handleSearch(event)" class="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-gray-300 focus:border-[#008D4C] focus:ring-1 focus:ring-[#008D4C] bg-white">
+              </div>
+              <select id="table-filter-type" onchange="loadTableClaims(1)" class="px-3 py-1.5 text-xs rounded-xl border border-gray-300 focus:border-[#008D4C] bg-white font-semibold">
+                <option value="ALL">Semua Kategori AI</option>
+                <option value="DISPUTED_CLAIM">Dipangkas Verifikator (Dispute)</option>
+                <option value="UPCODING">Upcoding</option>
+                <option value="UNBUNDLING">Unbundling</option>
+                <option value="PHANTOM_BILLING">Phantom Billing</option>
+                <option value="NORMAL">Klaim Wajar</option>
+              </select>
+              <select id="table-filter-verif" onchange="loadTableClaims(1)" class="px-3 py-1.5 text-xs rounded-xl border border-blue-200 focus:border-[#0B4F6C] bg-blue-50/70 text-[#0B4F6C] font-bold">
+                <option value="ALL">Semua Verifikasi</option>
+                <option value="UNVERIFIED">⏳ Belum Diverifikasi</option>
+                <option value="APPROVED">✅ Diverifikasi: Layak Bayar</option>
+                <option value="REJECTED">🚨 Diverifikasi: Ditolak (Fraud)</option>
+                <option value="DISPUTED">⚠️ Diverifikasi: Dispute</option>
+                <option value="PENDING">❓ Butuh Klarifikasi RS</option>
+                <option value="VERIFIED">📋 Sudah Diverifikasi (Semua)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table Content -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-700">
+              <thead class="bg-gray-50/80 border-b border-[#E5E7EB] text-[11px] font-bold text-[#0B4F6C] uppercase tracking-wider">
+                <tr>
+                  <th class="px-4 py-3.5">Nomor SEP / Kunjungan</th>
+                  <th class="px-4 py-3.5">Pasien &amp; Faskes</th>
+                  <th class="px-4 py-3.5">Diagnosa &amp; INA-CBG</th>
+                  <th class="px-3 py-3.5">Lama Rawat</th>
+                  <th class="px-4 py-3.5">Nilai Tagihan RS</th>
+                  <th class="px-3 py-3.5">Status Audit AI</th>
+                  <th class="px-3 py-3.5">Verifikasi Manual</th>
+                  <th class="px-4 py-3.5 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="claims-table-body" class="divide-y divide-[#E5E7EB]">
+                <tr>
+                  <td colspan="8" class="px-5 py-8 text-center text-gray-400">
+                    <i class="ti ti-loader animate-spin text-lg me-2"></i>Memuat daftar klaim...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Bar -->
+          <div class="p-4 border-t border-[#E5E7EB] bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span id="table-page-info" class="text-xs text-[#6B7280]">Menampilkan 1-10 dari 50.000 klaim</span>
+            <div class="inline-flex rounded-xl shadow-sm border border-gray-200 bg-white overflow-hidden">
+              <button id="btn-prev" onclick="changePage(-1)" class="px-3.5 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 border-r border-gray-200 transition disabled:opacity-50">
+                <i class="ti ti-chevron-left me-1"></i>Sebelumnya
+              </button>
+              <button id="btn-next" onclick="changePage(1)" class="px-3.5 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition disabled:opacity-50">
+                Selanjutnya<i class="ti ti-chevron-right ms-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Footer -->
+      <footer class="p-6 border-t border-[#E5E7EB] bg-white text-center text-xs text-[#6B7280]">
+        &copy; 2026 <strong>VeriKlaim &bull; Tim Inovasi Healthkathon BPJS Kesehatan</strong> &bull; 
+        Aditya Pratama, S.T., M.T. &amp; Nurman Hariyanto, S.ST., M.T. (UNU Kalbar) &bull; M. Ali Maulana, M.Kep. (FK UNTAN).
+      </footer>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 9. MODAL INTERAKTIF: ARSITEKTUR 4 PILAR (Sesuai Palet Warna Mobile JKN) -->
+  <!-- ========================================================================= -->
+  <div id="architectureModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="w-full max-w-5xl bg-white text-[#1F2937] rounded-3xl border border-[#E5E7EB] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-[#E5E7EB] flex items-center justify-between bg-gradient-to-r from-emerald-50/80 via-white to-blue-50/60">
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 rounded-full bg-emerald-100 text-[#008D4C] border border-emerald-200 font-mono text-xs font-bold flex items-center gap-1.5">
+            <i class="ti ti-shield-check"></i>
+            <span>ARSITEKTUR 4 PILAR</span>
+          </span>
+          <div>
+            <h3 class="font-extrabold text-base text-[#0B4F6C]">4 Pilar Keunggulan Mesin VeriKlaim</h3>
+            <p class="text-xs text-[#6B7280]">Spesifikasi Arsitektur Sistem Sesuai Healthkathon BPJS Kesehatan</p>
+          </div>
+        </div>
+        <button onclick="closeArchitectureModal()" class="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100 transition">
+          <i class="ti ti-x text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-5 bg-[#F5F7FA]">
+        <p class="text-xs text-[#6B7280] leading-relaxed">
+          Arsitektur platform VeriKlaim dirancang untuk kecepatan komputasi tinggi, keandalan mutlak tanpa crash, dan integrasi mulus antara kalkulasi Machine Learning serta penjelasan naratif medis dokter verifikator JKN:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <!-- Pilar 01: In-Memory Model Loading -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-5 shadow-sm hover:shadow-md transition hover:-translate-y-1 relative overflow-hidden flex flex-col justify-between group">
+            <div class="h-1.5 w-full bg-[#008D4C] absolute top-0 left-0"></div>
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-xs font-black text-[#008D4C] font-mono px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200">01</span>
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-[#008D4C] flex items-center justify-center text-xl shadow-sm">
+                  <i class="ti ti-server"></i>
+                </div>
+              </div>
+              <h4 class="font-bold text-sm text-[#1F2937] mb-1.5">In-Memory Loading</h4>
+              <p class="text-xs text-[#6B7280] leading-relaxed">
+                File model .joblib hanya di-load satu kali saat aplikasi dijalankan, menghasilkan inferensi ultra-cepat (&lt; 0.1 ms) tanpa I/O disk berulang.
+              </p>
+            </div>
+            <div class="pt-3 mt-4 border-t border-[#E5E7EB] flex items-center justify-between text-[11px]">
+              <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-[#008D4C] font-bold border border-emerald-200">
+                <i class="ti ti-circle-filled text-[7px] me-1"></i>Loaded
+              </span>
+              <span class="px-2 py-0.5 rounded-md bg-amber-50 text-[#F39C12] font-bold border border-amber-200">
+                <i class="ti ti-bolt me-1"></i>&lt; 0.1 ms
+              </span>
+            </div>
+          </div>
+
+          <!-- Pilar 02: Kolaborasi ML + LLM -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-5 shadow-sm hover:shadow-md transition hover:-translate-y-1 relative overflow-hidden flex flex-col justify-between group">
+            <div class="h-1.5 w-full bg-[#0B4F6C] absolute top-0 left-0"></div>
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-xs font-black text-[#0B4F6C] font-mono px-2 py-0.5 rounded-md bg-blue-50 border border-blue-200">02</span>
+                <div class="w-11 h-11 rounded-xl bg-blue-50 text-[#0B4F6C] flex items-center justify-center text-xl shadow-sm">
+                  <i class="ti ti-brain"></i>
+                </div>
+              </div>
+              <h4 class="font-bold text-sm text-[#1F2937] mb-1.5">Kolaborasi ML + LLM</h4>
+              <p class="text-xs text-[#6B7280] leading-relaxed">
+                Machine Learning menangani kalkulasi angka secara konsisten, sementara LLM Cloud menerjemahkan menjadi ringkasan klinis yang ramah verifikator.
+              </p>
+            </div>
+            <div class="pt-3 mt-4 border-t border-[#E5E7EB] flex items-center justify-between text-[11px]">
+              <span class="px-2 py-0.5 rounded-md bg-blue-50 text-[#0B4F6C] font-bold border border-blue-200">
+                <i class="ti ti-circle-filled text-[7px] me-1"></i>Integrated
+              </span>
+              <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-[#27AE60] font-bold border border-emerald-200">
+                <i class="ti ti-cloud me-1"></i>Gemini Cloud
+              </span>
+            </div>
+          </div>
+
+          <!-- Pilar 03: Validasi & Dokumentasi Otomatis -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-5 shadow-sm hover:shadow-md transition hover:-translate-y-1 relative overflow-hidden flex flex-col justify-between group">
+            <div class="h-1.5 w-full bg-[#2980B9] absolute top-0 left-0"></div>
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-xs font-black text-[#2980B9] font-mono px-2 py-0.5 rounded-md bg-sky-50 border border-sky-200">03</span>
+                <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#2980B9] flex items-center justify-center text-xl shadow-sm">
+                  <i class="ti ti-file-check"></i>
+                </div>
+              </div>
+              <h4 class="font-bold text-sm text-[#1F2937] mb-1.5">Validasi Otomatis</h4>
+              <p class="text-xs text-[#6B7280] leading-relaxed">
+                Skema Pydantic v2 memvalidasi tipe data masukan klaim secara otomatis dan dokumentasi Swagger UI interaktif langsung siap diuji.
+              </p>
+            </div>
+            <div class="pt-3 mt-4 border-t border-[#E5E7EB] flex items-center justify-between text-[11px]">
+              <span class="px-2 py-0.5 rounded-md bg-sky-50 text-[#2980B9] font-bold border border-sky-200">
+                <i class="ti ti-circle-filled text-[7px] me-1"></i>Pydantic v2
+              </span>
+              <a href="/docs" target="_blank" class="px-2 py-0.5 rounded-md bg-gray-100 hover:bg-gray-200 text-[#1F2937] font-bold transition flex items-center gap-1">
+                <span>Swagger</span>
+                <i class="ti ti-arrow-up-right text-xs"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Pilar 04: Sistem Tetap Jalan (Graceful Fallback) -->
+          <div class="bg-white rounded-2xl border border-[#E5E7EB] p-5 shadow-sm hover:shadow-md transition hover:-translate-y-1 relative overflow-hidden flex flex-col justify-between group">
+            <div class="h-1.5 w-full bg-[#27AE60] absolute top-0 left-0"></div>
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-xs font-black text-[#27AE60] font-mono px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200">04</span>
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-[#27AE60] flex items-center justify-center text-xl shadow-sm">
+                  <i class="ti ti-shield-check"></i>
+                </div>
+              </div>
+              <h4 class="font-bold text-sm text-[#1F2937] mb-1.5">Graceful Fallback</h4>
+              <p class="text-xs text-[#6B7280] leading-relaxed">
+                Saat API Key kosong, kuota habis, atau mode offline aktif, fallback deterministik Permenkes menjamin endpoint selalu merespons HTTP 200 OK.
+              </p>
+            </div>
+            <div class="pt-3 mt-4 border-t border-[#E5E7EB] flex items-center justify-between text-[11px]">
+              <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-[#27AE60] font-bold border border-emerald-200">
+                <i class="ti ti-shield-halved me-1"></i>Zero Crash
+              </span>
+              <span class="px-2 py-0.5 rounded-md bg-amber-50 text-[#F39C12] font-bold border border-amber-200">
+                <i class="ti ti-clock me-1"></i>&lt; 0.05 ms
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 border-t border-[#E5E7EB] bg-white flex justify-between items-center">
+        <span class="text-xs text-[#6B7280] flex items-center gap-1.5">
+          <i class="ti ti-certificate text-[#008D4C] text-sm"></i>
+          <span>Standar Kepatuhan Arsitektur Healthkathon 2026 BPJS Kesehatan</span>
+        </span>
+        <button onclick="closeArchitectureModal()" class="px-5 py-2 rounded-xl bg-[#008D4C] hover:bg-[#00733E] text-white font-bold text-xs shadow-sm transition">
+          Tutup Dialog
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 9B. MODAL TELAAH DOKUMEN & VERIFIKASI MANUAL (Human-in-the-Loop) -->
+  <!-- ========================================================================= -->
+  <div id="documentVerificationModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-2 sm:p-4">
+    <div class="w-full max-w-6xl bg-white text-[#1F2937] rounded-3xl border border-[#E5E7EB] shadow-2xl overflow-hidden flex flex-col max-h-[94vh]">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-3.5 border-b border-[#E5E7EB] flex items-center justify-between bg-gradient-to-r from-emerald-50/90 via-white to-blue-50/70">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-[#008D4C] text-white flex items-center justify-center text-xl shadow-sm">
+            <i class="ti ti-file-certificate"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="font-extrabold text-base text-[#0B4F6C]">Telaah Berkas Medis &amp; Verifikasi Manual Klaim</h3>
+              <span id="doc-modal-sep-badge" class="px-2 py-0.5 rounded-md font-mono text-xs font-black bg-blue-100 text-[#0B4F6C]">SEP-...</span>
+            </div>
+            <p class="text-xs text-[#6B7280]">Pencocokan Bukti Klinis Dokumen RS dengan Rekomendasi Audit AI (Human-in-the-Loop)</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div id="doc-modal-ai-status-pill" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700">
+            <i class="ti ti-robot"></i><span>Audit AI: Memuat...</span>
+          </div>
+          <div id="doc-modal-verif-status-pill" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+            <i class="ti ti-clock"></i><span>Belum Diverifikasi</span>
+          </div>
+          <button onclick="closeDocumentModal()" class="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100 transition">
+            <i class="ti ti-x text-xl"></i>
           </button>
         </div>
       </div>
 
-      <!-- Result Card -->
-      <div id="audit-result-box" class="mt-4 p-3 rounded-3" style="display: none; border-left: 5px solid;">
-        <div class="d-flex justify-content-between align-items-start mb-2">
-          <div>
-            <span id="res-badge-status" class="badge fs-6 px-3 py-2"></span>
-            <span id="res-badge-type" class="badge bg-dark ms-2 fs-6 px-3 py-2"></span>
-          </div>
-          <div class="text-end">
-            <div class="text-muted small">Skor Risiko Anomali</div>
-            <h4 class="fw-bold mb-0" id="res-confidence">0.0%</h4>
-          </div>
-        </div>
+      <!-- Modal Body (Two-Column Split Workspace) -->
+      <div class="flex-1 overflow-y-auto p-5 lg:p-6 bg-[#F5F7FA]">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          
+          <!-- LEFT COLUMN: Digital Medical Document Viewer (7 cols) -->
+          <div class="lg:col-span-7 space-y-3 flex flex-col">
+            
+            <!-- Tab Selector -->
+            <div class="flex items-center gap-1.5 p-1 bg-gray-200/80 rounded-xl border border-gray-200 text-xs font-bold overflow-x-auto">
+              <button id="tab-btn-sep" onclick="switchDocTab('sep')" class="px-3.5 py-1.5 rounded-lg bg-white text-[#008D4C] shadow-sm transition flex items-center gap-1.5">
+                <i class="ti ti-file-text"></i><span>1. Surat SEP Digital</span>
+              </button>
+              <button id="tab-btn-resume" onclick="switchDocTab('resume')" class="px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-gray-900 transition flex items-center gap-1.5">
+                <i class="ti ti-clipboard-heart"></i><span>2. Resume Medis DPJP</span>
+              </button>
+              <button id="tab-btn-billing" onclick="switchDocTab('billing')" class="px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-gray-900 transition flex items-center gap-1.5">
+                <i class="ti ti-receipt-2"></i><span>3. Rincian Biaya RS</span>
+              </button>
+              <button id="tab-btn-rujukan" onclick="switchDocTab('rujukan')" class="px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-gray-900 transition flex items-center gap-1.5">
+                <i class="ti ti-route"></i><span>4. Rujukan FKTP</span>
+              </button>
+            </div>
 
-        <!-- 3-Module Risk Breakdown Bars -->
-        <div class="row g-2 my-3 p-2 bg-white rounded border">
-          <div class="col-md-4">
-            <div class="small fw-semibold text-muted d-flex justify-content-between">
-              <span>Modul 1: Indikasi Upcoding</span>
-              <span id="score-mod1" class="fw-bold text-danger">0%</span>
-            </div>
-            <div class="progress" style="height: 6px;">
-              <div id="prog-mod1" class="progress-bar bg-danger" style="width: 0%;"></div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="small fw-semibold text-muted d-flex justify-content-between">
-              <span>Modul 2: Indikasi Unbundling</span>
-              <span id="score-mod2" class="fw-bold text-warning">0%</span>
-            </div>
-            <div class="progress" style="height: 6px;">
-              <div id="prog-mod2" class="progress-bar bg-warning" style="width: 0%;"></div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="small fw-semibold text-muted d-flex justify-content-between">
-              <span>Modul 3: Indikasi Phantom</span>
-              <span id="score-mod3" class="fw-bold text-purple" style="color: #6d28d9;">0%</span>
-            </div>
-            <div class="progress" style="height: 6px;">
-              <div id="prog-mod3" class="progress-bar bg-dark" style="width: 0%;"></div>
-            </div>
-          </div>
-        </div>
+            <!-- Authentic Medical Document Canvas Sheet -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-card p-5 relative min-h-[460px] flex flex-col justify-between">
+              
+              <!-- Background Security Watermark -->
+              <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+                <div class="text-center font-black text-6xl text-gray-900 rotate-[-25deg]">
+                  BPJS KESEHATAN<br>DOKUMEN RESMI
+                </div>
+              </div>
 
-        <div class="row mt-3">
-          <div class="col-md-6">
-            <h6 class="fw-bold text-dark mb-1"><i class="fa-solid fa-circle-info text-primary me-2"></i>Temuan Analisis AI:</h6>
-            <ul id="res-reasons-list" class="small mb-2 ps-3"></ul>
+              <!-- Document Content Area -->
+              <div id="doc-canvas-content" class="relative z-10 space-y-4">
+                <div class="py-12 text-center text-gray-400">
+                  <i class="ti ti-loader animate-spin text-2xl mb-2 text-[#008D4C]"></i>
+                  <p class="text-xs">Mengambil dokumen pendukung dari server...</p>
+                </div>
+              </div>
 
-            <h6 class="fw-bold text-dark mb-1 mt-3"><i class="fa-solid fa-scale-balanced text-warning me-2"></i>Dasar Hukum &amp; Regulasi:</h6>
-            <ul id="res-regulasi-list" class="small mb-0 ps-3 text-secondary"></ul>
+              <!-- Document Footnote & Digital Verification Hash -->
+              <div class="relative z-10 pt-3 mt-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500 gap-2">
+                <span class="flex items-center gap-1">
+                  <i class="ti ti-shield-check text-[#008D4C]"></i>
+                  <span>Dokumen Terautentikasi Digital BPJS Kesehatan &bull; Formularium JKN</span>
+                </span>
+                <span id="doc-verify-token" class="font-mono text-[10px] bg-gray-100 px-2 py-0.5 rounded text-gray-600">TOKEN: AUTH-VERIFIED</span>
+              </div>
+            </div>
+
           </div>
-          <div class="col-md-6 border-start">
-            <h6 class="fw-bold text-dark mb-1"><i class="fa-solid fa-clipboard-check text-success me-2"></i>Rekomendasi Tindakan Verifikator BPJS (VClaim / AUDIA):</h6>
-            <ul id="res-recomms-list" class="small mb-2 ps-3"></ul>
-            <div class="mt-3 p-2 bg-light rounded text-success fw-bold small border" id="res-saving-text"></div>
+
+          <!-- RIGHT COLUMN: Human Verifier Workstation & Cross-Check (5 cols) -->
+          <div class="lg:col-span-5 space-y-4">
+            
+            <!-- Panel 1: Cross-Check AI vs Dokumen Pendukung -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-card p-4 space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                <h4 class="font-extrabold text-xs text-[#0B4F6C] flex items-center gap-1.5">
+                  <i class="ti ti-check-double text-[#008D4C]"></i>
+                  <span>Validasi Silang (AI vs Berkas Medis)</span>
+                </h4>
+                <span id="cross-check-score" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-[#008D4C] border border-emerald-200">5/5 Terpenuhi</span>
+              </div>
+
+              <div id="cross-check-items-list" class="space-y-2 text-xs">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Panel 2: Form Putusan Verifikator Manusia -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] shadow-card p-4 space-y-4">
+              <div class="pb-2 border-b border-gray-100">
+                <h4 class="font-extrabold text-xs text-[#1F2937] flex items-center gap-1.5">
+                  <i class="ti ti-gavel text-[#0B4F6C]"></i>
+                  <span>Keputusan Verifikator BPJS (Human Sign-off)</span>
+                </h4>
+                <p class="text-[11px] text-[#6B7280]">Pilih putusan administratif dan telaah kelayakan klaim rumah sakit.</p>
+              </div>
+
+              <!-- Decision Choice Pills (4 options) -->
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <label id="opt-label-approved" class="cursor-pointer border-2 border-emerald-200 bg-emerald-50/80 rounded-xl p-2.5 flex items-start gap-2 hover:bg-emerald-100/70 transition">
+                  <input type="radio" name="verif_decision" value="APPROVED" checked onchange="handleDecisionChange('APPROVED')" class="mt-0.5 accent-[#008D4C]">
+                  <div>
+                    <div class="font-bold text-[#008D4C] flex items-center gap-1">
+                      <i class="ti ti-circle-check"></i>Layak Bayar
+                    </div>
+                    <div class="text-[10px] text-gray-500">Setujui klaim (FPK Sah)</div>
+                  </div>
+                </label>
+
+                <label id="opt-label-rejected" class="cursor-pointer border-2 border-gray-200 bg-white rounded-xl p-2.5 flex items-start gap-2 hover:bg-red-50/60 transition">
+                  <input type="radio" name="verif_decision" value="REJECTED" onchange="handleDecisionChange('REJECTED')" class="mt-0.5 accent-[#D32F2F]">
+                  <div>
+                    <div class="font-bold text-gray-700 flex items-center gap-1">
+                      <i class="ti ti-circle-x"></i>Ditolak (Fraud)
+                    </div>
+                    <div class="text-[10px] text-gray-500">Fiktif / Anomali Berat</div>
+                  </div>
+                </label>
+
+                <label id="opt-label-disputed" class="cursor-pointer border-2 border-gray-200 bg-white rounded-xl p-2.5 flex items-start gap-2 hover:bg-amber-50/60 transition">
+                  <input type="radio" name="verif_decision" value="DISPUTED" onchange="handleDecisionChange('DISPUTED')" class="mt-0.5 accent-[#F39C12]">
+                  <div>
+                    <div class="font-bold text-gray-700 flex items-center gap-1">
+                      <i class="ti ti-alert-triangle"></i>Dispute Koreksi
+                    </div>
+                    <div class="text-[10px] text-gray-500">Koreksi severity level</div>
+                  </div>
+                </label>
+
+                <label id="opt-label-pending" class="cursor-pointer border-2 border-gray-200 bg-white rounded-xl p-2.5 flex items-start gap-2 hover:bg-sky-50/60 transition">
+                  <input type="radio" name="verif_decision" value="PENDING" onchange="handleDecisionChange('PENDING')" class="mt-0.5 accent-[#2980B9]">
+                  <div>
+                    <div class="font-bold text-gray-700 flex items-center gap-1">
+                      <i class="ti ti-help"></i>Klarifikasi RS
+                    </div>
+                    <div class="text-[10px] text-gray-500">Minta rekam medis faskes</div>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Catatan Verifikator -->
+              <div class="space-y-1">
+                <label class="block text-xs font-bold text-gray-700">
+                  <span>Catatan Medis &amp; Administratif Verifikator:</span>
+                  <span class="text-red-500">*</span>
+                </label>
+                <textarea id="verif-notes-input" rows="3" class="w-full text-xs p-2.5 rounded-xl border border-gray-300 focus:border-[#008D4C] focus:ring-1 focus:ring-[#008D4C] bg-white text-gray-800" placeholder="Contoh: Dokumen SEP dan resume medis rawat jalan telah diverifikasi langsung. Diagnosa Z09.8 rawat jalan 0 hari selaras dan layak dibayarkan."></textarea>
+              </div>
+
+              <!-- Petugas Verifikator -->
+              <div class="space-y-1">
+                <label class="block text-xs font-bold text-gray-700">Nama Petugas Verifikator (DPJP / Tim Pencegahan Kecurangan):</label>
+                <div class="relative">
+                  <i class="ti ti-user-check absolute left-3 top-2.5 text-gray-400"></i>
+                  <input id="verif-officer-input" type="text" value="dr. Aditya Pratama (Verifikator BPJS Kesehatan)" class="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-gray-300 focus:border-[#008D4C] bg-white font-semibold text-gray-800">
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <button id="btn-save-verification" onclick="submitManualVerification()" class="w-full py-2.5 rounded-xl bg-[#008D4C] hover:bg-[#00733E] text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+                <i class="ti ti-shield-check text-base"></i>
+                <span>Sahkan &amp; Simpan Keputusan Verifikasi</span>
+              </button>
+
+              <!-- Previous Verification Banner (If any) -->
+              <div id="verif-history-banner" class="hidden p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs text-[#0B4F6C] space-y-1">
+                <div class="font-bold flex items-center gap-1.5">
+                  <i class="ti ti-history"></i><span>Riwayat Verifikasi Sebelumnya</span>
+                </div>
+                <div id="verif-history-text" class="text-[11px] text-gray-600"></div>
+              </div>
+
+            </div>
+
           </div>
+
         </div>
       </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3 border-t border-[#E5E7EB] bg-white flex justify-between items-center text-xs text-[#6B7280]">
+        <span class="flex items-center gap-1.5">
+          <i class="ti ti-lock text-[#008D4C]"></i>
+          <span>Seluruh putusan telaah manual tercatat dalam audit trail persisten platform VeriKlaim.</span>
+        </span>
+        <button onclick="closeDocumentModal()" class="px-4 py-1.5 rounded-lg border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold transition">
+          Tutup
+        </button>
+      </div>
+
     </div>
-
-    <!-- Live Feed Claim Explorer -->
-    <div class="card shadow-sm border-0 rounded-3 p-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <div>
-          <h5 class="fw-bold mb-0"><i class="fa-solid fa-list-check me-2 text-primary"></i>Penjelajah Berkas Klaim (Live Claim Explorer)</h5>
-          <small class="text-muted">Data tersinkronisasi langsung dengan database audit klaim FKRTL</small>
-        </div>
-        <div class="d-flex gap-2">
-          <input type="text" id="table-search" class="form-control form-control-sm" placeholder="Cari No SEP, Diagnosa, RS..." style="width: 250px;" onkeyup="handleSearch(event)">
-          <select id="table-filter-type" class="form-select form-select-sm" style="width: 180px;" onchange="loadTableClaims(1)">
-            <option value="ALL">Semua Kategori</option>
-            <option value="DISPUTED_CLAIM">Dipangkas Verifikator (Dispute)</option>
-            <option value="UPCODING">Upcoding</option>
-            <option value="UNBUNDLING">Unbundling</option>
-            <option value="PHANTOM_BILLING">Phantom Billing</option>
-            <option value="NORMAL">Klaim Wajar</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
-          <thead>
-            <tr>
-              <th>Nomor SEP / Kunjungan</th>
-              <th>Pasien &amp; Faskes</th>
-              <th>Diagnosa &amp; INA-CBG</th>
-              <th>Lama Rawat</th>
-              <th>Nilai Tagihan RS</th>
-              <th>Status Audit AI</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="claims-table-body">
-            <tr><td colspan="7" class="text-center py-4 text-muted">Memuat data klaim...</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div class="d-flex justify-content-between align-items-center mt-3">
-        <small class="text-muted" id="table-page-info">Menampilkan...</small>
-        <div class="btn-group btn-group-sm">
-          <button class="btn btn-outline-secondary" id="btn-prev" onclick="changePage(-1)">Sebelumnya</button>
-          <button class="btn btn-outline-secondary" id="btn-next" onclick="changePage(1)">Selanjutnya</button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
-  <footer class="text-center py-3 text-muted small border-top mt-5 bg-white">
-    &copy; 2026 <strong>VeriKlaim Tim Inovasi Healthkathon BPJS Kesehatan</strong> &bull; Aditya Pratama, S.T., M.T. &amp; Nurman Hariyanto, S.ST., M.T. (Dosen Sistem Informasi UNU Kalbar) &bull; M. Ali Maulana, M.Kep. (Dosen Keperawatan FK UNTAN).
-  </footer>
+  <!-- Floating Toast Notification -->
+  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+  <!-- ========================================================================= -->
+  <!-- 10. JAVASCRIPT ORCHESTRATION -->
+  <!-- ========================================================================= -->
   <script>
     let currentDataset = 'real';
     let currentPage = 1;
     let totalPages = 1;
+    let currentLLMMode = 'ONLINE';
     let fraudChart = null;
     let rsChart = null;
 
-    async function initDashboard() {
-      await loadStats();
-      await loadTableClaims(1);
+    function toggleSidebar() {
+      const sidebar = document.getElementById('main-sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    }
+
+    function togglePresetDropdown() {
+      const menu = document.getElementById('preset-dropdown-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    function selectCase(type) {
+      document.getElementById('preset-dropdown-menu').classList.add('hidden');
+      loadCase(type);
+    }
+
+    function openArchitectureModal() {
+      const modal = document.getElementById('architectureModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeArchitectureModal() {
+      const modal = document.getElementById('architectureModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function initDashboard() {
+      // Prioritaskan pemuatan tabel klaim & data secara paralel seketika
+      loadTableClaims(1);
+      loadStats();
+      checkLLMSystemStatus();
+    }
+
+    function syncToggleUI(mode) {
+      currentLLMMode = mode.toUpperCase();
+      const isOnline = (currentLLMMode === 'ONLINE' || currentLLMMode === 'AUTO');
+      const navToggle = document.getElementById('nav-llm-toggle');
+      const navLabel = document.getElementById('nav-toggle-label');
+      const simPill = document.getElementById('sim-llm-status-pill');
+
+      if (navToggle) navToggle.checked = isOnline;
+      if (navLabel) {
+        navLabel.innerText = isOnline ? 'AI Online' : 'AI Offline';
+        navLabel.className = isOnline ? 'text-xs font-bold text-[#008D4C]' : 'text-xs font-bold text-[#F39C12]';
+      }
+      if (simPill) {
+        if (isOnline) {
+          simPill.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 text-[#008D4C] border border-emerald-200';
+          simPill.innerHTML = '<i class="ti ti-cloud text-sm"></i><span>AI Online (Gemini Active)</span>';
+        } else {
+          simPill.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-50 text-[#F39C12] border border-amber-200';
+          simPill.innerHTML = '<i class="ti ti-shield-halved text-sm"></i><span>Rule Engine (Offline Permenkes)</span>';
+        }
+      }
+    }
+
+    async function toggleLLMMode(isOnline) {
+      const targetMode = isOnline ? 'ONLINE' : 'OFFLINE';
+      syncToggleUI(targetMode);
+      try {
+        await fetch('/api/system/toggle-llm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: targetMode })
+        });
+        await checkLLMSystemStatus();
+      } catch (err) {
+        console.error('Gagal toggle mode LLM:', err);
+      }
+    }
+
+    async function checkLLMSystemStatus() {
+      try {
+        const res = await fetch('/api/system/features');
+        const data = await res.json();
+        const mode = (data.llm_status?.mode || 'ONLINE').toUpperCase();
+        syncToggleUI(mode);
+      } catch (e) {
+        console.warn('Gagal memverifikasi status LLM:', e);
+      }
     }
 
     async function switchDataset(mode) {
       currentDataset = mode;
+      const btnReal = document.getElementById('btn-mode-real');
+      const btnSynth = document.getElementById('btn-mode-synth');
+      const subtitle = document.getElementById('kpi-dataset-subtitle');
+
       if (mode === 'real') {
-        document.getElementById('btn-mode-real').className = 'btn btn-success fw-bold';
-        document.getElementById('btn-mode-synth').className = 'btn btn-outline-secondary fw-semibold';
-        document.getElementById('current-dataset-label').innerText = 'Data Riil BPJS Kesehatan FKRTL 2024 (50.000 Kasus Lapangan)';
-        document.getElementById('kpi-dataset-subtitle').innerText = 'Kohor Longitudinal FKRTL Asli';
+        btnReal.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition';
+        btnSynth.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition';
+        subtitle.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#27AE60]"></span><span>Kohor Longitudinal FKRTL Asli</span>';
       } else {
-        document.getElementById('btn-mode-synth').className = 'btn btn-success fw-bold';
-        document.getElementById('btn-mode-real').className = 'btn btn-outline-secondary fw-semibold';
-        document.getElementById('current-dataset-label').innerText = 'Dataset Skenario Uji Komprehensif (10.000 Kasus Simulai)';
-        document.getElementById('kpi-dataset-subtitle').innerText = 'Distribusi Lengkap 4 Tipe Kasus';
+        btnSynth.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition';
+        btnReal.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition';
+        subtitle.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#0B4F6C]"></span><span>10.000 Kasus Simulasi Komprehensif</span>';
       }
-      await loadStats();
-      await loadTableClaims(1);
+      loadStats();
+      loadTableClaims(1);
     }
 
     async function loadStats() {
@@ -470,35 +1462,24 @@
 
       document.getElementById('kpi-total-claims').innerText = Number(stats.total_claims).toLocaleString('id-ID');
       document.getElementById('kpi-total-fraud').innerText = Number(stats.total_fraud).toLocaleString('id-ID');
-      document.getElementById('kpi-fraud-rate').innerText = `${stats.fraud_rate_pct}% dari total klaim`;
-      document.getElementById('kpi-funds-saved').innerText = `Rp ${(stats.total_fraud_saved / 1e6).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")} Juta`;
+      document.getElementById('kpi-fraud-rate').innerText = `Tingkat Anomali: ${stats.fraud_rate_pct}%`;
+      document.getElementById('kpi-funds-saved').innerText = `Rp ${(stats.total_fraud_saved / 1000000).toFixed(0)} Juta`;
 
-      renderFraudChart(stats.type_counts);
-      renderRSChart(stats.rs_breakdown);
+      updateCharts(stats);
     }
 
-    function renderFraudChart(counts) {
-      const ctx = document.getElementById('fraudDistributionChart').getContext('2d');
+    function updateCharts(stats) {
+      const counts = stats.type_counts;
+      const pieCtx = document.getElementById('fraudDistributionChart').getContext('2d');
       if (fraudChart) fraudChart.destroy();
 
-      const labels = Object.keys(counts);
-      const dataVals = Object.values(counts);
-      const colorMap = {
-        'NORMAL': '#10b981',
-        'DISPUTED_CLAIM': '#dc2626',
-        'UPCODING': '#ef4444',
-        'UNBUNDLING': '#f59e0b',
-        'PHANTOM_BILLING': '#8b5cf6'
-      };
-      const bgColors = labels.map(l => colorMap[l] || '#64748b');
-
-      fraudChart = new Chart(ctx, {
+      fraudChart = new Chart(pieCtx, {
         type: 'doughnut',
         data: {
-          labels: labels,
+          labels: Object.keys(counts),
           datasets: [{
-            data: dataVals,
-            backgroundColor: bgColors,
+            data: Object.values(counts),
+            backgroundColor: ['#27AE60', '#F39C12', '#8B5CF6', '#D32F2F'],
             borderWidth: 2,
             borderColor: '#ffffff'
           }]
@@ -507,35 +1488,39 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'right' }
-          }
+            legend: { position: 'bottom', labels: { boxWidth: 10, font: { family: 'Plus Jakarta Sans', size: 10 } } }
+          },
+          cutout: '68%'
         }
       });
-    }
 
-    function renderRSChart(rsData) {
-      const ctx = document.getElementById('rsBreakdownChart').getContext('2d');
+      const rsData = stats.rs_breakdown;
+      const barCtx = document.getElementById('rsBreakdownChart').getContext('2d');
       if (rsChart) rsChart.destroy();
 
-      const labels = Object.keys(rsData);
-      const rates = labels.map(k => rsData[k].fraud_rate);
+      const rsLabels = Object.keys(rsData);
+      const rates = rsLabels.map(k => rsData[k].fraud_rate);
 
-      rsChart = new Chart(ctx, {
+      rsChart = new Chart(barCtx, {
         type: 'bar',
         data: {
-          labels: labels,
+          labels: rsLabels,
           datasets: [{
             label: 'Tingkat Anomali / Dispute (%)',
             data: rates,
-            backgroundColor: '#009639',
-            borderRadius: 6
+            backgroundColor: '#008D4C',
+            borderRadius: 8
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
           scales: {
-            y: { beginAtZero: true, ticks: { callback: v => v + '%' } }
+            y: { beginAtZero: true, ticks: { callback: v => v + '%' } },
+            x: { grid: { display: false } }
           }
         }
       });
@@ -544,9 +1529,10 @@
     async function loadTableClaims(page) {
       currentPage = page;
       const type = document.getElementById('table-filter-type').value;
+      const verifStatus = document.getElementById('table-filter-verif')?.value || 'ALL';
       const search = document.getElementById('table-search').value;
 
-      const res = await fetch(`/api/claims?dataset=${currentDataset}&fraud_type=${type}&search=${encodeURIComponent(search)}&page=${page}&limit=10`);
+      const res = await fetch(`/api/claims?dataset=${currentDataset}&fraud_type=${type}&verification_status=${verifStatus}&search=${encodeURIComponent(search)}&page=${page}&limit=10`);
       const data = await res.json();
       totalPages = data.total_pages;
 
@@ -554,55 +1540,67 @@
       tbody.innerHTML = '';
 
       if (data.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Tidak ada klaim yang cocok dengan filter pencarian.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="px-5 py-8 text-center text-gray-400">Tidak ada berkas klaim yang cocok dengan filter.</td></tr>';
+        document.getElementById('table-page-info').innerText = '0 dari 0 klaim';
         return;
       }
 
       data.data.forEach(c => {
-        let badgeClass = 'badge-normal';
-        let badgeText = 'Klaim Wajar';
-        const ft = c.fraud_type_clean;
+        let badgeBg = 'bg-emerald-50 text-[#27AE60] border border-emerald-200';
+        let badgeLabel = 'NORMAL';
+        if (c.fraud_type_clean === 'UPCODING') { badgeBg = 'bg-red-50 text-[#D32F2F] border border-red-200'; badgeLabel = 'UPCODING'; }
+        else if (c.fraud_type_clean === 'UNBUNDLING') { badgeBg = 'bg-amber-50 text-[#F39C12] border border-amber-200'; badgeLabel = 'UNBUNDLING'; }
+        else if (c.fraud_type_clean === 'PHANTOM_BILLING') { badgeBg = 'bg-purple-50 text-purple-700 border border-purple-200'; badgeLabel = 'PHANTOM BILLING'; }
+        else if (c.fraud_type_clean === 'DISPUTED_CLAIM') { badgeBg = 'bg-rose-50 text-rose-700 border border-rose-200'; badgeLabel = 'DIPANGKAS BPJS'; }
 
-        if (ft === 'UPCODING') {
-          badgeClass = 'badge-fraud-upcoding';
-          badgeText = '🚨 Upcoding';
-        } else if (ft === 'UNBUNDLING') {
-          badgeClass = 'badge-fraud-unbundling';
-          badgeText = '⚠️ Unbundling';
-        } else if (ft === 'PHANTOM_BILLING') {
-          badgeClass = 'badge-fraud-phantom';
-          badgeText = '🛑 Phantom Billing';
-        } else if (ft === 'DISPUTED_CLAIM') {
-          badgeClass = 'badge-fraud-dispute';
-          badgeText = '⚖️ Dipotong Verifikator';
+        // Verifikasi Manual Status Badge
+        let verifBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-600 border border-gray-200"><i class="ti ti-hourglass-empty"></i> Belum Verifikasi</span>';
+        if (c.verification_status === 'APPROVED') {
+          verifBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-[#008D4C] border border-emerald-200" title="Diverifikasi oleh: ${c.verified_by || '-'}"><i class="ti ti-circle-check"></i> Layak Bayar</span>`;
+        } else if (c.verification_status === 'REJECTED') {
+          verifBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-[#D32F2F] border border-red-200" title="Ditolak oleh: ${c.verified_by || '-'}"><i class="ti ti-circle-x"></i> Ditolak (Fraud)</span>`;
+        } else if (c.verification_status === 'DISPUTED') {
+          verifBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-[#F39C12] border border-amber-200" title="Dispute koreksi oleh: ${c.verified_by || '-'}"><i class="ti ti-alert-triangle"></i> Dispute</span>`;
+        } else if (c.verification_status === 'PENDING') {
+          verifBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 text-[#2980B9] border border-sky-200" title="Klarifikasi oleh: ${c.verified_by || '-'}"><i class="ti ti-help"></i> Klarifikasi</span>`;
         }
 
         const tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50/70 transition';
         tr.innerHTML = `
-          <td><span class="font-monospace fw-semibold">${c.NO_SEP}</span></td>
-          <td>
-            <div class="fw-medium">${c.ID_PESERTA}</div>
-            <small class="text-muted">${c.TIPE_FASKES || 'RS Provider'}</small>
+          <td class="px-4 py-3">
+            <div class="font-mono font-bold text-gray-900">${c.NO_SEP}</div>
+            <div class="text-[11px] text-gray-500">${c.TGL_MASUK || c.FKL03 || '2024'}</div>
           </td>
-          <td>
-            <div class="fw-medium text-truncate" style="max-width: 240px;" title="${c.NAMA_DIAGNOSA}">${c.NAMA_DIAGNOSA}</div>
-            <small class="badge bg-light text-dark border">${c.KODE_INACBG || '-'}</small>
+          <td class="px-4 py-3">
+            <div class="font-semibold text-gray-800">Pasien ${c.ID_PESERTA || c.PSTV01}</div>
+            <div class="text-[11px] text-gray-500">${c.TIPE_FASKES || c.FKL09 || 'RS Rujukan'}</div>
           </td>
-          <td>${c.los_clean} Hari</td>
-          <td><span class="fw-semibold">Rp ${Number(c.display_tagih).toLocaleString('id-ID')}</span></td>
-          <td><span class="badge ${badgeClass} px-2 py-1">${badgeText}</span></td>
-          <td>
-            <button class="btn btn-sm btn-outline-primary py-0 px-2" onclick='loadExistingClaim(${JSON.stringify(c)})'>
-              <i class="fa-solid fa-magnifying-glass me-1"></i>Audit
-            </button>
+          <td class="px-4 py-3">
+            <div class="font-medium text-gray-900 truncate max-w-[190px]" title="${c.NAMA_DIAGNOSA}">${c.NAMA_DIAGNOSA}</div>
+            <div class="font-mono text-[11px] text-gray-500">${c.KODE_INACBG || '-'}</div>
+          </td>
+          <td class="px-3 py-3"><span class="px-2 py-0.5 rounded-md bg-gray-100 font-semibold text-gray-700">${c.los_clean} Hari</span></td>
+          <td class="px-4 py-3 font-bold font-mono text-[#0B4F6C]">Rp ${Number(c.display_tagih).toLocaleString('id-ID')}</td>
+          <td class="px-3 py-3"><span class="px-2 py-1 rounded-md text-[10px] font-bold ${badgeBg}">${badgeLabel}</span></td>
+          <td class="px-3 py-3 whitespace-nowrap">${verifBadge}</td>
+          <td class="px-4 py-3 text-center whitespace-nowrap">
+            <div class="flex items-center justify-center gap-1.5">
+              <button class="px-2.5 py-1 rounded-lg bg-[#008D4C] text-white hover:bg-[#00733E] font-bold text-[11px] transition inline-flex items-center gap-1 shadow-sm" onclick="openDocumentModal('${c.NO_SEP}')">
+                <i class="ti ti-file-certificate"></i>Telaah
+              </button>
+              <button class="px-2 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold text-[11px] transition inline-flex items-center gap-1" onclick='loadExistingClaim(${JSON.stringify(c)})'>
+                <i class="ti ti-stethoscope"></i>Audit
+              </button>
+            </div>
           </td>
         `;
         tbody.appendChild(tr);
       });
 
-      document.getElementById('table-page-info').innerText = `Halaman ${data.page} dari ${data.total_pages} (${data.total.toLocaleString('id-ID')} Total Klaim)`;
-      document.getElementById('btn-prev').disabled = (data.page <= 1);
-      document.getElementById('btn-next').disabled = (data.page >= data.total_pages);
+      document.getElementById('table-page-info').innerText = `Halaman ${page} dari ${totalPages} (${data.total.toLocaleString('id-ID')} total klaim)`;
+      document.getElementById('btn-prev').disabled = (page <= 1);
+      document.getElementById('btn-next').disabled = (page >= totalPages);
     }
 
     function changePage(delta) {
@@ -613,44 +1611,116 @@
     }
 
     function handleSearch(e) {
-      if (e.key === 'Enter' || e.target.value.length === 0) {
+      if (e.key === 'Enter') {
         loadTableClaims(1);
       }
     }
 
     function loadCase(type) {
+      document.getElementById('inp-pelayanan').value = 'RITL';
+      document.getElementById('inp-diag-masuk').value = '-';
+      document.getElementById('inp-faskes-jenis').value = 'RS Umum';
+      document.getElementById('inp-rujukan').value = 'VALID';
+      document.getElementById('inp-topup-type').value = '-';
+      document.getElementById('inp-topup-biaya').value = '0';
+
       if (type === 'normal') {
-        document.getElementById('inp-no-sep').value = 'SEP-NORM-2026-0081';
+        document.getElementById('inp-no-sep').value = 'SEP-NOR-2026-0001';
         document.getElementById('inp-icd10').value = 'J18.9|Pneumonia Tidak Spesifik|J-4-16|INFEKSI SALURAN PERNAPASAN';
-        document.getElementById('inp-severity').value = '1';
+        document.getElementById('inp-severity').value = '2';
         document.getElementById('inp-los').value = '3';
-        document.getElementById('inp-biaya-riil').value = '4600000';
-        document.getElementById('inp-biaya-tagih').value = '4800000';
-        document.getElementById('inp-icd9').value = '87.44';
+        document.getElementById('inp-rs-type').value = 'RS Kelas C';
+        document.getElementById('inp-biaya-riil').value = '8400000';
+        document.getElementById('inp-biaya-tagih').value = '8900000';
+        document.getElementById('inp-icd9').value = '-';
       } else if (type === 'upcoding') {
         document.getElementById('inp-no-sep').value = 'SEP-UPC-2026-0042';
         document.getElementById('inp-icd10').value = 'J18.9|Pneumonia Tidak Spesifik|J-4-16|INFEKSI SALURAN PERNAPASAN';
         document.getElementById('inp-severity').value = '3';
-        document.getElementById('inp-los').value = '2';
+        document.getElementById('inp-los').value = '1';
+        document.getElementById('inp-rs-type').value = 'RS Kelas C';
         document.getElementById('inp-biaya-riil').value = '3400000';
         document.getElementById('inp-biaya-tagih').value = '17400000';
         document.getElementById('inp-icd9').value = '-';
       } else if (type === 'unbundling') {
         document.getElementById('inp-no-sep').value = 'SEP-UNB-2026-0019';
-        document.getElementById('inp-icd10').value = 'K35.8|Apendisitis Akut Lainnya|K-1-12|PROSEDUR APENDIKS';
+        document.getElementById('inp-icd10').value = 'K35.8|Apendisitis Akut Lainnya|K-1-12|APENDISITIS';
         document.getElementById('inp-severity').value = '1';
         document.getElementById('inp-los').value = '1';
-        document.getElementById('inp-biaya-riil').value = '6700000';
+        document.getElementById('inp-rs-type').value = 'RS Kelas D';
+        document.getElementById('inp-biaya-riil').value = '6750000';
         document.getElementById('inp-biaya-tagih').value = '7500000';
-        document.getElementById('inp-icd9').value = '47.09';
+        document.getElementById('inp-icd9').value = '47.0 - Appendectomy';
       } else if (type === 'phantom') {
         document.getElementById('inp-no-sep').value = '419911224V002625';
         document.getElementById('inp-icd10').value = 'I10|Hipertensi Primer|I-4-17|HIPERTENSI';
         document.getElementById('inp-severity').value = '1';
         document.getElementById('inp-los').value = '0';
+        document.getElementById('inp-rs-type').value = 'RS Kelas C';
         document.getElementById('inp-biaya-riil').value = '0';
         document.getElementById('inp-biaya-tagih').value = '2223200';
         document.getElementById('inp-icd9').value = '-';
+      } else if (type === 'klaster1') {
+        document.getElementById('inp-no-sep').value = 'SEP-K1-IMPLAN-0081';
+        document.getElementById('inp-icd10').value = 'S72.0|Fraktur Leher Femur Paha|M-1-40|PROSEDUR SENDI & TULANG PAHA';
+        document.getElementById('inp-severity').value = '1';
+        document.getElementById('inp-los').value = '3';
+        document.getElementById('inp-rs-type').value = 'RS Kelas B';
+        document.getElementById('inp-biaya-riil').value = '12000000';
+        document.getElementById('inp-biaya-tagih').value = '35000000';
+        document.getElementById('inp-icd9').value = '-';
+        document.getElementById('inp-topup-type').value = 'RR - Special Prosthesis (Implan Platina Femur)';
+        document.getElementById('inp-topup-biaya').value = '23000000';
+      } else if (type === 'klaster2') {
+        document.getElementById('inp-no-sep').value = 'SEP-K2-DRIFT-0045';
+        document.getElementById('inp-diag-masuk').value = 'K30';
+        document.getElementById('inp-icd10').value = 'K25.0|Tukak Lambung Akut Pendarahan|K-4-10|TUKAK LAMBUNG BERAT';
+        document.getElementById('inp-severity').value = '3';
+        document.getElementById('inp-los').value = '1';
+        document.getElementById('inp-rs-type').value = 'RS Kelas C';
+        document.getElementById('inp-biaya-riil').value = '2200000';
+        document.getElementById('inp-biaya-tagih').value = '11500000';
+        document.getElementById('inp-icd9').value = '-';
+      } else if (type === 'klaster3') {
+        document.getElementById('inp-no-sep').value = 'SEP-K3-VELOCITY-0092';
+        document.getElementById('inp-icd10').value = 'A90|Dengue Fever / Demam Berdarah|A-4-14|DEMAM BERDARAH';
+        document.getElementById('inp-severity').value = '3';
+        document.getElementById('inp-los').value = '1';
+        document.getElementById('inp-rs-type').value = 'RS Kelas C';
+        document.getElementById('inp-biaya-riil').value = '3000000';
+        document.getElementById('inp-biaya-tagih').value = '18500000';
+        document.getElementById('inp-icd9').value = '-';
+      } else if (type === 'klaster4') {
+        document.getElementById('inp-no-sep').value = 'SEP-K4-BYPASS-0103';
+        document.getElementById('inp-pelayanan').value = 'RJTL';
+        document.getElementById('inp-diag-masuk').value = 'H52.1';
+        document.getElementById('inp-icd10').value = 'H52.1|Miopia / Kelainan Refraksi|H-3-13|PELAYANAN MATA RJTL';
+        document.getElementById('inp-severity').value = '1';
+        document.getElementById('inp-los').value = '0';
+        document.getElementById('inp-rs-type').value = 'RS Kelas B';
+        document.getElementById('inp-biaya-riil').value = '350000';
+        document.getElementById('inp-biaya-tagih').value = '350000';
+        document.getElementById('inp-rujukan').value = 'BYPASS';
+        document.getElementById('inp-icd9').value = '-';
+      } else if (type === 'klaster5') {
+        document.getElementById('inp-no-sep').value = 'SEP-K5-PADDING-0077';
+        document.getElementById('inp-icd10').value = 'O82.0|Persalinan Sesar Elektif|O-1-20|SECTIO CAESAREA';
+        document.getElementById('inp-severity').value = '3';
+        document.getElementById('inp-los').value = '2';
+        document.getElementById('inp-rs-type').value = 'RS Kelas B';
+        document.getElementById('inp-biaya-riil').value = '6800000';
+        document.getElementById('inp-biaya-tagih').value = '18900000';
+        document.getElementById('inp-icd9').value = '-';
+      } else if (type === 'klaster6') {
+        document.getElementById('inp-no-sep').value = 'SEP-K6-MISMATCH-0023';
+        document.getElementById('inp-icd10').value = 'S06.2|Cedera Otak Difus Mayor|G-1-10|PROSEDUR KRANIOTOMI MAYOR';
+        document.getElementById('inp-severity').value = '3';
+        document.getElementById('inp-los').value = '5';
+        document.getElementById('inp-rs-type').value = 'RS Kelas D';
+        document.getElementById('inp-faskes-jenis').value = 'RS Khusus Bersalin';
+        document.getElementById('inp-biaya-riil').value = '35000000';
+        document.getElementById('inp-biaya-tagih').value = '45000000';
+        document.getElementById('inp-icd9').value = '01.24 - Kraniotomi dan Bedah Saraf Kepala';
       }
       runLiveAudit();
     }
@@ -658,23 +1728,64 @@
     function loadExistingClaim(c) {
       document.getElementById('inp-no-sep').value = c.NO_SEP;
       document.getElementById('inp-los').value = c.los_clean;
-      document.getElementById('inp-rs-type').value = c.TIPE_FASKES || 'RS Kelas C';
+      document.getElementById('inp-rs-type').value = c.TIPE_FASKES || 'RS Kelas B';
+      document.getElementById('inp-faskes-jenis').value = 'RS Umum';
+      document.getElementById('inp-rujukan').value = 'VALID';
+      document.getElementById('inp-topup-type').value = '-';
+      document.getElementById('inp-topup-biaya').value = '0';
+      document.getElementById('inp-diag-masuk').value = '-';
+
+      const pel = c.PELAYANAN || c.FKL10 || (parseInt(c.los_clean) > 0 ? 'RITL' : 'RJTL');
+      document.getElementById('inp-pelayanan').value = pel;
+
       document.getElementById('inp-biaya-tagih').value = c.display_tagih;
-      document.getElementById('inp-biaya-riil').value = c.BIAYA_RIIL_RS || (c.display_tagih * 0.8);
+      document.getElementById('inp-biaya-riil').value = c.BIAYA_RIIL_RS || c.FKL48 || (c.display_tagih * 0.95);
       document.getElementById('inp-icd9').value = c.KODE_ICD9_PROSEDUR || '-';
-      window.scrollTo({ top: 380, behavior: 'smooth' });
+
+      const icdSelect = document.getElementById('inp-icd10');
+      const kodeIcd10 = c.KODE_ICD10 || c.FKL17A || (c.KODE_INACBG ? c.KODE_INACBG.split('-')[0] : 'MED');
+      const namaDiag = c.NAMA_DIAGNOSA || 'Pelayanan Medis';
+      const inacbg = c.KODE_INACBG || 'Q-5-44';
+
+      let matched = false;
+      for (let i = 0; i < icdSelect.options.length; i++) {
+        if (icdSelect.options[i].value.includes(kodeIcd10)) {
+          icdSelect.selectedIndex = i;
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        const valStr = `${kodeIcd10}|${namaDiag}|${inacbg}|${namaDiag}`;
+        const opt = new Option(`${kodeIcd10} - ${namaDiag}`, valStr);
+        icdSelect.add(opt);
+        icdSelect.value = valStr;
+      }
+
+      const sevStr = String(c.SEVERITY_LEVEL || c.FKL23 || '1').toLowerCase();
+      let sevVal = '1';
+      if (sevStr.includes('3') || sevStr.includes('iii') || sevStr.includes('berat')) sevVal = '3';
+      else if (sevStr.includes('2') || sevStr.includes('ii') || sevStr.includes('sedang')) sevVal = '2';
+      document.getElementById('inp-severity').value = sevVal;
+
+      document.getElementById('section-simulator').scrollIntoView({ behavior: 'smooth' });
       runLiveAudit();
     }
 
     async function runLiveAudit() {
       const icdRaw = document.getElementById('inp-icd10').value.split('|');
+      const diagMasuk = document.getElementById('inp-diag-masuk').value;
+      const isUnreferral = (document.getElementById('inp-rujukan').value === 'BYPASS');
+
       const payload = {
         no_sep: document.getElementById('inp-no-sep').value,
         id_peserta: 'PST-AUDIT',
         tipe_faskes: document.getElementById('inp-rs-type').value,
-        pelayanan: 'RITL',
+        jenis_faskes: document.getElementById('inp-faskes-jenis').value,
+        pelayanan: document.getElementById('inp-pelayanan').value,
         kode_icd10: icdRaw[0],
         nama_diagnosa: icdRaw[1],
+        diag_masuk_icd10: (diagMasuk !== '-') ? diagMasuk : null,
         kode_komorbid: '-',
         kode_icd9: document.getElementById('inp-icd9').value,
         kode_inacbg: `${icdRaw[2]}-${['I','II','III'][document.getElementById('inp-severity').value - 1]}`,
@@ -683,7 +1794,11 @@
         los_hari: parseInt(document.getElementById('inp-los').value),
         biaya_tagih: parseFloat(document.getElementById('inp-biaya-tagih').value),
         biaya_riil: parseFloat(document.getElementById('inp-biaya-riil').value),
-        kunjungan_terakhir_hari: document.getElementById('inp-no-sep').value.includes('UNB') ? 2 : 999
+        topup_special_cmg: document.getElementById('inp-topup-type').value,
+        biaya_topup: parseFloat(document.getElementById('inp-topup-biaya').value || 0),
+        is_unreferral: isUnreferral,
+        kunjungan_terakhir_hari: document.getElementById('inp-no-sep').value.includes('UNB') ? 2 : 999,
+        force_mode: currentLLMMode
       };
 
       const res = await fetch('/api/audit', {
@@ -696,30 +1811,97 @@
       const box = document.getElementById('audit-result-box');
       box.style.display = 'block';
 
+      const bannerContainer = document.getElementById('verdict-banner-container');
       const badgeStatus = document.getElementById('res-badge-status');
       const badgeType = document.getElementById('res-badge-type');
 
       if (data.is_fraud === 1) {
-        box.style.backgroundColor = '#fff1f2';
-        box.style.borderColor = '#e11d48';
-        badgeStatus.className = 'badge bg-danger fs-6 px-3 py-2';
-        badgeStatus.innerText = '🚨 DITAHAN — TERDETEKSI KECURANGAN KLAIM';
-        badgeType.className = 'badge bg-dark ms-2 fs-6 px-3 py-2';
+        bannerContainer.className = 'p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 border shadow-sm bg-red-50 border-red-200';
+        badgeStatus.className = 'px-3 py-1 rounded-lg text-xs font-extrabold shadow-sm bg-[#D32F2F] text-white';
+        badgeStatus.innerText = '🚨 DITAHAN — TERDETEKSI ANOMALI KLAIM';
+        badgeType.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-gray-900 text-white shadow-sm';
         badgeType.innerText = `Modul: ${data.fraud_type}`;
         document.getElementById('res-saving-text').innerText = `Potensi Penyelamatan Dana JKN: Rp ${Number(data.potensi_hemat_idr).toLocaleString('id-ID')}`;
       } else {
-        box.style.backgroundColor = '#f0fdf4';
-        box.style.borderColor = '#16a34a';
-        badgeStatus.className = 'badge bg-success fs-6 px-3 py-2';
+        bannerContainer.className = 'p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 border shadow-sm bg-emerald-50 border-emerald-200';
+        badgeStatus.className = 'px-3 py-1 rounded-lg text-xs font-extrabold shadow-sm bg-[#27AE60] text-white';
         badgeStatus.innerText = '✅ LOLOS VERIFIKASI — WAJAR';
-        badgeType.className = 'badge bg-secondary ms-2 fs-6 px-3 py-2';
-        badgeType.innerText = 'Sesuai Standar INA-CBG';
-        document.getElementById('res-saving-text').innerText = 'Tidak ada selisih tarif yang perlu dipangkas.';
+        badgeType.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#0B4F6C] text-white shadow-sm';
+        badgeType.innerText = 'Standar INA-CBG Terpenuhi';
+        document.getElementById('res-saving-text').innerText = 'Klaim layak disetujui (Formulir Pengajuan Klaim Otomatis).';
       }
 
       document.getElementById('res-confidence').innerText = `${data.risk_score}%`;
+      document.getElementById('res-clinical-narrative').innerText = data.clinical_narrative || 'Narasi tidak tersedia.';
 
-      // Update 3-module bars
+      if (data.llm_metadata) {
+        const badge = document.getElementById('res-llm-badge');
+        const meta = data.llm_metadata;
+        if (meta.mode === 'OFFLINE') {
+          badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold shadow-sm bg-amber-100 text-amber-800 border border-amber-300';
+          badge.innerHTML = '<i class="ti ti-shield-halved me-1"></i>Offline Permenkes Engine (Manual Mode)';
+        } else if (meta.is_fallback) {
+          badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold shadow-sm bg-amber-500 text-white';
+          badge.innerHTML = '<i class="ti ti-alert-triangle me-1"></i>Graceful Fallback (HTTP 200 OK)';
+        } else {
+          badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold shadow-sm bg-[#008D4C] text-white shadow-brand-glow';
+          badge.innerHTML = '<i class="ti ti-cloud me-1"></i>AI Online (' + meta.provider + ')';
+        }
+        document.getElementById('res-llm-provider').innerText = `Sumber Narasi: ${meta.provider}`;
+      }
+
+      if (data.execution_latency_ms !== undefined) {
+        document.getElementById('res-execution-latency').innerText = `Latensi Inferensi: ${data.execution_latency_ms} ms`;
+      }
+
+      // Update 6-Cluster Matrix Badges
+      if (data.cluster_breakdown) {
+        const cb = data.cluster_breakdown;
+        const setBadge = (elId, val, isRatio = false) => {
+          const el = document.getElementById(elId);
+          if (!el) return;
+          if (isRatio) {
+            el.innerText = `${val}x`;
+            el.className = val >= 3.0 ? 'text-base font-black text-[#D32F2F] mt-0.5' : 'text-base font-black text-[#27AE60] mt-0.5';
+          } else {
+            el.innerText = `${val}%`;
+            el.className = val >= 50.0 ? 'text-base font-black text-[#D32F2F] mt-0.5' : (val > 0 ? 'text-base font-black text-[#F39C12] mt-0.5' : 'text-base font-black text-[#27AE60] mt-0.5');
+          }
+        };
+        setBadge('badge-k1', cb.klaster_1_special_cmg_topup);
+        setBadge('badge-k2', cb.klaster_2_coding_drift);
+        setBadge('badge-k3', data.cost_velocity_ratio || 1.0, true);
+        setBadge('badge-k4', cb.klaster_4_bypassing_referral);
+        setBadge('badge-k5', cb.klaster_5_comorbid_padding);
+        setBadge('badge-k6', cb.klaster_6_hospital_capability);
+      }
+
+      // Update TreeSHAP Feature Contributions
+      const shapContainer = document.getElementById('res-shap-container');
+      if (shapContainer) {
+        shapContainer.innerHTML = '';
+        if (data.shap_feature_importance && data.shap_feature_importance.length > 0) {
+          data.shap_feature_importance.forEach(s => {
+            const col = document.createElement('div');
+            let badgeBg = 'bg-gray-100 text-gray-700';
+            if (s.impact === 'HIGH') badgeBg = 'bg-red-100 text-[#D32F2F] font-bold';
+            else if (s.impact === 'MEDIUM') badgeBg = 'bg-amber-100 text-[#F39C12] font-bold';
+            else if (s.impact === 'NORMAL') badgeBg = 'bg-emerald-100 text-[#27AE60] font-bold';
+            col.innerHTML = `
+              <div class="flex items-center justify-between p-2 rounded-xl border border-gray-100 bg-gray-50/70 text-xs">
+                <span class="font-medium text-gray-800 truncate me-2">${s.feature_name}</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  <span class="px-1.5 py-0.5 rounded text-[10px] ${badgeBg}">${s.impact}</span>
+                  <span class="font-mono font-bold text-gray-900">${s.contribution_pct}%</span>
+                </div>
+              </div>
+            `;
+            shapContainer.appendChild(col);
+          });
+        }
+      }
+
+      // 3-Module Risk Bars
       document.getElementById('score-mod1').innerText = `${data.module_scores.upcoding_score}%`;
       document.getElementById('prog-mod1').style.width = `${data.module_scores.upcoding_score}%`;
 
@@ -729,7 +1911,7 @@
       document.getElementById('score-mod3').innerText = `${data.module_scores.phantom_score}%`;
       document.getElementById('prog-mod3').style.width = `${data.module_scores.phantom_score}%`;
 
-      // Reasons
+      // Findings
       const reasonsUl = document.getElementById('res-reasons-list');
       reasonsUl.innerHTML = '';
       data.audit_findings.forEach(r => {
@@ -755,6 +1937,530 @@
         li.innerText = r;
         recommsUl.appendChild(li);
       });
+    }
+
+    // =========================================================================
+    // 11. WORKFLOW VERIFIKASI MANUAL DOKUMEN KLINIS (HUMAN-IN-THE-LOOP)
+    // =========================================================================
+    let activeClaimDocData = null;
+    let activeDocTab = 'sep';
+    let currentSelectedDecision = 'APPROVED';
+
+    async function openDocumentModal(noSep) {
+      const modal = document.getElementById('documentVerificationModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      document.getElementById('doc-modal-sep-badge').innerText = noSep;
+      document.getElementById('doc-canvas-content').innerHTML = `
+        <div class="py-16 text-center text-gray-400">
+          <i class="ti ti-loader animate-spin text-3xl mb-2 text-[#008D4C]"></i>
+          <p class="text-xs font-semibold">Mengambil berkas rekam medis digital ${noSep}...</p>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`/api/claims/${encodeURIComponent(noSep)}/documents?dataset=${currentDataset}`);
+        const resData = await res.json();
+        if (!resData.data) throw new Error('Data klaim tidak ditemukan');
+        activeClaimDocData = resData.data;
+
+        // 1. Update Header Badges
+        const aiPred = activeClaimDocData.ai_prediction || {};
+        const aiPill = document.getElementById('doc-modal-ai-status-pill');
+        if (aiPred.is_fraud) {
+          aiPill.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-[#D32F2F] border border-red-200';
+          aiPill.innerHTML = `<i class="ti ti-alert-triangle"></i><span>Audit AI: ${aiPred.fraud_type} (${aiPred.risk_score}%)</span>`;
+        } else {
+          aiPill.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-[#008D4C] border border-emerald-200';
+          aiPill.innerHTML = `<i class="ti ti-shield-check"></i><span>Audit AI: WAJAR (${aiPred.risk_score}%)</span>`;
+        }
+
+        const verifPill = document.getElementById('doc-modal-verif-status-pill');
+        const curVerif = activeClaimDocData.current_verification;
+        if (curVerif && curVerif.verification_status !== 'UNVERIFIED') {
+          verifPill.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-[#008D4C] border border-emerald-200';
+          verifPill.innerHTML = `<i class="ti ti-circle-check"></i><span>${curVerif.status_label}</span>`;
+        } else {
+          verifPill.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200';
+          verifPill.innerHTML = `<i class="ti ti-clock"></i><span>Belum Diverifikasi</span>`;
+        }
+
+        // 2. Render Cross-Check Panel
+        renderCrossCheckPanel(activeClaimDocData.cross_check);
+
+        // 3. Prepopulate Verification Form
+        prepopulateVerificationForm(curVerif);
+
+        // 4. Render Active Document (Default to SEP)
+        switchDocTab('sep');
+
+      } catch (err) {
+        console.error('Gagal memuat dokumen klaim:', err);
+        document.getElementById('doc-canvas-content').innerHTML = `
+          <div class="py-12 text-center text-red-500">
+            <i class="ti ti-alert-circle text-3xl mb-2"></i>
+            <p class="text-xs font-bold">Gagal mengambil dokumen klaim: ${err.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function closeDocumentModal() {
+      const modal = document.getElementById('documentVerificationModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function switchDocTab(tabName) {
+      activeDocTab = tabName;
+      ['sep', 'resume', 'billing', 'rujukan'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (!btn) return;
+        if (t === tabName) {
+          btn.className = 'px-3.5 py-1.5 rounded-lg bg-white text-[#008D4C] shadow-sm transition flex items-center gap-1.5 font-bold';
+        } else {
+          btn.className = 'px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-gray-900 transition flex items-center gap-1.5 font-semibold';
+        }
+      });
+
+      renderActiveDocContent(tabName);
+    }
+
+    function renderActiveDocContent(tab) {
+      if (!activeClaimDocData || !activeClaimDocData.documents) return;
+      const c = activeClaimDocData;
+      const docs = c.documents;
+      const container = document.getElementById('doc-canvas-content');
+      const tokenEl = document.getElementById('doc-verify-token');
+
+      if (tab === 'sep') {
+        const sep = docs.sep;
+        tokenEl.innerText = `TOKEN: ${sep.barcode_token || 'SEP-DIGITAL-AUTH'}`;
+        container.innerHTML = `
+          <div class="border-b-2 border-[#008D4C] pb-3 mb-3 flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-sm text-[#008D4C] tracking-wide">${sep.title}</div>
+              <div class="text-[11px] font-semibold text-[#0B4F6C]">${sep.subtitle}</div>
+            </div>
+            <div class="text-right">
+              <span class="px-2 py-0.5 rounded bg-emerald-100 text-[#008D4C] font-mono text-[11px] font-bold">TERBIT ELEKTRONIK</span>
+              <div class="text-[10px] text-gray-400 mt-0.5">Tgl: ${sep.tgl_sep}</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
+            <div class="space-y-2">
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Nomor SEP</span>
+                <span class="font-mono font-bold text-gray-900">${sep.no_sep}</span>
+              </div>
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Nomor Kartu BPJS</span>
+                <span class="font-mono font-bold text-gray-900">${sep.no_kartu}</span>
+              </div>
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Nama Peserta</span>
+                <span class="font-semibold text-gray-900">${sep.nama_peserta}</span>
+              </div>
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Jenis Kelamin / Lahir</span>
+                <span class="text-gray-800">${sep.jns_kelamin} &bull; ${sep.tgl_lahir}</span>
+              </div>
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Jenis Pelayanan</span>
+                <span class="font-bold text-[#0B4F6C]">${sep.jns_pelayanan}</span>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Faskes Perujuk</span>
+                <span class="font-semibold text-gray-900">${sep.faskes_perujuk}</span>
+              </div>
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">No. Surat Rujukan</span>
+                <span class="font-mono text-gray-800">${sep.no_rujukan}</span>
+              </div>
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Poli Tujuan / Rawat</span>
+                <span class="font-bold text-gray-900">${sep.poli_tujuan}</span>
+              </div>
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Hak Kelas Rawat</span>
+                <span class="text-gray-800">${sep.kelas_rawat}</span>
+              </div>
+              <div class="flex justify-between border-b border-gray-100 pb-1">
+                <span class="text-gray-500">Faskes Pelaksana</span>
+                <span class="font-semibold text-gray-900">${sep.faskes_pelaksana}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 mt-2 space-y-1 text-xs">
+            <div class="text-[11px] font-bold text-gray-500 uppercase">Diagnosa Awal Masuk:</div>
+            <div class="font-bold text-gray-900 font-mono">${sep.diagnosa_awal}</div>
+            <div class="text-[11px] text-gray-500 italic mt-1">${sep.catatan}</div>
+          </div>
+        `;
+      } else if (tab === 'resume') {
+        const rm = docs.resume_medis;
+        tokenEl.innerText = `DPJP HASH: ${rm.dpjp.digital_signature_hash}`;
+        container.innerHTML = `
+          <div class="border-b-2 border-[#0B4F6C] pb-3 mb-3 flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-sm text-[#0B4F6C]">${rm.title}</div>
+              <div class="text-[11px] text-gray-600 font-semibold">${rm.hospital_name} &bull; No. RM: <span class="font-mono font-bold">${rm.no_rekam_medis}</span></div>
+            </div>
+            <div class="text-right">
+              <span class="px-2 py-0.5 rounded bg-blue-100 text-[#0B4F6C] font-mono text-[11px] font-bold">${rm.lama_rawat}</span>
+              <div class="text-[10px] text-gray-500 mt-0.5">${rm.tgl_masuk} s.d ${rm.tgl_keluar}</div>
+            </div>
+          </div>
+
+          <!-- Tanda Vital -->
+          <div class="grid grid-cols-5 gap-2 p-2.5 rounded-xl bg-gray-50 border border-gray-200 text-center text-xs">
+            <div>
+              <div class="text-[10px] text-gray-400">Tekanan Darah</div>
+              <div class="font-bold text-gray-800">${rm.tanda_vital.tekanan_darah}</div>
+            </div>
+            <div>
+              <div class="text-[10px] text-gray-400">Nadi</div>
+              <div class="font-bold text-gray-800">${rm.tanda_vital.nadi}</div>
+            </div>
+            <div>
+              <div class="text-[10px] text-gray-400">Suhu</div>
+              <div class="font-bold text-gray-800">${rm.tanda_vital.suhu}</div>
+            </div>
+            <div>
+              <div class="text-[10px] text-gray-400">Respirasi</div>
+              <div class="font-bold text-gray-800">${rm.tanda_vital.pernapasan}</div>
+            </div>
+            <div>
+              <div class="text-[10px] text-gray-400">Kesadaran</div>
+              <div class="font-bold text-[#008D4C] text-[11px]">${rm.tanda_vital.kesadaran}</div>
+            </div>
+          </div>
+
+          <div class="space-y-2 text-xs mt-3">
+            <div>
+              <span class="font-bold text-gray-700">Anamnesis &amp; Keluhan Utama:</span>
+              <p class="text-gray-700 bg-gray-50/70 p-2 rounded-lg border border-gray-100 mt-0.5 leading-relaxed">${rm.keluhan_anamnesis}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <span class="font-bold text-[#008D4C]">Diagnosa Utama (ICD-10):</span>
+                <p class="font-mono font-bold text-gray-900 bg-emerald-50/50 p-2 rounded-lg border border-emerald-100 mt-0.5">${rm.diagnosa_utama}</p>
+              </div>
+              <div>
+                <span class="font-bold text-[#0B4F6C]">Tindakan Medis (ICD-9-CM):</span>
+                <p class="font-mono text-gray-800 bg-blue-50/50 p-2 rounded-lg border border-blue-100 mt-0.5">${rm.prosedur_tindakan}</p>
+              </div>
+            </div>
+            <div>
+              <span class="font-bold text-gray-700">Terapi &amp; Pengobatan Diberikan:</span>
+              <p class="text-gray-700 bg-gray-50 p-2 rounded-lg border border-gray-100 mt-0.5">${rm.terapi_diberikan}</p>
+            </div>
+          </div>
+
+          <!-- DPJP Signature Stamp -->
+          <div class="pt-2 border-t border-gray-100 flex items-center justify-between mt-2">
+            <div class="text-[11px] text-gray-500">
+              Kondisi Pulang: <strong class="text-emerald-700">${rm.kondisi_keluar}</strong>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-gray-400">Dokter Penanggung Jawab Pelayanan (DPJP)</div>
+              <div class="font-bold text-xs text-[#0B4F6C]">${rm.dpjp.nama}</div>
+              <div class="text-[10px] text-gray-500 font-mono">${rm.dpjp.sip}</div>
+            </div>
+          </div>
+        `;
+      } else if (tab === 'billing') {
+        const b = docs.billing;
+        tokenEl.innerText = `BILL NO: ${b.no_kwitansi}`;
+        let rowsHtml = '';
+        b.items.forEach(it => {
+          rowsHtml += `
+            <tr class="border-b border-gray-100">
+              <td class="py-2 text-gray-800 font-medium">${it.item}</td>
+              <td class="py-2 text-gray-500 text-[11px]">${it.keterangan}</td>
+              <td class="py-2 text-right font-mono font-bold text-gray-900">Rp ${Number(it.biaya).toLocaleString('id-ID')}</td>
+            </tr>
+          `;
+        });
+
+        container.innerHTML = `
+          <div class="border-b-2 border-[#F39C12] pb-3 mb-3 flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-sm text-gray-900">${b.title}</div>
+              <div class="text-[11px] text-gray-500 font-mono">No. Kwitansi: ${b.no_kwitansi} &bull; Tgl: ${b.tgl_cetak}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[11px] text-gray-500">Kode INA-CBG Ditagihkan</div>
+              <div class="font-mono font-black text-xs text-[#0B4F6C]">${b.kode_inacbg}</div>
+            </div>
+          </div>
+
+          <!-- Itemized Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-gray-200 text-gray-500 text-[10px] uppercase font-bold text-left">
+                  <th class="pb-1.5">Komponen Pelayanan</th>
+                  <th class="pb-1.5">Uraian / Kuantitas</th>
+                  <th class="pb-1.5 text-right">Biaya Riil RS</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Summary Comparatives -->
+          <div class="grid grid-cols-3 gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 mt-3 text-center">
+            <div>
+              <div class="text-[10px] text-gray-500 font-semibold uppercase">Total Biaya Riil RS</div>
+              <div class="font-mono font-black text-sm text-gray-900">Rp ${Number(b.total_biaya_riil).toLocaleString('id-ID')}</div>
+            </div>
+            <div>
+              <div class="text-[10px] text-gray-500 font-semibold uppercase">Tarif INA-CBG Diajukan</div>
+              <div class="font-mono font-black text-sm text-[#0B4F6C]">Rp ${Number(b.total_tarif_inacbg).toLocaleString('id-ID')}</div>
+            </div>
+            <div>
+              <div class="text-[10px] text-gray-500 font-semibold uppercase">Cost Velocity Harian</div>
+              <div class="font-mono font-black text-sm ${b.cost_velocity_per_hari > 5000000 ? 'text-[#D32F2F]' : 'text-[#008D4C]'}">
+                Rp ${Number(b.cost_velocity_per_hari).toLocaleString('id-ID')}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (tab === 'rujukan') {
+        const r = docs.rujukan;
+        tokenEl.innerText = `REF-VALID: ${r.no_rujukan}`;
+        container.innerHTML = `
+          <div class="border-b-2 border-[#2980B9] pb-3 mb-3 flex items-center justify-between">
+            <div>
+              <div class="font-extrabold text-sm text-[#2980B9]">${r.title}</div>
+              <div class="text-[11px] text-gray-500 font-semibold">${r.faskes_asal} &bull; ${r.kabupaten_kota}</div>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-[#008D4C] font-bold text-[10px] border border-emerald-200">
+              <i class="ti ti-check me-1"></i>BERLAKU
+            </span>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div class="grid grid-cols-2 gap-4 p-3 bg-blue-50/50 rounded-xl border border-blue-100">
+              <div>
+                <span class="text-gray-500 text-[11px]">Nomor Surat Rujukan:</span>
+                <div class="font-mono font-bold text-[#0B4F6C]">${r.no_rujukan}</div>
+              </div>
+              <div>
+                <span class="text-gray-500 text-[11px]">Tanggal Terbit:</span>
+                <div class="font-bold text-gray-900">${r.tgl_rujukan}</div>
+              </div>
+              <div>
+                <span class="text-gray-500 text-[11px]">Masa Berlaku Sampai:</span>
+                <div class="font-bold text-[#008D4C]">${r.masa_berlaku_sampai} (90 Hari)</div>
+              </div>
+              <div>
+                <span class="text-gray-500 text-[11px]">Dokter Pemeriksa FKTP:</span>
+                <div class="font-semibold text-gray-800">${r.dokter_pemeriksa_fktp}</div>
+              </div>
+            </div>
+
+            <div>
+              <span class="font-bold text-gray-700">Diagnosa Rujukan Pertama:</span>
+              <p class="font-mono font-bold text-gray-900 p-2.5 rounded-lg bg-gray-50 border border-gray-200 mt-1">${r.diagnosa_rujukan}</p>
+            </div>
+
+            <div>
+              <span class="font-bold text-gray-700">Alasan Rujukan ke FKRTL:</span>
+              <p class="text-gray-700 p-2.5 rounded-lg bg-gray-50 border border-gray-200 mt-1 leading-relaxed">${r.catatan_rujukan}</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderCrossCheckPanel(checks) {
+      const container = document.getElementById('cross-check-items-list');
+      if (!container || !checks) return;
+
+      container.innerHTML = '';
+      let validCount = 0;
+      const totalCount = Object.keys(checks).length;
+
+      Object.keys(checks).forEach(k => {
+        const item = checks[k];
+        const isValid = (item.status === 'VALID');
+        if (isValid) validCount++;
+
+        let badgeClass = isValid ? 'bg-emerald-50 text-[#008D4C] border-emerald-200' : 'bg-red-50 text-[#D32F2F] border-red-200';
+        let icon = isValid ? 'ti ti-circle-check' : 'ti ti-alert-triangle';
+
+        const row = document.createElement('div');
+        row.className = `p-2.5 rounded-xl border ${badgeClass} space-y-1 transition`;
+        row.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-bold flex items-center gap-1.5">
+              <i class="${icon}"></i><span>${item.label}</span>
+            </span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${isValid ? 'bg-emerald-100 text-[#008D4C]' : 'bg-red-100 text-[#D32F2F]'}">${item.status}</span>
+          </div>
+          <p class="text-[11px] opacity-90 leading-relaxed">${item.detail}</p>
+        `;
+        container.appendChild(row);
+      });
+
+      const scoreEl = document.getElementById('cross-check-score');
+      if (scoreEl) {
+        scoreEl.innerText = `${validCount}/${totalCount} Valid`;
+        scoreEl.className = (validCount === totalCount) ?
+          'text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-[#008D4C] border border-emerald-200' :
+          'text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-[#F39C12] border border-amber-200';
+      }
+    }
+
+    function prepopulateVerificationForm(curVerif) {
+      const banner = document.getElementById('verif-history-banner');
+      const notesInput = document.getElementById('verif-notes-input');
+      const officerInput = document.getElementById('verif-officer-input');
+
+      if (curVerif && curVerif.verification_status !== 'UNVERIFIED') {
+        currentSelectedDecision = curVerif.verification_status;
+        handleDecisionChange(currentSelectedDecision);
+        notesInput.value = curVerif.notes || '';
+        if (curVerif.verified_by) officerInput.value = curVerif.verified_by;
+
+        banner.classList.remove('hidden');
+        document.getElementById('verif-history-text').innerHTML = `
+          Status: <strong class="text-gray-900">${curVerif.status_label}</strong><br>
+          Diverifikasi oleh: <strong class="text-gray-900">${curVerif.verified_by || '-'}</strong> pada ${curVerif.verified_at || '-'}.
+        `;
+      } else {
+        currentSelectedDecision = 'APPROVED';
+        handleDecisionChange('APPROVED');
+        notesInput.value = 'Dokumen SEP, resume medis rawat jalan, dan rincian biaya telah diperiksa langsung. Diagnosa dan tarif selaras dengan standar INA-CBG.';
+        banner.classList.add('hidden');
+      }
+    }
+
+    function handleDecisionChange(status) {
+      currentSelectedDecision = status;
+      const statuses = ['APPROVED', 'REJECTED', 'DISPUTED', 'PENDING'];
+      statuses.forEach(s => {
+        const label = document.getElementById(`opt-label-${s.toLowerCase()}`);
+        const radio = label ? label.querySelector('input') : null;
+        if (!label || !radio) return;
+
+        if (s === status) {
+          radio.checked = true;
+          if (s === 'APPROVED') label.className = 'cursor-pointer border-2 border-[#008D4C] bg-emerald-50 rounded-xl p-2.5 flex items-start gap-2 shadow-sm';
+          else if (s === 'REJECTED') label.className = 'cursor-pointer border-2 border-[#D32F2F] bg-red-50 rounded-xl p-2.5 flex items-start gap-2 shadow-sm';
+          else if (s === 'DISPUTED') label.className = 'cursor-pointer border-2 border-[#F39C12] bg-amber-50 rounded-xl p-2.5 flex items-start gap-2 shadow-sm';
+          else if (s === 'PENDING') label.className = 'cursor-pointer border-2 border-[#2980B9] bg-sky-50 rounded-xl p-2.5 flex items-start gap-2 shadow-sm';
+        } else {
+          label.className = 'cursor-pointer border-2 border-gray-200 bg-white rounded-xl p-2.5 flex items-start gap-2 hover:bg-gray-50 transition';
+        }
+      });
+    }
+
+    async function submitManualVerification() {
+      if (!activeClaimDocData || !activeClaimDocData.no_sep) return;
+
+      const noSep = activeClaimDocData.no_sep;
+      const notes = document.getElementById('verif-notes-input').value.trim();
+      const officer = document.getElementById('verif-officer-input').value.trim();
+
+      if (!notes) {
+        alert('Mohon masukkan catatan medis & administratif verifikator.');
+        return;
+      }
+
+      const btn = document.getElementById('btn-save-verification');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<i class="ti ti-loader animate-spin text-base"></i><span>Menyimpan Pengesahan...</span>`;
+
+      try {
+        const res = await fetch(`/api/claims/${encodeURIComponent(noSep)}/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: currentSelectedDecision,
+            notes: notes,
+            verified_by: officer,
+            checklist: {
+              check_sep: true,
+              check_diagnosa: true,
+              check_prosedur: true,
+              check_los: true,
+              check_rujukan: true,
+              check_billing: true
+            }
+          })
+        });
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'Gagal menyimpan verifikasi');
+
+        showToast(`Klaim ${noSep} berhasil diverifikasi: ${data.data.status_label}`, 'success');
+
+        // Update active claim verification status in memory
+        activeClaimDocData.current_verification = data.data;
+
+        // Update modal pill
+        const verifPill = document.getElementById('doc-modal-verif-status-pill');
+        verifPill.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-[#008D4C] border border-emerald-200';
+        verifPill.innerHTML = `<i class="ti ti-circle-check"></i><span>${data.data.status_label}</span>`;
+
+        // Update history banner
+        const banner = document.getElementById('verif-history-banner');
+        banner.classList.remove('hidden');
+        document.getElementById('verif-history-text').innerHTML = `
+          Status: <strong class="text-gray-900">${data.data.status_label}</strong><br>
+          Diverifikasi oleh: <strong class="text-gray-900">${data.data.verified_by}</strong> pada ${data.data.verified_at}.
+        `;
+
+        // Reload data table row
+        await loadTableClaims(currentPage);
+
+      } catch (err) {
+        console.error('Error saat menyimpan verifikasi:', err);
+        showToast(`Gagal verifikasi: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      const isSuccess = (type === 'success');
+      toast.className = `p-4 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-semibold border pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0 ${
+        isSuccess ? 'bg-white text-gray-800 border-emerald-200' : 'bg-red-50 text-red-900 border-red-200'
+      }`;
+
+      toast.innerHTML = `
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center ${isSuccess ? 'bg-emerald-100 text-[#008D4C]' : 'bg-red-100 text-red-600'} text-base">
+          <i class="${isSuccess ? 'ti ti-circle-check' : 'ti ti-alert-triangle'}"></i>
+        </div>
+        <div class="flex-1">${message}</div>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 50);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
     }
 
     window.onload = initDashboard;

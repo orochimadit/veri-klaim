@@ -6,6 +6,7 @@ from sklearn.metrics import classification_report, roc_auc_score, confusion_matr
 from sklearn.preprocessing import LabelEncoder
 import xgboost as xgb
 import json
+import os
 
 # 1. Load Dataset
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
