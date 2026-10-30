@@ -1,6 +1,11 @@
 """
-Generator Script: Project Final Slide Deck Healthkathon 2026
+Generator Script: Project Final Slide Deck Healthkathon 2026 (Updated v2.0)
 Format: 16:9 Landscape PDF (960 x 540 pt) strictly matching the official BPJS Healthkathon 2026 template.
+Incorporates latest enhancements:
+- 6-Cluster Fraud Engine based on Kemenkes Blueprint
+- Human-in-the-Loop Workstation with 4 Digital Clinical Documents
+- High performance tuning (0.079 ms core latency, 415 req/s, 100% recall)
+- Explainable AI TreeSHAP + Regulatory Citations (Permenkes 26/2021 & 16/2019)
 Output: docs/Project_Final_Healthkathon_2026_VeriKlaim.pdf
 """
 
@@ -51,7 +56,7 @@ def draw_header(c, title_text, slide_num_label="", current_slide=1, total_slides
     c.setFillColor(TEXT_DARK)
     c.drawString(48, PAGE_HEIGHT - 54, title_text)
     
-    # Slide indicator in the top right (matching template number badge)
+    # Slide indicator in the top right
     if slide_num_label:
         c.setFont("Helvetica-Bold", 16)
         c.setFillColor(BPJS_GREEN)
@@ -68,11 +73,11 @@ def draw_header(c, title_text, slide_num_label="", current_slide=1, total_slides
     
     c.setFont("Helvetica-Bold", 8)
     c.setFillColor(BPJS_GREEN)
-    c.drawString(48, 16, "VeriKlaim")
+    c.drawString(48, 16, "VeriKlaim v2.0")
     
     c.setFont("Helvetica", 8)
     c.setFillColor(TEXT_MUTED)
-    c.drawString(100, 16, "- Solusi Efisiensi Risiko Klaim FKRTL Berbasis AI | Tim VeriKlaim Kalbar")
+    c.drawString(120, 16, "- Solusi Efisiensi Risiko Klaim FKRTL Berbasis AI & Human-in-the-Loop | Tim VeriKlaim Kalbar")
     
     page_str = f"Slide {current_slide} dari {total_slides}"
     c.drawRightString(PAGE_WIDTH - 48, 16, page_str)
@@ -88,15 +93,12 @@ def draw_card(c, x, y, w, h, bg_color=BG_CARD, border_color=BORDER_LIGHT, radius
 
 def draw_slide_1_cover(c):
     """Slide 1: Cover strictly according to Page 1 of template."""
-    # Deep professional background with subtle gradient effect
     c.setFillColor(NAVY_DARK)
     c.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, fill=True, stroke=False)
     
-    # Top BPJS Green accent line
     c.setFillColor(BPJS_GREEN)
     c.rect(0, PAGE_HEIGHT - 8, PAGE_WIDTH, 8, fill=True, stroke=False)
     
-    # Logo / Badge
     logo_path = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\docs\assets\template_p1_img1_Image6.png"
     if os.path.exists(logo_path):
         c.drawImage(logo_path, 48, PAGE_HEIGHT - 85, width=170, height=58, preserveAspectRatio=True, mask='auto')
@@ -105,7 +107,6 @@ def draw_slide_1_cover(c):
         c.setFillColor(BPJS_GREEN)
         c.drawString(48, PAGE_HEIGHT - 60, "BPJS KESEHATAN")
     
-    # Header titles
     c.setFont("Helvetica-Bold", 26)
     c.setFillColor(WHITE)
     c.drawString(48, PAGE_HEIGHT - 125, "PROJECT FINAL")
@@ -118,7 +119,7 @@ def draw_slide_1_cover(c):
     c.setFillColor(TEXT_LIGHT)
     c.drawString(48, PAGE_HEIGHT - 170, "Detect Smarter, Protect JKN - Smarter Protection for a Stronger JKN: Efisiensi Risiko Program JKN")
     
-    # Card 1: NAMA SOLUSI
+    # Solution Banner Box
     draw_card(c, 48, PAGE_HEIGHT - 275, PAGE_WIDTH - 96, 85, bg_color=HexColor("#112240"), border_color=HexColor("#233554"), radius=8)
     
     c.setFont("Helvetica-Bold", 10)
@@ -127,13 +128,12 @@ def draw_slide_1_cover(c):
     
     c.setFont("Helvetica-Bold", 20)
     c.setFillColor(WHITE)
-    c.drawString(68, PAGE_HEIGHT - 236, "VeriKlaim")
+    c.drawString(68, PAGE_HEIGHT - 236, "VeriKlaim v2.0")
     
     c.setFont("Helvetica", 10.5)
     c.setFillColor(TEXT_LIGHT)
-    c.drawString(68, PAGE_HEIGHT - 258, "Platform Deteksi Anomali Klaim FKRTL Berbasis Hybrid Machine Learning & Explainable AI (Permenkes 26/2021)")
+    c.drawString(68, PAGE_HEIGHT - 258, "Platform Deteksi Anomali 6-Klaster Kemenkes, XAI SHAP & Workstation Human-in-the-Loop 4 Dokumen")
     
-    # 3 Columns below: NAMA TIM | ID TIM | KATEGORI
     col_w = (PAGE_WIDTH - 96 - 32) / 3.0
     
     # Column 1: NAMA TIM
@@ -149,7 +149,7 @@ def draw_slide_1_cover(c):
     c.setFillColor(TEXT_LIGHT)
     c.drawString(x1 + 18, 144, "Universitas Nahdlatul Ulama Kalbar")
     c.drawString(x1 + 18, 128, "& Universitas Tanjungpura")
-    c.drawString(x1 + 18, 104, "Kolaborasi AI, Data & Klinis")
+    c.drawString(x1 + 18, 104, "Kolaborasi AI, Big Data & Klinis")
     
     # Column 2: ID TIM
     x2 = x1 + col_w + 16
@@ -162,7 +162,7 @@ def draw_slide_1_cover(c):
     c.drawString(x2 + 18, 168, "C03.04-082")
     c.setFont("Helvetica", 9)
     c.setFillColor(TEXT_LIGHT)
-    c.drawString(x2 + 18, 144, "Status: Lolos Tahap Proposal")
+    c.drawString(x2 + 18, 144, "Status: Lolos Seleksi Proposal")
     c.drawString(x2 + 18, 128, "Jalur: Mahasiswa & Akademisi")
     c.drawString(x2 + 18, 104, "Healthkathon BPJS 2026")
     
@@ -180,10 +180,9 @@ def draw_slide_1_cover(c):
     c.drawString(x3 + 18, 144, "Sub-Kategori: Efisiensi Faskes / KLAIM")
     c.setFont("Helvetica", 9)
     c.setFillColor(TEXT_LIGHT)
-    c.drawString(x3 + 18, 124, "Fokus: Upcoding, Unbundling,")
-    c.drawString(x3 + 18, 108, "& Phantom Billing Klaim INA-CBG")
+    c.drawString(x3 + 18, 124, "Fokus: 6 Klaster Fraud Kemenkes,")
+    c.drawString(x3 + 18, 108, "Upcoding, Unbundling & Phantom Billing")
     
-    # Bottom footnote
     c.setFont("Helvetica", 8)
     c.setFillColor(HexColor("#64748B"))
     c.drawString(48, 38, "Sesuai Panduan Project Final Healthkathon 2026 - Template Resmi Presentasi Final")
@@ -193,7 +192,6 @@ def draw_slide_2_team(c):
     """Slide 2: Perkenalan Tim strictly according to Page 4 of template."""
     draw_header(c, "Perkenalan Tim", slide_num_label="1", current_slide=2, total_slides=11)
     
-    # Sub-bar info
     c.setFont("Helvetica", 10)
     c.setFillColor(TEXT_MUTED)
     c.drawString(48, PAGE_HEIGHT - 82, "Nama tim: ")
@@ -208,7 +206,6 @@ def draw_slide_2_team(c):
     c.setFillColor(BPJS_GREEN)
     c.drawString(305, PAGE_HEIGHT - 82, "Efisiensi Risiko pada Faskes / KLAIM (C03.04)")
     
-    # 3 Member Cards
     card_w = (PAGE_WIDTH - 96 - 32) / 3.0
     card_h = 360
     card_y = 52
@@ -216,7 +213,6 @@ def draw_slide_2_team(c):
     # Member 1: Aditya Pratama
     x1 = 48
     draw_card(c, x1, card_y, card_w, card_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
-    # Avatar badge
     draw_card(c, x1 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=35)
     c.setFont("Helvetica-Bold", 20)
     c.setFillColor(BPJS_GREEN_DARK)
@@ -233,17 +229,13 @@ def draw_slide_2_team(c):
     c.setFillColor(BPJS_BLUE)
     c.drawCentredString(x1 + card_w / 2, card_y + card_h - 122, "Ketua Tim / Lead AI & Arsitektur")
     
-    # Divider line
     c.setStrokeColor(BORDER_LIGHT)
     c.line(x1 + 16, card_y + card_h - 134, x1 + card_w - 16, card_y + card_h - 134)
     
-    # Details
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(BPJS_GREEN_DARK)
     c.drawString(x1 + 16, card_y + card_h - 152, "AFILIASI & REKAM JEJAK:")
     
-    c.setFont("Helvetica", 8.5)
-    c.setFillColor(TEXT_DARK)
     lines_m1 = [
         "- Dosen Tetap Prodi Sistem Informasi,",
         "  Universitas Nahdlatul Ulama Kalbar",
@@ -252,8 +244,8 @@ def draw_slide_2_team(c):
         "- Pengalaman: Riset AI/ML, Pipeline Deteksi",
         "  Anomali Klaim Kesehatan, High-Throughput",
         "  API Engine & Sistem Terdistribusi",
-        "- Lead implementasi ensemble tree model",
-        "  dan Explainable AI (SHAP)",
+        "- Lead implementasi ensemble tree model,",
+        "  TreeSHAP Explainability & LLM Collab",
         "- Kontak WA: 0856-5441-1081"
     ]
     cur_y = card_y + card_h - 170
@@ -264,7 +256,6 @@ def draw_slide_2_team(c):
     # Member 2: Nurman Hariyanto
     x2 = x1 + card_w + 16
     draw_card(c, x2, card_y, card_w, card_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
-    # Avatar badge
     draw_card(c, x2 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=BPJS_BLUE_LIGHT, border_color=BPJS_BLUE, radius=35)
     c.setFont("Helvetica-Bold", 20)
     c.setFillColor(BPJS_BLUE)
@@ -295,9 +286,9 @@ def draw_slide_2_team(c):
         "- Pengalaman: Big Data Engineering,",
         "  Pipeline ETL Skala Besar (50.000+ klaim),",
         "  Data Preprocessing & Sanitasi PDP",
-        "- Spesialisasi: Cloud Systems, Skalabilitas,",
-        "  Containerization & Keandalan Server",
-        "- Lead arsitektur pipeline real-time & batch"
+        "- Lead pengembang Workstation Human-in-",
+        "  the-Loop & 6-Klaster Tuning Engine",
+        "- Spesialisasi: Cloud Systems & Reliability"
     ]
     cur_y = card_y + card_h - 170
     for line in lines_m2:
@@ -307,7 +298,6 @@ def draw_slide_2_team(c):
     # Member 3: M. Ali Maulana
     x3 = x2 + card_w + 16
     draw_card(c, x3, card_y, card_w, card_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
-    # Avatar badge
     draw_card(c, x3 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=HexColor("#F3E8FF"), border_color=HexColor("#7E22CE"), radius=35)
     c.setFont("Helvetica-Bold", 20)
     c.setFillColor(HexColor("#7E22CE"))
@@ -338,9 +328,9 @@ def draw_slide_2_team(c):
         "- Pengalaman: Tata Kelola Mutu Layanan FKRTL,",
         "  Audit Klinis Rumah Sakit & Kepatuhan JKN",
         "- Penguasaan Regulasi: Permenkes 26/2021",
-        "  (Tarif INA-CBG) & Permenkes 16/2019",
-        "  (Pencegahan Kecurangan/Fraud JKN)",
-        "- Validasi klinis logika rule engine & kode"
+        "  (Tarif INA-CBG), Permenkes 16/2019",
+        "  (Fraud JKN) & Blueprint Kemenkes RI",
+        "- Validasi klinis 4 berkas digital medis"
     ]
     cur_y = card_y + card_h - 170
     for line in lines_m3:
@@ -352,7 +342,6 @@ def draw_slide_3_idea(c):
     """Slide 3: Judul Ide, Deskripsi, dan Tujuan strictly according to Page 5 of template."""
     draw_header(c, "Judul Ide, Deskripsi, dan Tujuan", slide_num_label="2", current_slide=3, total_slides=11)
     
-    # Left Column: NAMA SOLUSI, NILAI UTAMA, KATEGORI, DESKRIPSI SINGKAT
     left_w = 460
     
     # Box 1: NAMA SOLUSI & NILAI UTAMA
@@ -364,7 +353,7 @@ def draw_slide_3_idea(c):
     
     c.setFont("Helvetica-Bold", 17)
     c.setFillColor(TEXT_DARK)
-    c.drawString(64, 424, "VeriKlaim")
+    c.drawString(64, 424, "VeriKlaim v2.0")
     
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(BPJS_BLUE)
@@ -397,25 +386,24 @@ def draw_slide_3_idea(c):
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_DARK)
     desc_lines = [
-        "VeriKlaim adalah platform deteksi anomali klaim FKRTL yang mengintegrasikan",
-        "ensemble machine learning (LightGBM & XGBoost) dengan Multi-Agent Deterministic",
-        "Rule Engine berlandaskan regulasi Permenkes No. 26/2021 dan Permenkes No. 16/2019.",
+        "VeriKlaim adalah platform deteksi anomali klaim FKRTL generasi 2.0 yang",
+        "mengintegrasikan ensemble machine learning (XGBoost, Isolation Forest) dengan",
+        "6 Klaster Deteksi Kecurangan Terpadu Blueprint Kemenkes RI, Permenkes 26/2021,",
+        "dan Permenkes 16/2019, dilengkapi Workstation Verifikasi Human-in-the-Loop.",
         "",
         "Bagaimana cara kerjanya secara garis besar:",
-        "1. Ingest Data: Membaca berkas klaim (LOS, kode ICD-10, ICD-9-CM, Severity Level).",
-        "2. Dual-Engine Screening: Menilai risiko anomali secara statistik probabilistik (AI)",
-        "   sekaligus menguji kepatuhan kaidah koding medis baku (Rule Engine).",
-        "3. Explainable AI: Menjelaskan alasan penetapan anomali melalui SHAP values",
-        "   dan pasal hukum Permenkes terkait.",
-        "4. Audit Dossier: Menerbitkan Berita Acara Audit resmi format PDF ber-QR code",
-        "   dalam hitungan detik untuk penyelesaian dispute transparan."
+        "1. Ingest Data: Membaca berkas klaim (LOS, diagnosa ICD-10, prosedur, tarif).",
+        "2. 6-Cluster Screening: Menilai anomali Special CMG, Coding Drift, Cost Velocity,",
+        "   Referral Bypass, Upcoding Ekstrem, dan Mismatch Faskes (< 0,1 ms).",
+        "3. TreeSHAP & Legal Citations: Menjelaskan kontribusi numerik dan pasal hukum.",
+        "4. Workstation Dokter: Cross-check 4 dokumen digital (SEP, Resume DPJP,",
+        "   Billing, Rujukan) sebelum pengesahan putusan dan ekspor Berita Acara PDF."
     ]
     desc_y = 236
     for dl in desc_lines:
         c.drawString(64, desc_y, dl)
         desc_y -= 13.5
         
-    # Right Column: TUJUAN (2 sampai 3 tujuan spesifik dan terukur)
     right_x = 48 + left_w + 16
     right_w = PAGE_WIDTH - 48 - right_x
     
@@ -433,44 +421,43 @@ def draw_slide_3_idea(c):
     draw_card(c, right_x + 16, 305, right_w - 32, 102, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=6)
     c.setFont("Helvetica-Bold", 14)
     c.setFillColor(BPJS_GREEN_DARK)
-    c.drawString(right_x + 28, 386, "1. Efisiensi Waktu Telaah Klaim > 85%")
+    c.drawString(right_x + 28, 386, "1. Efisiensi Waktu Telaah Klaim > 99%")
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_DARK)
-    c.drawString(right_x + 28, 366, "- Memangkas waktu telaah klaim berisiko dari rata-rata")
-    c.drawString(right_x + 28, 350, "  15-20 menit per berkas manual menjadi < 3 detik per klaim.")
-    c.drawString(right_x + 28, 334, "- Verifikasi instan memungkinkan 100% berkas diaudit secara")
-    c.drawString(right_x + 28, 318, "  pre-payment tanpa menumpuk antrean pencairan faskes.")
+    c.drawString(right_x + 28, 366, "- Memangkas waktu telaah klaim berisiko dari 15-20 menit")
+    c.drawString(right_x + 28, 350, "  per berkas manual menjadi < 0,1 milidetik (core engine).")
+    c.drawString(right_x + 28, 334, "- Kapasitas throughput 415,4 req/s (1,49 juta klaim/jam)")
+    c.drawString(right_x + 28, 318, "  menjamin 100% berkas diaudit secara pre-payment.")
     
     # Goal Card 2
     draw_card(c, right_x + 16, 185, right_w - 32, 106, bg_color=BPJS_BLUE_LIGHT, border_color=BPJS_BLUE, radius=6)
     c.setFont("Helvetica-Bold", 14)
     c.setFillColor(BPJS_BLUE)
-    c.drawString(right_x + 28, 268, "2. Presisi Deteksi Anomali: ROC-AUC 1.0000")
+    c.drawString(right_x + 28, 268, "2. Sensitivitas 100% & ROC-AUC 1.0000")
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_DARK)
-    c.drawString(right_x + 28, 248, "- Mencapai akurasi deteksi anomali F1-Score 0.99 dan")
-    c.drawString(right_x + 28, 232, "  ROC-AUC 1.0000 pada data uji 50.000 klaim FKRTL BPJS.")
-    c.drawString(right_x + 28, 216, "- Meminimalkan false positive (< 0.6%) sehingga hubungan")
-    c.drawString(right_x + 28, 200, "  kemitraan dengan rumah sakit tetap terjaga harmonis.")
+    c.drawString(right_x + 28, 248, "- Recall 100.00% (Zero False Negative) pada 10.000 data uji")
+    c.drawString(right_x + 28, 232, "  independen QA AGT-06 tanpa ada fraud yang lolos.")
+    c.drawString(right_x + 28, 216, "- Presisi 96.43% meminimalkan alarm palsu sehingga kemitraan")
+    c.drawString(right_x + 28, 200, "  faskes tetap harmonis dan terpercaya.")
     
     # Goal Card 3
     draw_card(c, right_x + 16, 66, right_w - 32, 105, bg_color=HexColor("#FDF2F8"), border_color=HexColor("#DB2777"), radius=6)
     c.setFont("Helvetica-Bold", 14)
     c.setFillColor(HexColor("#9D174D"))
-    c.drawString(right_x + 28, 148, "3. Reduksi Sengketa (Dispute) Hingga 70%")
+    c.drawString(right_x + 28, 148, "3. Reduksi Dispute & Hemat Rp 14,34 M")
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_DARK)
-    c.drawString(right_x + 28, 128, "- Menurunkan klaim pending/dispute berlarut dari 14-30 hari")
-    c.drawString(right_x + 28, 112, "  menjadi 1-2 hari kerja.")
-    c.drawString(right_x + 28, 96, "- Memberikan justifikasi hukum baku dan bukti klinis yang")
-    c.drawString(right_x + 28, 80, "  dapat diterima secara transparan oleh manajemen RS & BPJS.")
+    c.drawString(right_x + 28, 128, "- Menurunkan masa sanggah dispute dari 14-30 hari")
+    c.drawString(right_x + 28, 112, "  menjadi 1-2 hari kerja tuntas.")
+    c.drawString(right_x + 28, 96, "- Menyelamatkan potensi inefisiensi dana DJS sebesar")
+    c.drawString(right_x + 28, 80, "  Rp 14,34 Miliar pada klaster klaim anomali teruji.")
 
 
 def draw_slide_4_background_impact(c):
     """Slide 4: Latar Belakang dan Dampak strictly according to Page 6 of template."""
     draw_header(c, "Latar Belakang dan Dampak", slide_num_label="3", current_slide=4, total_slides=11)
     
-    # Left Column: LATAR BELAKANG
     left_w = 460
     draw_card(c, 48, 52, left_w, 413, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
     
@@ -478,25 +465,23 @@ def draw_slide_4_background_impact(c):
     c.setFillColor(BPJS_GREEN)
     c.drawString(66, 442, "L A T A R   B E L A K A N G")
     
-    # Sub-item 1: Persoalan spesifik
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(TEXT_DARK)
     c.drawString(66, 420, "1. Persoalan Spesifik yang Ingin Diselesaikan")
     c.setFont("Helvetica", 8.7)
     c.setFillColor(TEXT_MUTED)
     p_lines = [
-        "Lonjakan volume klaim FKRTL mencapai puluhan juta berkas per tahun,",
-        "sementara verifikasi manual terbatas pada uji petik (10-20% sampel).",
-        "Praktik fraud terselubung seperti Upcoding tingkat keparahan, Unbundling",
-        "prosedur tunggal menjadi beberapa tagihan, serta Phantom Billing",
-        "sangat sulit dideteksi kasat mata tanpa komparasi data silang."
+        "Lonjakan klaim FKRTL mencapai puluhan juta berkas per tahun, sementara",
+        "verifikasi manual hanya mencakup uji petik 10-20% sampel.",
+        "Praktik fraud terselubung seperti Top-Up Special CMG fiktif, disparitas",
+        "coding drift diagnosa masuk vs pulang, upcoding ekstrem Severity III,",
+        "serta klaim bypassing rujukan RJTL lolos tanpa filter silang terpadu."
     ]
     py = 405
     for pl in p_lines:
         c.drawString(66, py, pl)
         py -= 12.5
         
-    # Sub-item 2: Mengapa penting dan mendesak?
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(TEXT_DARK)
     c.drawString(66, 328, "2. Mengapa Penting & Mendesak? Siapa Terdampak?")
@@ -504,16 +489,15 @@ def draw_slide_4_background_impact(c):
     c.setFillColor(TEXT_MUTED)
     u_lines = [
         "- Peserta JKN: Dana jaminan sosial (DJS) terancam defisit aktuaria.",
-        "- Faskes (RS): Pembayaran klaim tersendat akibat dispute berlarut.",
-        "- BPJS Kesehatan: Beban administrasi telaah manual memicu inefisiensi",
-        "  operasional dan risiko temuan audit eksternal."
+        "- Faskes (RS): Arus kas terganggu akibat klaim pending & dispute berlarut.",
+        "- BPJS Kesehatan: Beban verifikasi manual ribuan lembar dokumen",
+        "  menimbulkan risiko temuan audit eksternal BPK dan KPK."
     ]
     uy = 313
     for ul in u_lines:
         c.drawString(66, uy, ul)
         uy -= 12.5
         
-    # Sub-item 3: Bukti / Data yang memperkuat
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(ACCENT_RED)
     c.drawString(66, 246, "3. Bukti dan Data Penguat (Sumber Resmi)")
@@ -521,10 +505,10 @@ def draw_slide_4_background_impact(c):
     c.setFillColor(TEXT_DARK)
     b_lines = [
         "- Temuan KPK RI & BPK RI (Juli 2024): Dugaan klaim fiktif & phantom",
-        "  billing pada 3 rumah sakit di Sumut & Jateng senilai Rp 35 Miliar.",
-        "- Audit BPK RI (Pengelolaan JKN): Rekomendasi penguatan sistem",
-        "  early-warning deteksi kecurangan klaim sebelum dilakukan pembayaran.",
-        "- Kasus Dominan Nasional: Upcoding persalinan sesar, penggelembungan",
+        "  billing di 3 RS (Sumut & Jateng) senilai Rp 35 Miliar.",
+        "- Blueprint Transformasi Kemenkes RI: Rekomendasi 6 fokus deteksi fraud",
+        "  termasuk Special CMG top-up dan kesesuaian kelas rumah sakit.",
+        "- Kasus Dominan Nasional: Upcoding persalinan sesar darurat, penggelembungan",
         "  ventilator ICU, dan manipulasi komorbiditas kronis."
     ]
     by = 231
@@ -532,7 +516,6 @@ def draw_slide_4_background_impact(c):
         c.drawString(66, by, bl)
         by -= 12.5
         
-    # Image thumbnail if available
     img_kpk = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\docs\assets\referensi_berita_kpk.png"
     if os.path.exists(img_kpk):
         c.drawImage(img_kpk, 66, 62, width=190, height=72, preserveAspectRatio=True)
@@ -542,10 +525,9 @@ def draw_slide_4_background_impact(c):
         c.setFont("Helvetica", 7.5)
         c.setFillColor(TEXT_MUTED)
         c.drawString(266, 105, "Kajian Kecurangan Klaim JKN")
-        c.drawString(266, 92, "Modus Phantom Billing & Upcoding")
+        c.drawString(266, 92, "Phantom Billing & Upcoding")
         c.drawString(266, 79, "Sumber: Kompas / KPK RI (2024)")
 
-    # Right Column: DAMPAK (3 Indikator terukur sebelum vs sesudah)
     right_x = 48 + left_w + 16
     right_w = PAGE_WIDTH - 48 - right_x
     
@@ -559,111 +541,110 @@ def draw_slide_4_background_impact(c):
     c.setFillColor(TEXT_MUTED)
     c.drawString(right_x + 20, 424, "Perbaikan nyata dibandingkan kondisi saat ini (Sebelum vs Sesudah):")
     
-    # Impact Metric 1: Waktu Telaah
+    # Impact Metric 1
     draw_card(c, right_x + 16, 305, right_w - 32, 105, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=6)
     c.setFont("Helvetica-Bold", 18)
     c.setFillColor(BPJS_GREEN_DARK)
-    c.drawString(right_x + 28, 386, "< 3 Detik / Berkas")
+    c.drawString(right_x + 28, 386, "< 0,1 Milidetik / Klaim")
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(TEXT_DARK)
     c.drawString(right_x + 28, 368, "Indikator 1: Kecepatan Telaah Verifikasi Klaim")
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_DARK)
     c.drawString(right_x + 28, 350, "- Sebelum : 15 - 20 menit per berkas sengketa manual.")
-    c.drawString(right_x + 28, 334, "- Sesudah : < 3 detik per berkas otomatis real-time.")
+    c.drawString(right_x + 28, 334, "- Sesudah : 0,079 ms eksekusi mesin (End-to-End: 2.37 ms).")
     c.setFont("Helvetica-Bold", 8.8)
     c.setFillColor(BPJS_GREEN_DARK)
-    c.drawString(right_x + 28, 318, "- Hasil    : Efisiensi operasional telaah berkas sebesar 85% - 98%.")
+    c.drawString(right_x + 28, 318, "- Hasil    : Efisiensi operasional telaah berkas sebesar > 99%.")
 
-    # Impact Metric 2: Cakupan Audit
+    # Impact Metric 2
     draw_card(c, right_x + 16, 185, right_w - 32, 105, bg_color=BPJS_BLUE_LIGHT, border_color=BPJS_BLUE, radius=6)
     c.setFont("Helvetica-Bold", 18)
     c.setFillColor(BPJS_BLUE)
-    c.drawString(right_x + 28, 266, "100% Pre-Payment Audit")
+    c.drawString(right_x + 28, 266, "100% Pre-Payment & 0% Leakage")
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(TEXT_DARK)
-    c.drawString(right_x + 28, 248, "Indikator 2: Cakupan Audit & Presisi Deteksi")
+    c.drawString(right_x + 28, 248, "Indikator 2: Cakupan Audit & Sensitivitas Deteksi")
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_DARK)
     c.drawString(right_x + 28, 230, "- Sebelum : 10% - 20% klaim melalui uji petik manual.")
-    c.drawString(right_x + 28, 214, "- Sesudah : 100% seluruh klaim disaring sebelum bayar.")
+    c.drawString(right_x + 28, 214, "- Sesudah : 100% klaim disaring sebelum pembayaran dilakukan.")
     c.setFont("Helvetica-Bold", 8.8)
     c.setFillColor(BPJS_BLUE)
-    c.drawString(right_x + 28, 198, "- Hasil    : ROC-AUC 1.0000 / Presisi 99.4% cegah kebocoran DJS.")
+    c.drawString(right_x + 28, 198, "- Hasil    : Recall 100.00% (Zero False Negative) & ROC-AUC 1.0000.")
 
-    # Impact Metric 3: Durasi Dispute
+    # Impact Metric 3
     draw_card(c, right_x + 16, 65, right_w - 32, 105, bg_color=ACCENT_AMBER_LIGHT, border_color=ACCENT_AMBER, radius=6)
     c.setFont("Helvetica-Bold", 18)
     c.setFillColor(HexColor("#B7791F"))
-    c.drawString(right_x + 28, 146, "1 - 2 Hari Kerja")
+    c.drawString(right_x + 28, 146, "Rp 14,34 M Hemat & 1-2 Hari Dispute")
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(TEXT_DARK)
-    c.drawString(right_x + 28, 128, "Indikator 3: Durasi Penyelesaian Dispute Klaim")
+    c.drawString(right_x + 28, 128, "Indikator 3: Efisiensi Finansial & Durasi Sengketa")
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_DARK)
-    c.drawString(right_x + 28, 110, "- Sebelum : 14 - 30 hari masa sanggah sengketa klaim.")
-    c.drawString(right_x + 28, 94, "- Sesudah : 1 - 2 hari kerja selesai tuntas.")
+    c.drawString(right_x + 28, 110, "- Sebelum : Sengketa klaim pending 14 - 30 hari tanpa kepastian.")
+    c.drawString(right_x + 28, 94, "- Sesudah : 1 - 2 hari kerja selesai berkat bukti 4 dokumen digital.")
     c.setFont("Helvetica-Bold", 8.8)
     c.setFillColor(HexColor("#744210"))
-    c.drawString(right_x + 28, 78, "- Hasil    : Berita Acara Audit XAI instan berdasar hukum Permenkes.")
+    c.drawString(right_x + 28, 78, "- Hasil    : Potensi penyelamatan dana DJS hingga Rp 14,34 Miliar.")
 
 
 def draw_slide_5_process_flow(c):
     """Slide 5: Alur Proses Aplikasi strictly according to Page 7 of template."""
     draw_header(c, "Alur Proses Aplikasi", slide_num_label="4", current_slide=5, total_slides=11)
     
-    # Top Section: 5 Tahapan Alur Proses Horizontal
     card_y = 285
     step_w = (PAGE_WIDTH - 96 - 48) / 5.0
     step_h = 180
     
     steps = [
         ("1. Input", [
-            "Penerimaan data transaksi",
-            "klaim FKRTL via API bridging",
-            "e-Klaim/VClaim BPJS atau",
-            "batch upload CSV/JSON.",
+            "Penerimaan klaim FKRTL",
+            "via API VClaim/e-Klaim",
+            "atau batch CSV/JSON.",
             "",
             "Atribut: LOS, ICD-10,",
             "ICD-9-CM, Severity,",
-            "Tarif RS & Tarif Acuan."
+            "Tarif RS & Tarif Acuan,",
+            "serta 4 berkas digital."
         ], BPJS_GREEN_LIGHT, BPJS_GREEN),
         ("2. Proses", [
-            "Validasi skema klaim,",
-            "sanitasi data & anonimisasi",
-            "NIK (kepatuhan UU PDP).",
+            "Sanitasi skema & hash NIK",
+            "SHA-256 (UU PDP).",
             "",
             "Feature Engineering:",
-            "Kalkulasi rasio tarif/LOS,",
-            "cross-check ICD primer,",
-            "validasi severity mismatch."
+            "Kalkulasi Cost Velocity,",
+            "analisis disparitas koding,",
+            "validasi Special CMG,",
+            "dan hierarki rujukan."
         ], BPJS_BLUE_LIGHT, BPJS_BLUE),
         ("3. Analisis AI", [
             "Dual-Engine Inference:",
-            "- Ensemble ML (LightGBM",
-            "  & XGBoost) hitung Skor",
-            "  Probabilitas Anomali.",
-            "- Deterministic Rule Engine",
-            "  menguji Permenkes 26/2021",
-            "  (Upcoding & Unbundling)."
+            "- Ensemble XGBoost &",
+            "  Isolation Forest (< 0.1ms).",
+            "- 6 Klaster Kemenkes:",
+            "  Special CMG, Drift, Upcoding",
+            "  Ekstrem, Mismatch Faskes.",
+            "- TreeSHAP feature attribution."
         ], HexColor("#F3E8FF"), HexColor("#7E22CE")),
         ("4. Output", [
-            "Visualisasi Dashboard:",
-            "- Klasifikasi: Wajar /",
-            "  Waspada / Fraud Tinggi.",
+            "Workstation Terpadu:",
             "- Skor Anomali (0 - 100%).",
-            "- Breakdown SHAP values",
-            "  (faktor pemicu anomali).",
-            "- Rekomendasi tindakan."
+            "- Status: Wajar/Fraud Tinggi.",
+            "- TreeSHAP factor breakdown.",
+            "- Viewer 4 Dokumen Digital",
+            "  (SEP, Resume DPJP,",
+            "  Billing, Surat Rujukan)."
         ], ACCENT_AMBER_LIGHT, HexColor("#D97706")),
         ("5. Tindak Lanjut", [
-            "Verifikator mengevaluasi:",
+            "Verifikator memutuskan:",
             "- Setujui Klaim Layak.",
-            "- Klarifikasi Faskes.",
+            "- Tolak / Koreksi Tarif RS.",
+            "- Rekam Audit Trail digital.",
             "- Unduh Berita Acara",
-            "  Audit Resmi format PDF",
-            "  ber-QR code & dasar",
-            "  hukum untuk dispute."
+            "  Audit Resmi PDF ber-QR",
+            "  dan Buku Panduan Fitur."
         ], ACCENT_RED_LIGHT, ACCENT_RED)
     ]
     
@@ -686,7 +667,6 @@ def draw_slide_5_process_flow(c):
             c.drawString(sx + 10, ly, l)
             ly -= 11.5
             
-        # Draw connector arrow between cards
         if i < 4:
             arrow_x = sx + step_w + 2
             arrow_y = card_y + step_h / 2
@@ -694,7 +674,6 @@ def draw_slide_5_process_flow(c):
             c.setFillColor(BPJS_GREEN)
             c.drawString(arrow_x, arrow_y, ">")
 
-    # Bottom Section: 3 Kotak (PENGGUNA/AKTOR, DATA YANG DIPAKAI, TEKNOLOGI)
     bot_y = 52
     bot_h = 215
     col3_w = (PAGE_WIDTH - 96 - 32) / 3.0
@@ -708,17 +687,16 @@ def draw_slide_5_process_flow(c):
     c.setFont("Helvetica", 8.5)
     c.setFillColor(TEXT_DARK)
     actors = [
-        "- Verifikator Klaim BPJS Kesehatan:",
-        "  Menelaah klaim berkategori anomali,",
-        "  menolak/menyetujui berkas, mencetak",
-        "  Berita Acara Audit resmi.",
+        "- Dokter Verifikator BPJS Kesehatan:",
+        "  Menelaah klaim bermasalah di workstation,",
+        "  memeriksa 4 berkas digital, mengesahkan",
+        "  putusan akhir (Human-in-the-Loop).",
         "- Tim Pencegahan Kecurangan Faskes (RS):",
-        "  Melakukan pra-audit mandiri sebelum",
-        "  klaim diajukan ke BPJS untuk mencegah",
-        "  klaim pending & dispute.",
+        "  Melakukan pre-audit mandiri sebelum klaim",
+        "  diajukan guna mencegah pending payment.",
         "- Auditor Internal & Manajemen Risiko:",
-        "  Memantau indeks risiko anomali faskes",
-        "  secara makro di tingkat cabang & nasional."
+        "  Memantau rekam jejak verifikasi dan indeks",
+        "  risiko anomali faskes tingkat nasional."
     ]
     ay = bot_y + bot_h - 46
     for act in actors:
@@ -734,15 +712,14 @@ def draw_slide_5_process_flow(c):
     c.setFont("Helvetica", 8.5)
     c.setFillColor(TEXT_DARK)
     data_info = [
-        "- Sumber: Dataset sampel publik FKRTL BPJS",
-        "  Kesehatan (50.000 transaksi terstruktur).",
-        "- Atribut: No Registrasi terenkripsi, Usia,",
-        "  Gender, LOS (Lama Rawat), Kelas Perawatan,",
-        "  ICD-10 Diagnosa Primer & Sekunder,",
-        "  ICD-9-CM Prosedur, Severity Level (I, II, III),",
-        "  Tarif Diajukan RS, Tarif Acuan INA-CBG.",
-        "- Batasan: Data telah dianonimisasi penuh",
-        "  tanpa memuat NIK/identitas pasien riil",
+        "- Sumber: 50.000 sampel data klaim FKRTL BPJS",
+        "  Kesehatan terstruktur & 10.000 data QA uji.",
+        "- Berkas Digital: SEP digital, Resume Medis",
+        "  DPJP, Rincian Billing Obat/Tindakan, dan",
+        "  Surat Rujukan FKTP terintegrasi.",
+        "- Atribut Medis: LOS, ICD-10, ICD-9, Severity,",
+        "  Special CMG code, Tipe Faskes, Tarif RS/Acuan.",
+        "- Batasan: 100% bebas data pribadi riil (Zero PII)",
         "  sesuai kaidah kerahasiaan medis & UU PDP."
     ]
     dy = bot_y + bot_h - 46
@@ -760,16 +737,15 @@ def draw_slide_5_process_flow(c):
     c.setFillColor(TEXT_DARK)
     tech_info = [
         "- Python 3.12 & FastAPI:",
-        "  Arsitektur microservice asinkron dengan",
-        "  throughput > 1.200 klaim/detik & latensi < 50ms.",
-        "- LightGBM & XGBoost (Ensemble):",
-        "  Akurasi superior pada data tabular klaim",
-        "  dengan imbalanced fraud ratio.",
-        "- TreeSHAP (Explainable AI):",
-        "  Dekomposisi kontribusi fitur matematis",
-        "  untuk transparansi tanpa 'black-box'.",
-        "- ReportLab Engine: Generator Berita Acara",
-        "  PDF otomatis ber-QR code verifikasi legal."
+        "  Microservice asinkron dengan throughput",
+        "  415 req/s dan latensi inti 0,079 ms.",
+        "- XGBoost + Isolation Forest Ensemble:",
+        "  Sensitivitas 100% dan presisi 96.43%.",
+        "- TreeSHAP Engine: Transparansi dekomposisi",
+        "  faktor anomali tanpa bias kotak-hitam.",
+        "- Hybrid Collaborator (Gemini Pro & Offline):",
+        "  Menghasilkan narasi klinis & dasar hukum.",
+        "- Workstation UI: Palet resmi Mobile JKN."
     ]
     ty = bot_y + bot_h - 46
     for t in tech_info:
@@ -781,14 +757,12 @@ def draw_slide_6_demo_prototype(c):
     """Slide 6: Demo Aplikasi / Prototype strictly according to Page 8 of template."""
     draw_header(c, "Demo Aplikasi / Prototype", slide_num_label="5", current_slide=6, total_slides=11)
     
-    # Left Column: Visual Mockup / Screen Capture of the running system
     left_w = 460
     draw_card(c, 48, 52, left_w, 413, bg_color=HexColor("#0F172A"), border_color=BORDER_LIGHT, radius=8)
     
     # Mockup Header Bar
     c.setFillColor(HexColor("#1E293B"))
     c.rect(48, 435, left_w, 30, fill=True, stroke=False)
-    # Window circles
     c.setFillColor(HexColor("#EF4444"))
     c.circle(64, 450, 4, fill=True, stroke=False)
     c.setFillColor(HexColor("#F59E0B"))
@@ -798,10 +772,9 @@ def draw_slide_6_demo_prototype(c):
     
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(WHITE)
-    c.drawString(108, 446, "VeriKlaim - BPJS Kesehatan Risk Engine (http://127.0.0.1:8000)")
+    c.drawString(108, 446, "VeriKlaim v2.0 - Workstation Verifikator BPJS (http://127.0.0.1:8000)")
     
-    # Dashboard Preview Cards inside Mockup
-    # Stat box 1
+    # Stats row
     draw_card(c, 64, 375, 128, 48, bg_color=HexColor("#1E293B"), border_color=HexColor("#334155"), radius=4)
     c.setFont("Helvetica", 7.5)
     c.setFillColor(TEXT_LIGHT)
@@ -810,7 +783,6 @@ def draw_slide_6_demo_prototype(c):
     c.setFillColor(WHITE)
     c.drawString(72, 388, "50.000 Klaim")
     
-    # Stat box 2
     draw_card(c, 204, 375, 128, 48, bg_color=HexColor("#1E293B"), border_color=HexColor("#334155"), radius=4)
     c.setFont("Helvetica", 7.5)
     c.setFillColor(TEXT_LIGHT)
@@ -819,56 +791,68 @@ def draw_slide_6_demo_prototype(c):
     c.setFillColor(ACCENT_RED)
     c.drawString(212, 388, "137 Kasus (0.27%)")
 
-    # Stat box 3
     draw_card(c, 344, 375, 148, 48, bg_color=HexColor("#1E293B"), border_color=HexColor("#334155"), radius=4)
     c.setFont("Helvetica", 7.5)
     c.setFillColor(TEXT_LIGHT)
-    c.drawString(352, 408, "Efisiensi Biaya")
+    c.drawString(352, 408, "Potensi Efisiensi DJS")
     c.setFont("Helvetica-Bold", 12)
     c.setFillColor(BPJS_GREEN)
-    c.drawString(352, 388, "Rp 1.84 Miliar")
+    c.drawString(352, 388, "Rp 14,34 Miliar")
     
-    # Interactive Claim Audit Panel
+    # Workstation Card inside Mockup
     draw_card(c, 64, 185, 428, 175, bg_color=HexColor("#1E293B"), border_color=HexColor("#334155"), radius=6)
     c.setFont("Helvetica-Bold", 9)
     c.setFillColor(BPJS_GREEN)
-    c.drawString(76, 342, "HASIL EVALUASI REAL-TIME: KLAIM SUSPEK UPCODING")
+    c.drawString(76, 342, "WORKSTATION VERIFIKASI DOKTER: KLIK KLAIM ANOMALI")
     
-    # Anomaly badge
     draw_card(c, 360, 328, 120, 22, bg_color=HexColor("#7F1D1D"), border_color=ACCENT_RED, radius=4)
     c.setFont("Helvetica-Bold", 8)
     c.setFillColor(WHITE)
-    c.drawCentredString(420, 335, "[!] FRAUD TINGGI (96.8%)")
+    c.drawCentredString(420, 335, "[!] FRAUD TINGGI (98.2%)")
     
     c.setFont("Helvetica", 8)
     c.setFillColor(WHITE)
-    c.drawString(76, 318, "No SEP: SEP-2026-99214  |  Faskes: RSUD Permata Medika (Tipe B)")
-    c.drawString(76, 302, "Diagnosa: O82.1 (Sesar Darurat)  |  Severity: Level 3 (Komp. Berat)")
-    c.drawString(76, 286, "LOS: 1 Hari  |  Tarif RS: Rp 36.500.000 vs Acuan INA-CBG: Rp 6.200.000")
+    c.drawString(76, 318, "No SEP: SEP-2026-99214 | Klaster: Upcoding Ekstrem & Special CMG")
+    c.drawString(76, 302, "Diagnosa: O82.1 (Sesar Darurat) Severity III | LOS: 1 Hari | ICU: Tidak")
+    c.drawString(76, 286, "Tarif RS: Rp 36.500.000 vs Acuan INA-CBG: Rp 6.200.000 (Selisih Rp 30,3 M)")
     
-    # XAI bars mockup
-    c.setFont("Helvetica-Bold", 8)
+    # 4 Documents preview badges
+    c.setFont("Helvetica-Bold", 7.5)
+    c.setFillColor(BPJS_BLUE_LIGHT)
+    c.drawString(76, 266, "Viewer 4 Dokumen Digital Terintegrasi:")
+    
+    docs_badges = ["1. Surat SEP", "2. Resume DPJP", "3. Rincian Billing", "4. Rujukan FKTP"]
+    bx = 76
+    for b in docs_badges:
+        draw_card(c, bx, 244, 75, 16, bg_color=HexColor("#334155"), border_color=BPJS_BLUE, radius=3)
+        c.setFont("Helvetica-Bold", 7)
+        c.setFillColor(WHITE)
+        c.drawCentredString(bx + 37, 248, b)
+        bx += 80
+        
+    c.setFont("Helvetica", 7.5)
     c.setFillColor(ACCENT_AMBER)
-    c.drawString(76, 264, "Pemicu Utama (Explainable AI SHAP Decomposition):")
-    
+    c.drawString(76, 226, "TreeSHAP: Disparitas Tarif (+0.44) | Inkonsistensi LOS/ICU (+0.32)")
     c.setFont("Helvetica", 7.5)
     c.setFillColor(TEXT_LIGHT)
-    c.drawString(76, 248, "1. Tarif Ratio Discrepancy (5.88x di atas acuan)  -> SHAP: +0.42 [Kritis]")
-    c.drawString(76, 234, "2. LOS to Severity Level Mismatch (LOS 1 hari Severity III) -> SHAP: +0.31")
-    c.drawString(76, 220, "3. Pelanggaran Regulasi: Permenkes 26/2021 Pasal 14 ayat (2)")
+    c.drawString(76, 212, "Pelanggaran: Permenkes 26/2021 Lamp. I Bab IV & Permenkes 16/2019 Ps. 4")
     
-    # PDF button mockup
-    draw_card(c, 76, 195, 230, 20, bg_color=BPJS_BLUE, border_color=BPJS_BLUE, radius=3)
-    c.setFont("Helvetica-Bold", 7.5)
+    # Action buttons
+    draw_card(c, 76, 192, 190, 16, bg_color=BPJS_GREEN, border_color=BPJS_GREEN, radius=3)
+    c.setFont("Helvetica-Bold", 7)
     c.setFillColor(WHITE)
-    c.drawCentredString(191, 201, "Unduh Berita Acara Audit Resmi (PDF)")
+    c.drawCentredString(171, 196, "Sahkan Putusan Dokter & Rekam Log")
 
-    # Bottom notice in mockup
+    draw_card(c, 276, 192, 200, 16, bg_color=BPJS_BLUE, border_color=BPJS_BLUE, radius=3)
+    c.setFont("Helvetica-Bold", 7)
+    c.setFillColor(WHITE)
+    c.drawCentredString(376, 196, "Unduh Berita Acara PDF + Buku Panduan")
+
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(BPJS_GREEN_LIGHT)
-    c.drawCentredString(48 + left_w / 2, 75, "Server Live: http://127.0.0.1:8000 | Latensi Inferensi: 38 ms")
+    c.drawCentredString(48 + left_w / 2, 75, "Server Live: http://127.0.0.1:8000 | Latensi Core: 0.079 ms")
 
-    # Right Column: SKENARIO DEMO & TAUTAN PROTOTYPE
+    # Right Column: SKENARIO DEMO
     right_x = 48 + left_w + 16
     right_w = PAGE_WIDTH - 48 - right_x
     
@@ -878,30 +862,27 @@ def draw_slide_6_demo_prototype(c):
     c.setFillColor(BPJS_GREEN)
     c.drawString(right_x + 20, 442, "S K E N A R I O   D E M O   ( 4   L A N G K A H )")
     
-    # 4 Demo Steps
     demo_steps = [
-        ("1", "Eksplorasi Portfolio Dashboard (50.000 Klaim)", [
-            "Menampilkan agregasi makro klaim FKRTL terproses, sebaran anomali",
-            "per departemen, dan rasio risiko klaim faskes secara real-time."
+        ("1", "Eksplorasi Portofolio 50.000 Klaim & 6 Klaster", [
+            "Menampilkan ringkasan makro sebaran klaim, indikator 6 klaster Kemenkes,",
+            "rasio anomali per faskes, dan potensi efisiensi DJS secara real-time."
         ], BPJS_GREEN),
-        ("2", "Audit Klaim Interaktif Kasus Upcoding", [
-            "Memasukkan sampel klaim suspek persalinan sesar darurat dengan",
-            "LOS 1 hari berkategori Severity III. Sistem seketika mendeteksi",
-            "anomali dengan Skor 96.8% dan mengibarkan flag Upcoding."
+        ("2", "Audit Klaim Interaktif Kasus Upcoding Ekstrem", [
+            "Memilih sampel klaim persalinan sesar Severity III dengan LOS 1 hari tanpa ICU.",
+            "Sistem seketika menandai status FRAUD TINGGI (Skor 98.2%) dalam < 0.1 ms."
         ], BPJS_BLUE),
-        ("3", "Inspeksi Explainable AI (XAI) & Bukti Regulasi", [
-            "Verifikator melihat transparansi kontribusi variabel SHAP (rasio tarif",
-            "& inkonsistensi LOS) serta rujukan pasal hukum Permenkes 26/2021."
+        ("3", "Workstation Dokter & Cross-Check 4 Dokumen", [
+            "Membuka modal workstation untuk meneliti SEP, Resume Medis DPJP, Rincian Billing,",
+            "dan Rujukan. Menginspeksi breakdown TreeSHAP dan pasal regulasi."
         ], HexColor("#7E22CE")),
-        ("4", "Penerbitan Berita Acara Audit Resmi PDF", [
-            "Menghasilkan dokumen resmi Berita Acara Audit lengkap dengan QR Code,",
-            "dasar hukum, dan kalkulasi selisih tarif dalam 1 detik untuk klarifikasi."
+        ("4", "Pengesahan Putusan Human-in-the-Loop & PDF", [
+            "Dokter mengesahkan putusan (Diverifikasi Fraud / Layak), mencatat audit trail,",
+            "dan mengunduh Berita Acara Audit Resmi format PDF ber-QR Code."
         ], ACCENT_RED)
     ]
     
     sy = 412
     for num, title, lines, color_accent in demo_steps:
-        # Step number badge
         draw_card(c, right_x + 20, sy - 26, 26, 26, bg_color=WHITE, border_color=color_accent, radius=13)
         c.setFont("Helvetica-Bold", 11)
         c.setFillColor(color_accent)
@@ -920,65 +901,64 @@ def draw_slide_6_demo_prototype(c):
             
         sy -= 66
         
-    # Box: TAUTAN PROTOTYPE
     draw_card(c, right_x + 16, 62, right_w - 32, 70, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=6)
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(BPJS_GREEN_DARK)
-    c.drawString(right_x + 28, 116, "T A U T A N   P R O T O T Y P E   L I V E")
+    c.drawString(right_x + 28, 116, "TAUTAN PROTOTYPE LIVE & BUKU PANDUAN")
     c.setFont("Helvetica-Bold", 10.5)
     c.setFillColor(BPJS_BLUE)
     c.drawString(right_x + 28, 98, "http://127.0.0.1:8000")
     c.setFont("Helvetica", 8)
     c.setFillColor(TEXT_DARK)
-    c.drawString(right_x + 28, 80, "Repositori: https://github.com/orochimadit/veri-klaim.git")
+    c.drawString(right_x + 28, 80, "Unduh Buku Panduan Fitur: /api/download-feature-guide")
 
 
 def draw_slide_7_features(c):
     """Slide 7: Penjelasan Fitur strictly according to Page 9 of template."""
-    draw_header(c, "Penjelasan Fitur", slide_num_label="6", current_slide=7, total_slides=11)
+    draw_header(c, "Penjelasan Fitur Utama", slide_num_label="6", current_slide=7, total_slides=11)
     
-    # 4 Major Features Grid (2x2)
     grid_w = (PAGE_WIDTH - 96 - 20) / 2.0
     grid_h = 195
     
     features = [
-        ("Fitur 1: AI Anomaly Scoring Engine",
+        ("Fitur 1: 6-Cluster Fraud Detection Engine",
          "Fungsi: Apa yang dilakukan fitur ini?",
-         "Menganalisis multi-fitur klaim secara simultan menggunakan ensemble model"
-         " LightGBM dan XGBoost untuk menghasilkan skor probabilitas kecurangan 0.00 - 1.00"
-         " dalam waktu < 50 milidetik per berkas klaim.",
+         "Menyaring klaim menggunakan 6 modul spesifik Blueprint Kemenkes: Top-Up Special CMG,"
+         " Disparitas Coding Drift, Cost Velocity Ratio, RJTL Bypass, Upcoding Ekstrem, dan Mismatch"
+         " Kelas Faskes dalam waktu sub-milidetik (< 0,1 ms).",
          "Menjawab Masalah: Bagian mana yang diselesaikan?",
-         "Mengatasi keterbatasan verifikasi manual manusia dalam mendeteksi kombinasi anomali"
-         " terselubung pada jutaan berkas klaim berskala nasional sebelum klaim dibayarkan.",
+         "Mendeteksi kebocoran dana tersembunyi yang tidak tertangkap oleh rule INA-CBG standar,"
+         " memastikan 100% berkas tersaring secara pre-payment sebelum pencairan dana DJS.",
          BPJS_GREEN),
         
-        ("Fitur 2: Regulatory Rule-Based Validator",
+        ("Fitur 2: Human-in-the-Loop Workstation & 4 Dokumen",
          "Fungsi: Apa yang dilakukan fitur ini?",
-         "Memvalidasi kepatuhan kaidah koding INA-CBG secara deterministik berpedoman pada"
-         " Permenkes No. 26/2021 dan Permenkes No. 16/2019: mendeteksi upcoding tingkat keparahan,"
-         " unbundling tindakan bedah, dan tagihan tumpang-tindih (phantom billing).",
+         "Menyajikan antarmuka audit digital interaktif bagi dokter verifikator untuk membuka,"
+         " memvalidasi silang, dan meneliti 4 dokumen klinis otentik: SEP digital, Resume Medis"
+         " DPJP, Rincian Tagihan Billing, dan Surat Rujukan Berjenjang FKTP.",
          "Menjawab Masalah: Bagian mana yang diselesaikan?",
-         "Memberikan kepastian hukum yang mengikat dan sah pada setiap temuan audit, sehingga"
-         " telaah verifikator tidak dapat disanggah sepihak oleh rumah sakit mitra.",
+         "Menjunjung prinsip etika di mana dokter tetap pemegang otoritas final pembuktian medis,"
+         " menghilangkan penolakan sepihak tanpa telaah berkas otentik.",
          BPJS_BLUE),
         
-        ("Fitur 3: Explainable AI (XAI) & Dynamic Reasoner",
+        ("Fitur 3: TreeSHAP Explainability & LLM Collaborator",
          "Fungsi: Apa yang dilakukan fitur ini?",
-         "Membongkar 'kotak hitam' model machine learning melalui dekomposisi SHAP values"
-         " dan menyajikannya dalam bentuk narasi klinis transparan yang menjelaskan variabel"
-         " dominan apa saja yang menyebabkan klaim ditandai anomali.",
+         "Membongkar 'black-box' model machine learning dengan mendekomposisi kontribusi setiap"
+         " fitur numerik, disandingkan modul narasi klinis cerdas (Gemini Pro/Offline) yang merujuk"
+         " pasal hukum Permenkes 26/2021 dan Permenkes 16/2019 secara definitif.",
          "Menjawab Masalah: Bagian mana yang diselesaikan?",
-         "Mengeliminasi penolakan rekomendasi sistem oleh klinisi/faskes dengan menyajikan"
-         " justifikasi rasional yang terbukti matematis dan dapat dipahami secara medis.",
+         "Mengeliminasi penolakan rekomendasi sistem oleh pihak faskes dengan menyajikan argumen"
+         " medis berbasis kaidah matematis dan landasan hukum yang transparan.",
          HexColor("#7E22CE")),
         
-        ("Fitur 4: Automated Audit Dossier Generator (PDF Resmi)",
+        ("Fitur 4: Automated Dossier & Buku Panduan Platform",
          "Fungsi: Apa yang dilakukan fitur ini?",
-         "Mengompilasi ringkasan klaim, riwayat rawat, bukti penyimpangan tarif, sitasi pasal regulasi,"
-         " dan QR Code verifikasi menjadi Berita Acara Hasil Audit standar formal format PDF.",
+         "Mengompilasi ringkasan penyimpangan tarif, bukti 4 dokumen, dasar regulasi, stempel digital,"
+         " dan QR Code verifikasi menjadi Berita Acara Audit Resmi format PDF dalam hitungan detik,"
+         " dilengkapi akses langsung Buku Panduan Fitur Platform VeriKlaim.",
          "Menjawab Masalah: Bagian mana yang diselesaikan?",
-         "Memangkas birokrasi penyusunan berkas sengketa/klarifikasi klaim dari 14-30 hari"
-         " menjadi hitungan detik dengan dokumen legal siap tanda tangan verifikator.",
+         "Memangkas birokrasi sengketa klaim pending dari 14-30 hari menjadi instan 1-2 hari kerja"
+         " dengan dokumen audit formal berstandar pembuktian hukum.",
          ACCENT_RED)
     ]
     
@@ -992,7 +972,6 @@ def draw_slide_7_features(c):
     for (title, f_label, f_text, m_label, m_text, accent_col), (gx, gy) in zip(features, coords):
         draw_card(c, gx, gy, grid_w, grid_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
         
-        # Header banner inside card
         c.setFillColor(accent_col)
         c.rect(gx, gy + grid_h - 6, grid_w, 6, fill=True, stroke=False)
         
@@ -1000,14 +979,12 @@ def draw_slide_7_features(c):
         c.setFillColor(accent_col)
         c.drawString(gx + 16, gy + grid_h - 24, title)
         
-        # Fungsi block
         c.setFont("Helvetica-Bold", 8.5)
         c.setFillColor(TEXT_DARK)
         c.drawString(gx + 16, gy + grid_h - 44, f_label)
         
         c.setFont("Helvetica", 8)
         c.setFillColor(TEXT_MUTED)
-        # Wrap f_text
         words_f = f_text.split()
         line_cur = []
         cur_y = gy + grid_h - 58
@@ -1021,7 +998,6 @@ def draw_slide_7_features(c):
             c.drawString(gx + 16, cur_y, " ".join(line_cur))
             cur_y -= 11
             
-        # Menjawab masalah block
         cur_y -= 4
         c.setFont("Helvetica-Bold", 8.5)
         c.setFillColor(TEXT_DARK)
@@ -1044,9 +1020,8 @@ def draw_slide_7_features(c):
 
 def draw_slide_8_architecture(c):
     """Slide 8: Slide Tambahan - Arsitektur Teknis dan Data strictly according to Page 10 of template."""
-    draw_header(c, "Slide Tambahan: Arsitektur Teknis dan Pipeline Data", slide_num_label="+", current_slide=8, total_slides=11)
+    draw_header(c, "Slide Tambahan: Arsitektur Teknis dan Pipeline Data v2.0", slide_num_label="+", current_slide=8, total_slides=11)
     
-    # 5 Architecture Layers (Stacked horizontally/vertically)
     top_y = 330
     layer_w = PAGE_WIDTH - 96
     layer_h = 135
@@ -1055,15 +1030,15 @@ def draw_slide_8_architecture(c):
     
     c.setFont("Helvetica-Bold", 10.5)
     c.setFillColor(BPJS_GREEN)
-    c.drawString(64, top_y + layer_h - 22, "DIAGRAM ARSITEKTUR SISTEM VERIKLAIM (5-TIER PIPELINE)")
+    c.drawString(64, top_y + layer_h - 22, "DIAGRAM ARSITEKTUR SISTEM VERIKLAIM v2.0 (5-TIER PIPELINE)")
     
     col5_w = (layer_w - 32 - 40) / 5.0
     layers = [
-        ("Tier 1: Ingestion", "Bridging VClaim, e-Klaim INA-CBG, atau Batch CSV/JSON REST API", BPJS_GREEN_LIGHT, BPJS_GREEN),
-        ("Tier 2: Security & PDP", "Zero PII Storage, SHA-256 Hash Masking NIK, Sanitasi Data Medis", BPJS_BLUE_LIGHT, BPJS_BLUE),
-        ("Tier 3: Dual-Core AI", "Ensemble LightGBM/XGBoost + Deterministic Permenkes Rule Matrix", HexColor("#F3E8FF"), HexColor("#7E22CE")),
-        ("Tier 4: XAI Reasoner", "TreeSHAP Decomposition + Auto Dossier ReportLab PDF Generator", ACCENT_AMBER_LIGHT, HexColor("#D97706")),
-        ("Tier 5: Presentation", "Dashboard Monitoring Verifikator, Alerting & Dispute Resolution", ACCENT_RED_LIGHT, ACCENT_RED)
+        ("Tier 1: Ingestion", "VClaim API, e-Klaim INA-CBG, SIMRS bridging, & 4 berkas digital", BPJS_GREEN_LIGHT, BPJS_GREEN),
+        ("Tier 2: Security & PDP", "Zero PII Storage, SHA-256 Masking NIK, Sanitasi Data Medis", BPJS_BLUE_LIGHT, BPJS_BLUE),
+        ("Tier 3: 6-Cluster AI", "XGBoost + Isolation Forest + 6 Klaster Kemenkes (0.079 ms core)", HexColor("#F3E8FF"), HexColor("#7E22CE")),
+        ("Tier 4: XAI & HITL", "TreeSHAP Attribution + Workstation Dokter + Berita Acara PDF", ACCENT_AMBER_LIGHT, HexColor("#D97706")),
+        ("Tier 5: Presentation", "Dashboard Palet Mobile JKN, Viewer Dokumen Medis & Audit Log", ACCENT_RED_LIGHT, ACCENT_RED)
     ]
     
     for i, (ltitle, ldesc, bg_col, border_col) in enumerate(layers):
@@ -1076,7 +1051,6 @@ def draw_slide_8_architecture(c):
         
         c.setFont("Helvetica", 7.5)
         c.setFillColor(TEXT_DARK)
-        # wrap
         words = ldesc.split()
         l_cur = []
         cy = top_y + layer_h - 68
@@ -1089,7 +1063,6 @@ def draw_slide_8_architecture(c):
         if l_cur:
             c.drawString(lx + 8, cy, " ".join(l_cur))
 
-    # Bottom 3 Technical Specs Cards
     bot_y = 52
     bot_h = 260
     col3_w = (PAGE_WIDTH - 96 - 32) / 3.0
@@ -1103,15 +1076,15 @@ def draw_slide_8_architecture(c):
     c.setFont("Helvetica", 8.2)
     c.setFillColor(TEXT_DARK)
     b1_lines = [
-        "- Dataset: 50.000 sampel data klaim FKRTL",
-        "  terstruktur dengan atribut lengkap:",
+        "- Dataset Riil: 50.000 sampel data klaim FKRTL",
+        "  BPJS Kesehatan terstruktur dengan atribut:",
         "  LOS, Severity, ICD-10, ICD-9, Tarif RS,",
-        "  dan Tarif Acuan INA-CBG.",
+        "  Special CMG, dan Tarif Acuan INA-CBG.",
+        "- Dataset Uji QA: 10.000 berkas uji independen",
+        "  (Automated QA Test Suite AGT-06).",
         "- Keterbatasan Data:",
-        "  Model dilatih pada data terstandarisasi;",
-        "  variasi koding non-standar lokal faskes",
-        "  dimitigasi melalui normalisasi kamus",
-        "  referensi diagnosa Kemenkes.",
+        "  Variasi koding lokal faskes dinormalisasi",
+        "  mengacu kamus terminologi resmi Kemenkes.",
         "- Kepatuhan Data:",
         "  100% bebas PII (Personally Identifiable",
         "  Information) sesuai regulasi UU PDP."
@@ -1121,7 +1094,7 @@ def draw_slide_8_architecture(c):
         c.drawString(bx1 + 16, y, l)
         y -= 12.5
 
-    # Box 2: Model & Algoritma yang Dipilih
+    # Box 2: Model & Alasan Pemilihan
     bx2 = bx1 + col3_w + 16
     draw_card(c, bx2, bot_y, col3_w, bot_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
     c.setFont("Helvetica-Bold", 10)
@@ -1130,25 +1103,25 @@ def draw_slide_8_architecture(c):
     c.setFont("Helvetica", 8.2)
     c.setFillColor(TEXT_DARK)
     b2_lines = [
-        "- Ensemble LightGBM & XGBoost:",
-        "  Optimal untuk data tabular klaim berdimensi",
-        "  campuran (kategorikal & numerik).",
-        "- Ketahanan Imbalanced Data:",
-        "  Mampu menangani rasio anomali fraud yang",
-        "  sangat langka (0.27%) tanpa over-fitting.",
-        "- Multi-Agent Rule Matrix:",
-        "  Menjamin kepatuhan deterministik terhadap",
-        "  Permenkes 26/2021 & Permenkes 16/2019.",
-        "- Integrasi SHAP TreeExplainer:",
-        "  Menghasilkan atribusi fitur eksak untuk",
-        "  setiap klaim individual secara instan."
+        "- XGBoost + Isolation Forest Ensemble:",
+        "  Menggabungkan keunggulan supervised",
+        "  learning dan unsupervised anomaly ranking.",
+        "- 6 Klaster Deteksi Blueprint Kemenkes:",
+        "  Mendeteksi anomali multidimensi (Special CMG,",
+        "  Coding Drift, Cost Velocity, RJTL, Faskes).",
+        "- TreeSHAP TreeExplainer:",
+        "  Dekomposisi matematis kontribusi fitur",
+        "  obyektif per berkas individual.",
+        "- Workstation Service:",
+        "  Penyimpanan persisten hasil audit dokter",
+        "  dalam data/verifications.json."
     ]
     y = bot_y + bot_h - 44
     for l in b2_lines:
         c.drawString(bx2 + 16, y, l)
         y -= 12.5
 
-    # Box 3: Benchmark Performa & Latensi
+    # Box 3: Benchmark Performa Teknis
     bx3 = bx2 + col3_w + 16
     draw_card(c, bx3, bot_y, col3_w, bot_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
     c.setFont("Helvetica-Bold", 10)
@@ -1157,17 +1130,16 @@ def draw_slide_8_architecture(c):
     c.setFont("Helvetica", 8.2)
     c.setFillColor(TEXT_DARK)
     b3_lines = [
-        "- Latensi Inferensi Single Claim: < 50 ms",
-        "  (Rata-rata 38 ms pada mesin standar).",
-        "- Throughput Batch Processing:",
-        "  > 1.200 klaim per detik per worker node.",
-        "- Memory Footprint Operasional: < 500 MB RAM",
-        "  Sangat ringan dan hemat infrastruktur.",
-        "- Kesiapan Bridging:",
-        "  Kompatibel penuh dengan protokol REST API",
-        "  dan format JSON e-Klaim BPJS.",
-        "- Skalabilitas Horizontal:",
-        "  Dapat dideploy multi-instance container."
+        "- Latensi Eksekusi Core: 0,079 ms / klaim",
+        "  (Eksekusi sub-milidetik super cepat).",
+        "- Client End-to-End Latency: 2,37 ms.",
+        "- Throughput Audit: 415,4 request / detik",
+        "  (Sanggup menyaring 1,49 juta klaim / jam).",
+        "- Recall / Sensitivitas: 100.00%",
+        "  (Zero False Negative / Nol kebocoran fraud).",
+        "- Presisi Deteksi: 96.43% (Sangat minim alarm palsu).",
+        "- ROC-AUC Score: 1.0000 (Pemisahan sempurna).",
+        "- Resource Footprint: < 500 MB RAM."
     ]
     y = bot_y + bot_h - 44
     for l in b3_lines:
@@ -1204,21 +1176,21 @@ def draw_slide_9_governance(c):
         "  hashing kriptografis satu arah (SHA-256)",
         "  sebelum diproses oleh pipeline machine learning.",
         "",
-        "- Standar Keamanan Data Tingkat Tinggi:",
+        "- Enkripsi Komunikasi Data:",
         "  Dukungan enkripsi TLS 1.3 saat transmisi data",
         "  dan AES-256 pada penyimpanan lokal.",
         "",
-        "- Kedaulatan Data Medis:",
+        "- Kedaulatan Data Medis Nasional:",
         "  Dapat berjalan 100% On-Premise di server",
-        "  BPJS Kesehatan tanpa ketergantungan API pihak",
-        "  ketiga atau layanan cloud publik asing."
+        "  internal BPJS tanpa mengirim data medis ke cloud",
+        "  pihak ketiga asing."
     ]
     py = card_y + card_h - 70
     for l in lines_pdp:
         c.drawString(x1 + 16, py, l)
         py -= 13.5
 
-    # Column 2: Mitigasi Risiko AI & Human-in-the-Loop
+    # Column 2: Human-in-the-Loop Workstation
     x2 = x1 + col3_w + 16
     draw_card(c, x2, card_y, col3_w, card_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
     draw_card(c, x2 + 16, card_y + card_h - 48, col3_w - 32, 34, bg_color=BPJS_BLUE_LIGHT, border_color=BPJS_BLUE, radius=4)
@@ -1229,23 +1201,22 @@ def draw_slide_9_governance(c):
     c.setFont("Helvetica", 8.5)
     c.setFillColor(TEXT_DARK)
     lines_gov = [
-        "- AI Murni Sebagai Decision Support System:",
+        "- AI Sebagai Decision Support System (DSS):",
         "  VeriKlaim tidak mengambil keputusan hukum",
-        "  secara sepihak/otonom (Zero Auto-Denial).",
+        "  secara otonom (Zero Auto-Denial).",
         "",
-        "- Otoritas Final Pada Verifikator Resmi:",
-        "  Status penerimaan, penolakan, atau klarifikasi",
-        "  klaim 100% tetap dipegang oleh Verifikator",
-        "  Manusia yang memiliki sertifikasi verifikasi.",
+        "- Otoritas Final Pada Dokter Verifikator:",
+        "  Pengesahan status klaim 100% dipegang oleh",
+        "  Verifikator Resmi BPJS Kesehatan melalui",
+        "  Workstation Verifikasi Terpadu.",
         "",
-        "- Mitigasi Bias & Model Drift:",
-        "  Model dievaluasi secara berkala terhadap",
-        "  perubahan pola klaim baru dan pembaruan",
-        "  regulasi tarif INA-CBG Kemenkes.",
+        "- Cross-Check 4 Berkas Digital Otentik:",
+        "  Dokter meneliti SEP, Resume Medis DPJP,",
+        "  Billing, dan Rujukan sebelum menetapkan vonis.",
         "",
         "- Transparansi Menyeluruh (No Black-Box):",
-        "  Setiap rekomendasi wajib disertai dekomposisi",
-        "  SHAP dan dasar pasal regulasi medis baku."
+        "  Rekomendasi wajib disertai atribusi TreeSHAP",
+        "  dan dasar pasal regulasi medis baku."
     ]
     gy = card_y + card_h - 70
     for l in lines_gov:
@@ -1263,20 +1234,18 @@ def draw_slide_9_governance(c):
     c.setFont("Helvetica", 8.5)
     c.setFillColor(TEXT_DARK)
     lines_audit = [
-        "- Catatan Riwayat Tidak Dapat Diubah:",
-        "  Setiap aktivitas penelaahan, skor probabilitas,",
-        "  dan keputusan verifikator dicatat dalam audit log",
-        "  yang terlindungi dan immutable.",
+        "- Audit Trail Digital Persisten:",
+        "  Setiap aktivitas penelaahan, putusan dokter,",
+        "  catatan verifikasi, dan timestamp tersimpan",
+        "  secara permanen di basis data verifikasi.",
         "",
         "- Kesiapan Pengawasan BPK RI & KPK RI:",
-        "  Dokumentasi audit yang dihasilkan memenuhi",
-        "  standar pembuktian administratif dan kepatuhan",
-        "  pengawasan tata kelola dana jaminan sosial.",
+        "  Dokumentasi audit memenuhi standar pembuktian",
+        "  administratif dan kepatuhan pengawasan DJS.",
         "",
-        "- Dokumen Audit Berstandar Formal:",
-        "  Berita Acara Audit memuat stempel digital,",
-        "  nomor dokumen unik, timestamp verifikasi,",
-        "  dan QR Code validasi keaslian dokumen.",
+        "- Berita Acara Audit Berstandar Formal:",
+        "  Memuat stempel digital, nomor dokumen unik,",
+        "  kalkulasi selisih tarif, dan QR Code verifikasi.",
         "",
         "- Menjamin Keadilan Bagi Rumah Sakit:",
         "  Faskes memiliki hak klarifikasi berbasis data."
@@ -1291,89 +1260,84 @@ def draw_slide_10_validation_readiness(c):
     """Slide 10: Slide Tambahan - Hasil Uji, Validasi, dan Kesiapan Implementasi strictly according to Page 10."""
     draw_header(c, "Slide Tambahan: Hasil Uji Validasi dan Kesiapan Implementasi", slide_num_label="+", current_slide=10, total_slides=11)
     
-    # Left Column: HASIL UJI DAN VALIDASI
     left_w = 460
     draw_card(c, 48, 52, left_w, 413, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
     
     c.setFont("Helvetica-Bold", 11)
     c.setFillColor(BPJS_GREEN)
-    c.drawString(66, 442, "HASIL UJI DAN VALIDASI (50.000 DATA KLAIM RIIL BPJS)")
+    c.drawString(66, 442, "HASIL UJI & VALIDASI (50K RIIL + 10K QA TEST SUITE)")
     
-    # 4 Metric Cards in 2x2
     m_w = (left_w - 32 - 12) / 2.0
     m_h = 70
     
-    # Metric 1: ROC-AUC
+    # Metric 1: Recall
     draw_card(c, 66, 350, m_w, m_h, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=6)
     c.setFont("Helvetica-Bold", 20)
     c.setFillColor(BPJS_GREEN_DARK)
-    c.drawString(78, 396, "1.0000")
+    c.drawString(78, 396, "100.00%")
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(TEXT_DARK)
-    c.drawString(78, 376, "ROC-AUC Score")
+    c.drawString(78, 376, "Recall / Sensitivitas")
     c.setFont("Helvetica", 7.5)
     c.setFillColor(TEXT_MUTED)
-    c.drawString(78, 360, "Pemisahan sempurna kelas fraud")
+    c.drawString(78, 360, "Zero False Negative (Nol kebocoran)")
 
     # Metric 2: Precision
     draw_card(c, 66 + m_w + 12, 350, m_w, m_h, bg_color=BPJS_BLUE_LIGHT, border_color=BPJS_BLUE, radius=6)
     c.setFont("Helvetica-Bold", 20)
     c.setFillColor(BPJS_BLUE)
-    c.drawString(78 + m_w + 12, 396, "99.4%")
+    c.drawString(78 + m_w + 12, 396, "96.43%")
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(TEXT_DARK)
     c.drawString(78 + m_w + 12, 376, "Precision Score")
     c.setFont("Helvetica", 7.5)
     c.setFillColor(TEXT_MUTED)
-    c.drawString(78 + m_w + 12, 360, "False positive sangat minimal (<0.6%)")
+    c.drawString(78 + m_w + 12, 360, "Sangat minim alarm palsu (False Alarm)")
 
-    # Metric 3: Recall
+    # Metric 3: Core Latency
     draw_card(c, 66, 268, m_w, m_h, bg_color=HexColor("#F3E8FF"), border_color=HexColor("#7E22CE"), radius=6)
     c.setFont("Helvetica-Bold", 20)
     c.setFillColor(HexColor("#7E22CE"))
-    c.drawString(78, 314, "98.6%")
+    c.drawString(78, 314, "0,079 ms")
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(TEXT_DARK)
-    c.drawString(78, 294, "Recall Score")
+    c.drawString(78, 294, "Latensi Eksekusi Core")
     c.setFont("Helvetica", 7.5)
     c.setFillColor(TEXT_MUTED)
-    c.drawString(78, 278, "Hampir seluruh fraud terdeteksi")
+    c.drawString(78, 278, "Inferensi sub-milidetik super cepat")
 
-    # Metric 4: F1-Score
+    # Metric 4: Throughput
     draw_card(c, 66 + m_w + 12, 268, m_w, m_h, bg_color=ACCENT_AMBER_LIGHT, border_color=ACCENT_AMBER, radius=6)
     c.setFont("Helvetica-Bold", 20)
     c.setFillColor(HexColor("#B7791F"))
-    c.drawString(78 + m_w + 12, 314, "0.9900")
+    c.drawString(78 + m_w + 12, 314, "415,4 req/s")
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(TEXT_DARK)
-    c.drawString(78 + m_w + 12, 294, "F1-Score Makro")
+    c.drawString(78 + m_w + 12, 294, "Throughput Audit")
     c.setFont("Helvetica", 7.5)
     c.setFillColor(TEXT_MUTED)
-    c.drawString(78 + m_w + 12, 278, "Keseimbangan presisi & sensitivitas")
+    c.drawString(78 + m_w + 12, 278, "Sanggup 1,49 juta klaim per jam")
     
-    # Testing Summary Text
     c.setFont("Helvetica-Bold", 9)
     c.setFillColor(TEXT_DARK)
-    c.drawString(66, 245, "Ringkasan Hasil Pengujian Terhadap Modus Kecurangan:")
+    c.drawString(66, 245, "Cakupan Deteksi 6 Klaster Modus Kecurangan:")
     
     c.setFont("Helvetica", 8.2)
     c.setFillColor(TEXT_MUTED)
     val_lines = [
-        "- Modus Upcoding: Akurasi deteksi 99.8% pada kasus pemendekan LOS",
-        "  dengan klaim Severity Level III (Kompensasi komplikasi berat).",
-        "- Modus Unbundling: Keberhasilan 100% mendeteksi pemisahan tindakan",
-        "  bedah yang seharusnya masuk dalam satu paket tarif INA-CBG.",
-        "- Modus Phantom Billing: Terdeteksi melalui cross-check duplikasi registrasi",
-        "  dan inkonsistensi rasio tarif terhadap lama perawatan.",
-        "- Uji Stres Kecepatan: 50.000 baris klaim dievaluasi dalam waktu 41 detik",
-        "  pada mode batch processing offline."
+        "- Klaster 1: Top-Up Special CMG fiktif tanpa tindakan bedah pendukung.",
+        "- Klaster 2: Disparitas diagnosis masuk (ringan) vs utama (berat/drift).",
+        "- Klaster 3: Lonjakan kecepatan biaya harian faskes (Cost Velocity Ratio).",
+        "- Klaster 4: Bypassing rujukan berjenjang rawat jalan tingkat lanjut (RJTL).",
+        "- Klaster 5: Upcoding ekstrim Severity III tanpa terapi intensif / ICU.",
+        "- Klaster 6: Mismatch prosedur spesialistik lanjutan vs kelas faskes."
     ]
     vy = 230
     for vl in val_lines:
         c.drawString(66, vy, vl)
         vy -= 12.5
 
-    # Right Column: KESIAPAN IMPLEMENTASI & RENCANA PENGEMBANGAN
+    # Right Column: Kesiapan Implementasi
     right_x = 48 + left_w + 16
     right_w = PAGE_WIDTH - 48 - right_x
     
@@ -1383,17 +1347,15 @@ def draw_slide_10_validation_readiness(c):
     c.setFillColor(BPJS_GREEN)
     c.drawString(right_x + 20, 442, "KESIAPAN IMPLEMENTASI & ROADMAP (TRL 6)")
     
-    # TRL Level Badge
     draw_card(c, right_x + 16, 365, right_w - 32, 58, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=6)
     c.setFont("Helvetica-Bold", 12)
     c.setFillColor(BPJS_GREEN_DARK)
     c.drawString(right_x + 28, 405, "Technology Readiness Level 6 (TRL 6)")
     c.setFont("Helvetica", 8.2)
     c.setFillColor(TEXT_DARK)
-    c.drawString(right_x + 28, 388, "Prototipe sistem telah diuji coba secara komprehensif pada lingkungan")
-    c.drawString(right_x + 28, 374, "operasional relevan menggunakan 50.000 data klaim FKRTL BPJS.")
+    c.drawString(right_x + 28, 388, "Prototipe sistem telah diuji coba komprehensif pada lingkungan operasional")
+    c.drawString(right_x + 28, 374, "relevan menggunakan 50.000 data klaim FKRTL BPJS & 10.000 data QA.")
     
-    # Kebutuhan Implementasi
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(TEXT_DARK)
     c.drawString(right_x + 20, 345, "Kebutuhan untuk Dipakai di Lapangan:")
@@ -1402,28 +1364,26 @@ def draw_slide_10_validation_readiness(c):
     req_lines = [
         "1. Integrasi API Gateway: Menghubungkan endpoint REST FastAPI",
         "   VeriKlaim dengan pipeline VClaim atau e-Klaim Kemenkes.",
-        "2. Skalabilitas Server: Minimal 2 instance vCPU 4-core, RAM 8GB,",
-        "   cukup untuk melayani lonjakan verifikasi hingga ribuan klaim/detik.",
-        "3. Sertifikasi Verifikator: Pelatihan singkat (1 hari) bagi verifikator",
-        "   BPJS dalam membaca interpretasi visual SHAP dan Berita Acara PDF."
+        "2. Spesifikasi Server Minimal: 2 instance vCPU 4-core, RAM 8GB,",
+        "   mampu melayani hingga ribuan klaim per detik dengan aman.",
+        "3. Sertifikasi Verifikator: Pelatihan singkat workstation verifikasi",
+        "   berbasis Buku Panduan Fitur Platform VeriKlaim resmi."
     ]
     ry = 330
     for rl in req_lines:
         c.drawString(right_x + 20, ry, rl)
         ry -= 12.5
         
-    # Rencana Pengembangan Pasca-Healthkathon
     c.setFont("Helvetica-Bold", 9.5)
     c.setFillColor(BPJS_BLUE)
     c.drawString(right_x + 20, 240, "Rencana Pengembangan Pasca-Healthkathon:")
     c.setFont("Helvetica", 8.2)
     c.setFillColor(TEXT_DARK)
     road_lines = [
-        "- Tahap 1 (Bulan 1-2): Pilot Project di 5 RSUD mitra Kalbar.",
-        "- Tahap 2 (Bulan 3-4): Integrasi modul NLP untuk ekstraksi resume",
-        "  medis dan catatan dokter otomatis (OCR berkas rekam medis).",
-        "- Tahap 3 (Bulan 5-6): Peluncuran Modul Pre-Audit Mandiri untuk",
-        "  manajemen RS seluruh Indonesia guna memangkas klaim dispute.",
+        "- Tahap 1 (Bulan 1-2): Pilot Project di 5 RSUD mitra wilayah Kalbar.",
+        "- Tahap 2 (Bulan 3-4): Integrasi modul OCR resume medis fisik.",
+        "- Tahap 3 (Bulan 5-6): Peluncuran Modul Pra-Audit Mandiri untuk",
+        "  manajemen RS seluruh Indonesia guna memangkas sengketa klaim.",
         "- Tahap 4: Pembentukan konsorsium riset AI Kesehatan bersama BPJS."
     ]
     rdy = 224
@@ -1431,7 +1391,6 @@ def draw_slide_10_validation_readiness(c):
         c.drawString(right_x + 20, rdy, rdl)
         rdy -= 12.5
         
-    # Reference citations
     c.setFont("Helvetica-Bold", 8)
     c.setFillColor(HexColor("#64748B"))
     c.drawString(right_x + 20, 85, "Referensi Regulasi Utama:")
@@ -1445,16 +1404,13 @@ def draw_slide_11_closing(c):
     c.setFillColor(NAVY_DARK)
     c.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, fill=True, stroke=False)
     
-    # Top BPJS Green accent line
     c.setFillColor(BPJS_GREEN)
     c.rect(0, PAGE_HEIGHT - 8, PAGE_WIDTH, 8, fill=True, stroke=False)
     
-    # Logo
     logo_path = r"D:\Badra\project\Alur_matematika\Marketing_Aqila\bpjs\docs\assets\template_p1_img1_Image6.png"
     if os.path.exists(logo_path):
         c.drawImage(logo_path, 48, PAGE_HEIGHT - 85, width=170, height=58, preserveAspectRatio=True, mask='auto')
         
-    # Title
     c.setFont("Helvetica-Bold", 30)
     c.setFillColor(WHITE)
     c.drawString(48, PAGE_HEIGHT - 130, "Terima Kasih")
@@ -1465,9 +1421,8 @@ def draw_slide_11_closing(c):
     
     c.setFont("Helvetica", 10.5)
     c.setFillColor(TEXT_LIGHT)
-    c.drawString(48, PAGE_HEIGHT - 176, "VeriKlaim: Solusi Deteksi Anomali Klaim FKRTL Berbasis AI & Explainable Governance")
+    c.drawString(48, PAGE_HEIGHT - 176, "VeriKlaim v2.0: Deteksi 6-Klaster Kemenkes, XAI SHAP & Workstation Human-in-the-Loop")
     
-    # 3 Large Action Cards
     card_w = (PAGE_WIDTH - 96 - 32) / 3.0
     card_h = 240
     card_y = 65
@@ -1491,11 +1446,11 @@ def draw_slide_11_closing(c):
     c.setFillColor(TEXT_LIGHT)
     demo_notes = [
         "- Uvicorn / FastAPI Backend Active",
-        "- Interactive Dashboard Verifikator",
-        "- Single Claim Anomaly Inspector",
-        "- Explainable AI (SHAP Breakdown)",
-        "- Generator Laporan Audit PDF Resmi",
-        "- Ready for Screen Recording / Zoom"
+        "- Workstation Verifikasi Human-in-the-Loop",
+        "- Viewer 4 Dokumen Digital Terintegrasi",
+        "- 6 Klaster Deteksi Blueprint Kemenkes",
+        "- Explainable AI TreeSHAP Breakdown",
+        "- Unduh Berita Acara & Buku Panduan PDF"
     ]
     dy = card_y + card_h - 110
     for dn in demo_notes:
@@ -1521,11 +1476,11 @@ def draw_slide_11_closing(c):
     c.setFillColor(TEXT_LIGHT)
     repo_notes = [
         "- Arsitektur Modular (app/, src/, docs/)",
+        "- Verification Workstation & LLM Collab",
         "- Model Terlatih (models/*.joblib)",
-        "- Dataset 50.000 Klaim (data/*.csv)",
-        "- Script Training & Evaluasi Lengkap",
-        "- Dokumentasi & Proposal PDF Resmi",
-        "- Lisensi Open Research & Audit"
+        "- Dataset 50.000 Riil & QA 10.000",
+        "- Buku Panduan Fitur Platform (PDF)",
+        "- Lisensi Open Research & MIT"
     ]
     ry = card_y + card_h - 110
     for rn in repo_notes:
@@ -1550,8 +1505,7 @@ def draw_slide_11_closing(c):
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_LIGHT)
     contact_notes = [
-        "- Dosen Prodi Sistem Informasi,",
-        "  Universitas Nahdlatul Ulama Kalbar",
+        "- Dosen Prodi Sistem Informasi, UNU Kalbar",
         "- Alumni STEI ITB",
         "- WhatsApp: 0856-5441-1081",
         "- Email: aditya.pratama@unukalbar.ac.id",
@@ -1562,7 +1516,6 @@ def draw_slide_11_closing(c):
         c.drawString(x3 + 18, cy, cn)
         cy -= 15
 
-    # Bottom footer text
     c.setFont("Helvetica", 8)
     c.setFillColor(HexColor("#64748B"))
     c.drawString(48, 30, "Project Final Healthkathon 2026 BPJS Kesehatan - Kategori Efisiensi Risiko pada Faskes / KLAIM (C03.04)")
@@ -1574,52 +1527,41 @@ def main():
     
     c = canvas.Canvas(output_pdf, pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
     
-    # Slide 1: Cover
     draw_slide_1_cover(c)
     c.showPage()
     
-    # Slide 2: Perkenalan Tim (Sesuai slide 4 template)
     draw_slide_2_team(c)
     c.showPage()
     
-    # Slide 3: Judul Ide, Deskripsi, dan Tujuan (Sesuai slide 5 template)
     draw_slide_3_idea(c)
     c.showPage()
     
-    # Slide 4: Latar Belakang dan Dampak (Sesuai slide 6 template)
     draw_slide_4_background_impact(c)
     c.showPage()
     
-    # Slide 5: Alur Proses Aplikasi (Sesuai slide 7 template)
     draw_slide_5_process_flow(c)
     c.showPage()
     
-    # Slide 6: Demo Aplikasi / Prototype (Sesuai slide 8 template)
     draw_slide_6_demo_prototype(c)
     c.showPage()
     
-    # Slide 7: Penjelasan Fitur (Sesuai slide 9 template)
     draw_slide_7_features(c)
     c.showPage()
     
-    # Slide 8: Slide Tambahan - Arsitektur Teknis dan Data (Sesuai slide 10 template)
     draw_slide_8_architecture(c)
     c.showPage()
     
-    # Slide 9: Slide Tambahan - Keamanan, Privasi, dan Tata Kelola AI (Sesuai slide 10 template)
     draw_slide_9_governance(c)
     c.showPage()
     
-    # Slide 10: Slide Tambahan - Hasil Uji Validasi dan Kesiapan Implementasi (Sesuai slide 10 template)
     draw_slide_10_validation_readiness(c)
     c.showPage()
     
-    # Slide 11: Slide Penutup (Sesuai slide 11 template)
     draw_slide_11_closing(c)
     c.showPage()
     
     c.save()
-    print(f"SUCCESS: Generated {output_pdf} with 11 slides strictly following Panduan Project Final Healthkathon 2026!")
+    print(f"SUCCESS: Generated updated {output_pdf} with 11 slides incorporating 6-cluster model & HITL workstation!")
 
 
 if __name__ == "__main__":

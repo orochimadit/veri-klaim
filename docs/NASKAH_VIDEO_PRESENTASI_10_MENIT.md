@@ -1,8 +1,8 @@
 # NASKAH PANDUAN REKAMAN VIDEO PRESENTASI (DURASI MAKSIMAL 10 MENIT)
-**Healthkathon 2026 BPJS Kesehatan — Project Final**  
+**Healthkathon 2026 BPJS Kesehatan — Project Final (Versi Terkini v2.0)**  
 *Tema: Detect Smarter, Protect JKN — Smarter Protection for a Stronger JKN (Efisiensi Risiko Program JKN)*  
 *Kategori: Efisiensi Risiko pada Faskes / KLAIM (Kode: C03.04)*  
-*Nama Solusi: VeriKlaim*  
+*Nama Solusi: VeriKlaim v2.0*  
 *Nama Tim: Tim VeriKlaim Kalbar*  
 
 ---
@@ -10,7 +10,7 @@
 ## 1. PANDUAN UMUM & CHECKLIST SEBELUM MEREKAM (ZOOM MEETING)
 1. **Durasi Total:** Maksimal 10 menit (Target ideal rekaman: 9 menit 30 detik s.d. 9 menit 50 detik).
 2. **Platform Perekaman:** Zoom Meeting (Rekomendasi resmi panitia).
-   - Pastikan kamera/webcam ketiga anggota tim menyala (foto/video wajah tampil jelas).
+   - Pastikan webcam ketiga anggota tim menyala (foto/video wajah tampil jelas).
    - Gunakan fitur *Share Screen* untuk menampilkan slide presentasi (`docs/project_final_healthkathon_slides.html` atau `docs/Project_Final_Healthkathon_2026_VeriKlaim.pdf`) serta browser aktif di `http://127.0.0.1:8000/` saat sesi demo.
 3. **Pengaturan YouTube:** Unggah video ke YouTube dengan visibilitas **Unlisted** (Tidak Publik) atau **Private** (pastikan tautan dapat dibuka panitia).
 4. **Batas Akhir Submit:** 19 Oktober s.d. 1 November 2026 melalui Dashboard Healthkathon BPJS Kesehatan.
@@ -25,7 +25,7 @@
 | **00:30 - 01:30** | 60 detik | Slide 3 | Judul Ide, Nilai Utama, Deskripsi & 3 Tujuan Terukur | **Aditya Pratama** |
 | **01:30 - 03:00** | 90 detik | Slide 4 | Latar Belakang Masalah (KPK/BPK) & 3 Indikator Dampak | **M. Ali Maulana** |
 | **03:00 - 04:30** | 90 detik | Slide 5 | Alur Proses Aplikasi (Input, Proses, AI, Output, Tindak Lanjut) | **Nurman Hariyanto** |
-| **04:30 - 07:30** | 180 detik | Slide 6 & Web | **DEMO LANGSUNG APLIKASI (Live System http://127.0.0.1:8000)** | **Aditya Pratama** |
+| **04:30 - 07:30** | 180 detik | Slide 6 & Web | **DEMO LANGSUNG APLIKASI (Live Workstation http://127.0.0.1:8000)** | **Aditya Pratama** |
 | **07:30 - 09:00** | 90 detik | Slide 7 | Penjelasan 4 Fitur Utama Solusi | **Nurman Hariyanto** & **M. Ali Maulana** |
 | **09:00 - 10:00** | 60 detik | Slide 8 - 11 | Arsitektur, Keamanan PDP, Validasi 50k & Penutup | **Aditya Pratama** |
 
@@ -38,9 +38,9 @@
 
 > **Aditya Pratama (Ketua Tim):**  
 > *"Assalamu’alaikum Warahmatullahi Wabarakatuh, salam sejahtera, dan salam sehat untuk Dewan Juri Healthkathon BPJS Kesehatan 2026.  
-> Kami dari **Tim VeriKlaim Kalbar** dengan bangga mempersembahkan solusi kami pada Kategori Efisiensi Risiko pada Faskes/KLAIM: **VeriKlaim — Platform Deteksi Anomali Klaim FKRTL Berbasis Hybrid Machine Learning dan Explainable AI.**  
+> Kami dari **Tim VeriKlaim Kalbar** dengan bangga mempersembahkan solusi kami pada Kategori Efisiensi Risiko pada Faskes/KLAIM: **VeriKlaim v2.0 — Platform Deteksi Anomali 6-Klaster Kemenkes, Explainable AI SHAP, dan Workstation Human-in-the-Loop 4 Dokumen Digital.**  
 > Tim kami merupakan kolaborasi lintas disiplin antara AI, Big Data, dan Manajemen Layanan Klinis:  
-> 1. Saya sendiri, **Aditya Pratama, S.T., M.T.**, Dosen Program Studi Sistem Informasi Universitas Nahdlatul Ulama Kalimantan Barat, alumni STEI ITB, bertindak sebagai Ketua Tim dan Lead AI & Arsitektur Sistem.  
+> 1. Saya sendiri, **Aditya Pratama, S.T., M.T.**, Dosen Program Studi Sistem Informasi Universitas Nahdlatul Ulama Kalimantan Barat, alumni S1 & S2 STEI ITB, bertindak sebagai Ketua Tim dan Lead AI & Arsitektur Sistem.  
 > 2. Rekan saya, **Nurman Hariyanto, S.ST., M.T.**, Dosen Sistem Informasi UNU Kalbar, alumni S2 STEI ITB dan Polban, sebagai Lead Rekayasa Data & Infrastruktur.  
 > 3. Dan **M. Ali Maulana, M.Kep.**, Dosen Keperawatan Fakultas Kedokteran Universitas Tanjungpura, sebagai Lead Domain Klinis dan Kepatuhan Regulasi Kesehatan."*
 
@@ -51,14 +51,14 @@
 
 > **Aditya Pratama:**  
 > *"Nilai utama dari VeriKlaim dirangkum dalam satu kalimat:  
-> **'Solusi ini membantu Verifikator BPJS Kesehatan dan Tim Pencegahan Fraud Rumah Sakit mendeteksi kecurangan klaim INA-CBG secara otomatis, transparan, dan berlandaskan regulasi klinis sebelum pembayaran dilakukan, agar efisiensi dana jaminan sosial tercapai optimal.'**  
+> **'Solusi ini membantu Verifikator BPJS Kesehatan dan Tim Pengendali Fraud Faskes mendeteksi kecurangan klaim INA-CBG secara otomatis, transparan, dan berlandaskan regulasi klinis sebelum pembayaran dilakukan, agar efisiensi dana jaminan sosial tercapai optimal.'**  
 >  
-> Secara garis besar, VeriKlaim bekerja melalui integrasi dua mesin: Ensemble Machine Learning (LightGBM dan XGBoost) untuk mendeteksi anomali statistik tersembunyi, yang dipadukan dengan Deterministic Rule Engine berlandaskan Permenkes No. 26/2021 dan Permenkes No. 16/2019.  
+> Secara garis besar, VeriKlaim v2.0 bekerja melalui integrasi dua mesin: Ensemble Machine Learning (XGBoost dan Isolation Forest) dengan kecepatan eksekusi inti di bawah 0,1 milidetik, yang dipadukan dengan 6 Klaster Deteksi Kecurangan Terpadu Blueprint Kemenkes RI, Permenkes No. 26/2021, dan Permenkes No. 16/2019.  
 >  
-> Tiga tujuan terukur yang kami capai:  
-> 1. **Efisiensi Waktu Audit:** Memangkas waktu telaah klaim berisiko dari 15-20 menit manual menjadi **kurang dari 3 detik** per berkas.  
-> 2. **Presisi Tinggi:** Mencapai **ROC-AUC 1.0000 dan F1-Score 0.99** dengan false positive di bawah 0.6% pada dataset teruji 50.000 klaim.  
-> 3. **Reduksi Dispute 70%:** Menurunkan durasi sengketa klaim dari 14-30 hari menjadi 1-2 hari melalui Berita Acara Audit transparan berbasis Explainable AI."*
+> Tiga target terukur yang kami capai:  
+> 1. **Efisiensi Waktu Audit > 99%:** Memangkas waktu telaah klaim berisiko dari 15-20 menit manual menjadi **0,079 milidetik** per berkas, dengan throughput 415 request per detik atau 1,49 juta klaim per jam.  
+> 2. **Sensitivitas 100% & ROC-AUC 1.0000:** Mencapai **Recall 100.00% (Zero False Negative)** tanpa ada klaim fraud yang lolos, serta Presisi 96.43% yang meminimalkan alarm palsu.  
+> 3. **Penyelamatan Finansial Rp 14,34 M:** Menyelamatkan potensi kebocoran dana DJS hingga Rp 14,34 Miliar dan memangkas masa dispute dari 30 hari menjadi 1-2 hari kerja."*
 
 ---
 
@@ -69,14 +69,12 @@
 > *"Bapak dan Ibu Dewan Juri yang kami hormati,  
 > Setiap tahunnya, puluhan juta klaim FKRTL diajukan ke BPJS Kesehatan. Namun kapasitas telaah verifikator manusia secara manual sangat terbatas, sehingga hanya 10 hingga 20 persen berkas yang sempat diaudit lewat uji petik.  
 >  
-> Keterbatasan ini memicu celah kebocoran Dana Jaminan Sosial (DJS). Temuan BPK RI dan kajian KPK pada Juli 2024 secara gamblang mencatat adanya dugaan klaim fiktif dan phantom billing senilai Rp 35 Miliar di tiga rumah sakit di Sumatera Utara dan Jawa Tengah. Modus yang mendominasi meliputi: Upcoding tingkat keparahan pada tindakan bedah sesar, tagihan ganda ventilator ICU, dan penambahan komorbiditas palsu.  
->  
-> Bila klaim bermasalah ini disengketakan, proses klarifikasi memakan waktu 14 hingga 30 hari, menahan arus kas rumah sakit dan membebani administrasi BPJS.  
+> Keterbatasan ini memicu celah kebocoran Dana Jaminan Sosial (DJS). Temuan BPK RI dan kajian KPK pada Juli 2024 secara gamblang mencatat dugaan klaim fiktif dan phantom billing senilai Rp 35 Miliar di tiga rumah sakit di Sumatera Utara dan Jawa Tengah. Modus yang mendominasi meliputi: Top-Up Special CMG fiktif tanpa operasi, disparitas diagnosa masuk ringan menjadi diagnosa pulang berat, upcoding ekstrem persalinan sesar tanpa ICU, dan klaim rawat jalan bypassing rujukan.  
 >  
 > VeriKlaim menghadirkan lompatan dampak konkret sebelum vs sesudah:  
-> 1. **Kecepatan Telaah:** Dari 15-20 menit per berkas manual menjadi **kurang dari 3 detik** otomatis real-time.  
-> 2. **Cakupan Audit:** Dari hanya 10-20% sampel acak menjadi **100% seluruh klaim tersaring secara pre-payment**.  
-> 3. **Resolusi Dispute:** Dari 14-30 hari kalender menjadi **1-2 hari kerja selesai**, karena sistem langsung menerbitkan bukti klinis dan dasar hukum yang tidak dapat disanggah sepihak."*
+> 1. **Kecepatan Telaah:** Dari 15-20 menit per berkas manual menjadi **sub-milidetik (< 0,1 ms)** otomatis real-time.  
+> 2. **Cakupan Audit:** Dari hanya 10-20% sampel acak menjadi **100% seluruh klaim tersaring secara pre-payment dengan Zero False Negative**.  
+> 3. **Resolusi Dispute:** Dari 14-30 hari kalender menjadi **1-2 hari kerja selesai**, karena dokter verifikator langsung dibekali bukti silang 4 dokumen digital dan landasan hukum yang sah."*
 
 ---
 
@@ -84,14 +82,14 @@
 **[Tampilkan Slide 5: Alur Proses Aplikasi]**
 
 > **Nurman Hariyanto (Lead Data & Infrastruktur):**  
-> *"Berikut adalah arsitektur alur kerja 5 tahap VeriKlaim:  
-> 1. **Tahap 1 - Input:** Data transaksi klaim diterima secara real-time via API bridging e-Klaim/VClaim BPJS atau batch upload file CSV/JSON dengan parameter lengkap: Length of Stay (LOS), kode diagnosa ICD-10, prosedur ICD-9-CM, tingkat keparahan, serta tarif RS dan tarif acuan INA-CBG.  
-> 2. **Tahap 2 - Proses:** Sistem melakukan sanitasi skema dan penyamaran identitas NIK pasien (Zero PII sesuai UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi), dilanjutkan rekayasa fitur rasio tarif terhadap LOS dan matriks inkonsistensi klinis.  
-> 3. **Tahap 3 - Analisis AI:** Data dievaluasi serentak oleh Dual-Core Engine: Ensemble Tree Model menghitung probabilitas anomali statistik, sementara Clinical Rule Matrix menguji pelanggaran batas Permenkes 26/2021 dan 16/2019.  
-> 4. **Tahap 4 - Output:** Dashboard menampilkan status klaim: Wajar, Waspada, atau Fraud Tinggi, lengkap dengan visualisasi atribusi faktor TreeSHAP dan rekomendasi tindakan.  
-> 5. **Tahap 5 - Tindak Lanjut:** Verifikator dapat menyetujui klaim layak atau langsung mencetak Berita Acara Audit Resmi format PDF ber-QR code dan dasar hukum untuk proses klarifikasi ke faskes.  
+> *"Berikut adalah arsitektur alur kerja 5 tahap VeriKlaim v2.0:  
+> 1. **Tahap 1 - Input:** Data transaksi klaim diterima via API VClaim/e-Klaim atau batch upload file CSV/JSON, mencakup data klinis dan 4 berkas digital pendukung.  
+> 2. **Tahap 2 - Proses:** Sistem melakukan sanitasi skema dan hashing NIK SHA-256 (kepatuhan UU PDP No. 27/2022), dilanjutkan rekayasa fitur Cost Velocity Ratio dan matriks inkonsistensi koding.  
+> 3. **Tahap 3 - Analisis AI:** Data dievaluasi serentak oleh Dual-Core Engine: Ensemble XGBoost dan Isolation Forest menghitung skor risiko, sementara 6 Klaster Kemenkes menguji pelanggaran kaidah INA-CBG secara deterministik.  
+> 4. **Tahap 4 - Output:** Hasil disajikan ke dalam **Workstation Verifikasi Dokter**, lengkap dengan skor anomali, dekomposisi TreeSHAP, dan viewer 4 dokumen digital terintegrasi.  
+> 5. **Tahap 5 - Tindak Lanjut:** Dokter verifikator mengesahkan putusan akhir, mencatat rekam jejak digital (audit trail), dan mengunduh Berita Acara Audit Resmi format PDF ber-QR code.  
 >  
-> Aktor utama pengguna solusi ini adalah Verifikator Kantor Cabang BPJS Kesehatan, Tim Pencegahan Kecurangan Rumah Sakit (Tim PK-RS), dan Auditor Manajemen Risiko."*
+> Aktor utama pengguna solusi ini adalah Dokter Verifikator Kantor Cabang BPJS Kesehatan, Tim Pencegahan Kecurangan Rumah Sakit (Tim PK-RS), dan Auditor Manajemen Risiko."*
 
 ---
 
@@ -99,25 +97,27 @@
 **[Pindah Screen Share ke Browser aktif di http://127.0.0.1:8000/]**
 
 > **Aditya Pratama:**  
-> *"Sekarang mari kita saksikan demo langsung sistem VeriKlaim yang sedang berjalan secara aktif pada server lokal kami di port 8000.  
+> *"Sekarang mari kita saksikan demo langsung sistem VeriKlaim v2.0 yang sedang berjalan aktif pada server lokal kami di port 8000.  
 >  
-> **Skenario 1: Monitoring Portofolio 50.000 Klaim (Makro Dashboard)**  
-> Di layar terlihat dashboard monitoring operasional. Sistem telah memproses 50.000 data sampel klaim FKRTL BPJS Kesehatan. Dari 50.000 klaim ini, VeriKlaim secara presisi mengidentifikasi 137 klaim berindikasi anomali fraud (rasio 0.27%), dengan total potensi efisiensi dana yang berhasil diselamatkan mencapai Rp 1,84 Miliar. Kita juga dapat melihat sebaran rasio anomali per departemen faskes secara real-time.  
+> **Skenario 1: Monitoring Portofolio 50.000 Klaim & 6 Klaster Kemenkes**  
+> Di layar terlihat dashboard monitoring operasional dengan palet resmi Mobile JKN. Sistem telah memproses 50.000 data sampel klaim FKRTL BPJS Kesehatan. Dari 50.000 klaim ini, VeriKlaim mengidentifikasi 137 klaim berindikasi fraud dengan total potensi inefisiensi yang berhasil diselamatkan mencapai Rp 14,34 Miliar. Kita juga dapat memfilter klaim berdasarkan 6 klaster deteksi Kemenkes.  
 >  
-> **Skenario 2: Audit Klaim Interaktif Kasus Upcoding (Single Claim Evaluation)**  
-> Sekarang kita masuk ke modul audit klaim individual. Kita simulasikan satu berkas klaim: Pasien tindakan persalinan sesar darurat (ICD-10 O82.1), dengan Length of Stay hanya 1 hari, namun rumah sakit menagihkan tarif Severity Level III (komplikasi berat) sebesar Rp 36.500.000, padahal tarif acuan INA-CBG standar hanya Rp 6.200.000.  
-> Begitu kita klik tombol **'Evaluasi Klaim'**, perhatikan! Dalam waktu kurang dari 40 milidetik, sistem seketika memberikan vonis: **Status Anomali: FRAUD TINGGI dengan Skor Risiko 96.8%!**  
+> **Skenario 2: Audit Klaim Interaktif Kasus Upcoding Ekstrem**  
+> Sekarang kita masuk ke evaluasi klaim individual. Kita simulasikan satu berkas klaim: Pasien persalinan sesar darurat (ICD-10 O82.1), dengan lama rawat hanya 1 hari, namun diajukan Severity III (komplikasi berat) sebesar Rp 36.500.000, padahal tarif acuan hanya Rp 6.200.000 dan pasien tidak dirawat di ICU.  
+> Dalam waktu 0,079 milidetik, sistem seketika memberikan vonis: **Status Anomali: FRAUD TINGGI dengan Skor Risiko 98.2%!**  
 >  
-> **Skenario 3: Transparansi Explainable AI (XAI) & Bukti Regulasi**  
-> Mengapa sistem menandai klaim ini sebagai fraud? VeriKlaim bukan kotak hitam!  
-> Di bagian bawah, modul TreeSHAP membedah faktor penyebabnya:  
-> 1. Rasio tarif yang melonjak 5.88 kali lipat di atas acuan memberikan kontribusi SHAP positif sebesar +0.42.  
-> 2. Diskrepansi LOS 1 hari pada tindakan Severity III memberikan kontribusi +0.31.  
-> 3. Modul kepatuhan hukum langsung menampilkan pelanggaran: **Permenkes No. 26 Tahun 2021 Pasal 14 ayat (2) mengenai ketidaksesuaian tingkat keparahan dengan bukti lama rawat klinis.**  
+> **Skenario 3: Workstation Dokter & Cross-Check 4 Dokumen Digital (Human-in-the-Loop)**  
+> Di sinilah keunggulan utama VeriKlaim: Dokter verifikator dapat menekan tombol **'Buka Workstation'**.  
+> Terbuka modal terpadu yang menampilkan 4 dokumen klinis otentik:  
+> 1. **Surat Eligibilitas Peserta (SEP) Digital.**  
+> 2. **Resume Medis Pasien Pulang dari DPJP.**  
+> 3. **Rincian Tagihan Billing Rumah Sakit.**  
+> 4. **Surat Rujukan Berjenjang FKTP.**  
+> Dokter dapat memvalidasi langsung kesesuaian antara diagnosa, lama rawat, dan obat yang diberikan. Modul TreeSHAP membeberkan faktor pemicu anomali secara numerik, disertai rujukan resmi Permenkes 26/2021 dan Permenkes 16/2019.  
 >  
-> **Skenario 4: Penerbitan Berita Acara Audit Resmi (PDF)**  
-> Terakhir, verifikator cukup menekan tombol **'Unduh Berita Acara Audit Resmi'**.  
-> Dalam 1 detik, dokumen PDF formal langsung terbit! Dokumen ini memuat nomor register audit, rincian klinis, dasar pasal hukum yang dilanggar, kalkulasi selisih tarif yang harus dikonfirmasi, serta QR Code validasi keaslian dokumen yang siap ditandatangani dan dikirimkan ke pihak rumah sakit sebagai bahan klarifikasi resmi."*
+> **Skenario 4: Pengesahan Putusan Dokter & Penerbitan Dokumen PDF**  
+> Dokter verifikator memilih putusan: **'Sahkan Status: FRAUD TINGGI'**, memasukkan catatan telaah klinis, dan menekan tombol simpan. Putusan ini langsung tercatat secara persisten ke dalam audit trail sistem.  
+> Terakhir, verifikator dapat langsung mengunduh **Berita Acara Audit Resmi format PDF** ber-QR code serta **Buku Panduan Fitur Platform VeriKlaim** untuk lampiran klarifikasi resmi ke pihak rumah sakit."*
 
 ---
 
@@ -125,13 +125,13 @@
 **[Kembali ke Slide Presentasi — Tampilkan Slide 7: Penjelasan Fitur]**
 
 > **Nurman Hariyanto:**  
-> *"Empat fitur inti yang menopang keunggulan VeriKlaim:  
-> 1. **AI Anomaly Scoring Engine:** Menghitung probabilitas kecurangan multi-variabel dalam hitungan milidetik, menyaring jutaan transaksi sebelum pembayaran.  
-> 2. **Regulatory Rule-Based Validator:** Memvalidasi ambang batas kaidah koding Permenkes 26/2021 dan Permenkes 16/2019, memberikan legitimasi hukum definitif pada setiap temuan."*  
+> *"Empat fitur inti yang menopang keunggulan VeriKlaim v2.0:  
+> 1. **6-Cluster Fraud Detection Engine:** Menyaring 6 klaster Blueprint Kemenkes dalam waktu sub-milidetik (< 0,1 ms) dengan kapasitas 415 request per detik.  
+> 2. **Human-in-the-Loop Workstation & 4 Dokumen:** Memberikan ruang telaah otentik bagi dokter verifikator untuk memeriksa berkas SEP, Resume DPJP, Billing, dan Rujukan secara transparan."*  
 >  
 > **M. Ali Maulana:**  
-> *"3. **Explainable AI (XAI) & Dynamic Reasoner:** Menghilangkan fenomena 'black-box' dengan menerjemahkan kontribusi fitur SHAP ke dalam bahasa klinis yang mudah dipahami dokter penanggung jawab pasien maupun verifikator.  
-> 4. **Automated Audit Dossier Generator:** Mengotomasi pembuatan dokumen berita acara audit legal format PDF, memangkas proses sengketa administratif dari 30 hari menjadi instan."*
+> *"3. **TreeSHAP Explainability & LLM Collaborator:** Membongkar kotak hitam AI dengan atribusi fitur matematis dan narasi klinis cerdas berlandaskan pasal regulasi baku.  
+> 4. **Automated Dossier & Buku Panduan Platform:** Mengotomasi penerbitan dokumen Berita Acara Audit PDF formal dan Buku Panduan Fitur 5 Halaman, memangkas masa sengketa klaim pending menjadi 1-2 hari kerja."*
 
 ---
 
@@ -139,13 +139,13 @@
 **[Tampilkan Slide 8, 9, 10, dan akhiri di Slide 11 Penutup]**
 
 > **Aditya Pratama:**  
-> *"Dari sisi kesiapan implementasi, VeriKlaim berada pada **Technology Readiness Level 6 (TRL 6)**. Prototipe telah diuji penuh menggunakan 50.000 data klaim FKRTL BPJS Kesehatan dengan hasil evaluasi: **ROC-AUC 1.0000, Presisi 99.4%, dan Recall 98.6%**.  
+> *"Dari sisi kesiapan implementasi, VeriKlaim berada pada **Technology Readiness Level 6 (TRL 6)**. Prototipe telah diuji penuh menggunakan 50.000 data sampel klaim FKRTL BPJS Kesehatan dan 10.000 berkas uji independen QA AGT-06 dengan hasil: **Recall 100.00%, ROC-AUC 1.0000, Presisi 96.43%, dan latensi core 0,079 ms**.  
 >  
-> Dari aspek keamanan, VeriKlaim patuh penuh pada **UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)** dengan prinsip Zero PII Storage dan pseudonymization hashing satu arah. Seluruh sistem dirancang *On-Premise Ready* di data center BPJS Kesehatan tanpa mengirim data ke pihak ketiga.  
+> Dari aspek kepatuhan regulasi, VeriKlaim patuh penuh pada **UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)** dengan prinsip Zero PII Storage dan pseudonymization hashing satu arah. Seluruh sistem dirancang *On-Premise Ready* di data center BPJS Kesehatan tanpa mengirim data ke pihak ketiga.  
 >  
-> Kami juga menjunjung etika **Human-in-the-Loop**, di mana AI murni bertindak sebagai Decision Support System pembantu analisis, sementara kewenangan final persetujuan klaim tetap 100% berada di tangan Verifikator Resmi BPJS Kesehatan.  
+> Prinsip **Human-in-the-Loop** kami pegang teguh: AI murni bertindak sebagai Decision Support System cerdas, sementara wewenang final persetujuan klaim tetap 100% berada di tangan Dokter Verifikator Resmi BPJS Kesehatan.  
 >  
-> Repositori kode lengkap dapat diakses publik di GitHub: `https://github.com/orochimadit/veri-klaim`.  
+> Repositori kode dan dokumentasi lengkap dapat diakses publik di GitHub: `https://github.com/orochimadit/veri-klaim`.  
 >  
 > Bersama VeriKlaim: **Detect Smarter, Protect JKN — Smarter Protection for a Stronger JKN.**  
 > Terima kasih atas perhatian Dewan Juri, Wassalamu’alaikum Warahmatullahi Wabarakatuh."*
@@ -153,6 +153,6 @@
 ---
 
 ## 4. TIPS SUKSES SAAT REKAMAN ZOOM
-- **Transisi Screen Share:** Saat menit ke 04:30, Ketua Tim (Aditya) beralih dari tab slide ke tab browser dashboard live (`http://127.0.0.1:8000`). Lakukan tes sebelum merekam.
+- **Transisi Screen Share:** Saat menit ke 04:30, Ketua Tim (Aditya) beralih dari tab slide ke tab browser dashboard live (`http://127.0.0.1:8000`). Tunjukkan tombol buka workstation dokter dan viewer 4 dokumen digital.
 - **Pengaturan Audio:** Gunakan headset/mikrofon eksternal agar suara tidak bergema.
 - **Ketepatan Waktu:** Pasang timer/stopwatch di samping layar laptop untuk memantau transisi bagian agar tidak melebihi batas 10 menit.
