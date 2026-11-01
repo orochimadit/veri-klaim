@@ -78,6 +78,7 @@ STATS_PATH = os.path.join(ROOT_DIR, "data", "stats", "precomputed_stats.json")
 REAL_STATS_PATH = os.path.join(ROOT_DIR, "data", "stats", "real_veriklaim_stats.json")
 PDF_REPORT_PATH = os.path.join(ROOT_DIR, "docs", "Laporan_Hasil_Audit_VeriKlaim.pdf")
 FEATURE_GUIDE_PDF_PATH = os.path.join(ROOT_DIR, "docs", "Buku_Panduan_Fitur_Platform_VeriKlaim.pdf")
+SLIDES_HTML_PATH = os.path.join(ROOT_DIR, "docs", "project_final_healthkathon_slides.html")
 DASHBOARD_HTML_PATH = os.path.join(APP_DIR, "templates", "dashboard.html")
 
 # Initialize Engine
@@ -505,6 +506,13 @@ def download_feature_guide():
         media_type="application/pdf",
         filename="Buku_Panduan_Fitur_Platform_VeriKlaim.pdf"
     )
+
+@app.get("/slides", response_class=HTMLResponse, include_in_schema=False)
+def slides():
+    if os.path.exists(SLIDES_HTML_PATH):
+        with open(SLIDES_HTML_PATH, "r", encoding="utf-8") as f:
+            return f.read()
+    return "<h1>Slide Deck Not Found</h1>"
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 def index():
