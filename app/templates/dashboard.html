@@ -1471,15 +1471,20 @@
     <!-- Floating Interactive Tutorial Card (Compact, Responsive, Collision-Free) -->
     <div id="tutorial-card" class="fixed z-[9995] w-[92vw] sm:w-[420px] max-w-[430px] bg-white rounded-2xl border-2 border-[#008D4C] shadow-2xl overflow-hidden transition-all duration-300 pointer-events-auto">
       
-      <!-- Card Header -->
-      <div class="px-4 py-2.5 bg-gradient-to-r from-emerald-50 via-white to-blue-50/70 border-b border-[#E5E7EB] flex items-center justify-between">
+      <!-- Card Header (Draggable & Position Switcher) -->
+      <div id="tut-card-header" class="px-4 py-2.5 bg-gradient-to-r from-emerald-50 via-white to-blue-50/70 border-b border-[#E5E7EB] flex items-center justify-between select-none cursor-grab">
         <div class="flex items-center gap-1.5">
           <span id="tut-step-badge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#008D4C] text-white shadow-sm">Langkah 1 dari 11</span>
           <span id="tut-category-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-[#0B4F6C]">Basis Data</span>
         </div>
-        <button onclick="skipTutorial()" class="text-gray-400 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100 transition" title="Lewati Tutorial (Esc)">
-          <i class="ti ti-x text-base"></i>
-        </button>
+        <div class="flex items-center gap-1">
+          <button type="button" onclick="toggleCardPosition()" class="text-gray-400 hover:text-emerald-700 p-1 rounded-lg hover:bg-emerald-50 transition" title="Pindahkan Sisi Kartu (Kiri/Kanan)">
+            <i class="ti ti-arrows-left-right text-sm"></i>
+          </button>
+          <button type="button" onclick="skipTutorial()" class="text-gray-400 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100 transition" title="Lewati Tutorial (Esc)">
+            <i class="ti ti-x text-base"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Card Body -->
@@ -1586,6 +1591,7 @@
       loadTableClaims(1);
       loadStats();
       checkLLMSystemStatus();
+      initDraggableCard();
 
       // Cek otomatis panduan interaktif bagi pengguna baru
       setTimeout(() => {
@@ -2736,7 +2742,7 @@
         step: 3,
         target: '#section-kpi',
         fallbackTarget: '#section-kpi',
-        preferredPlacement: 'bottom-end',
+        preferredPlacement: 'docked-bottom-right',
         category: 'Dashboard Eksekutif',
         icon: 'ti-layout-dashboard',
         title: '3. Dashboard Eksekutif & KPI Portofolio Klaim',
@@ -2768,7 +2774,7 @@
         step: 5,
         target: '#preset-dropdown-container',
         fallbackTarget: '#section-simulator',
-        preferredPlacement: 'left',
+        preferredPlacement: 'docked-bottom-left',
         category: 'Simulator Klaim',
         icon: 'ti-flask',
         title: '5. Simulator Forensik Pemeriksaan Klaim (< 1 ms)',
@@ -2779,14 +2785,17 @@
         actionEvent: 'click',
         prepare: () => {
           const sim = document.getElementById('section-simulator');
-          if (sim) sim.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (sim) {
+            const y = sim.getBoundingClientRect().top + window.pageYOffset - 75;
+            window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+          }
         }
       },
       {
         step: 6,
         target: '#btn-run-live-audit',
         fallbackTarget: '#section-simulator',
-        preferredPlacement: 'right',
+        preferredPlacement: 'docked-bottom-left',
         category: 'Deteksi AI',
         icon: 'ti-scan',
         title: '6. Eksekusi Audit AI & Deteksi Kecurangan Seketika',
@@ -2797,14 +2806,17 @@
         actionEvent: 'click',
         prepare: () => {
           const btn = document.getElementById('btn-run-live-audit');
-          if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (btn) {
+            const y = btn.getBoundingClientRect().top + window.pageYOffset - 180;
+            window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+          }
         }
       },
       {
         step: 7,
         target: '#audit-result-box',
         fallbackTarget: '#section-simulator',
-        preferredPlacement: 'left',
+        preferredPlacement: 'docked-bottom-left',
         category: 'Explainable AI',
         icon: 'ti-brain',
         title: '7. Transparansi Keputusan AI (Explainable AI TreeSHAP)',
@@ -2818,7 +2830,8 @@
               selectCase('upcoding');
               runLiveAudit();
             }
-            box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const y = box.getBoundingClientRect().top + window.pageYOffset - 75;
+            window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
           }
         }
       },
@@ -2826,7 +2839,7 @@
         step: 8,
         target: '#section-claims-controls',
         fallbackTarget: '#section-claims',
-        preferredPlacement: 'above',
+        preferredPlacement: 'docked-bottom-left',
         category: 'Penjelajah Berkas',
         icon: 'ti-list-search',
         title: '8. Penjelajah Berkas 50.000 Klaim (Pencarian Kilat & Dua Status)',
@@ -2837,14 +2850,17 @@
         actionEvent: 'input, change',
         prepare: () => {
           const claims = document.getElementById('section-claims');
-          if (claims) claims.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (claims) {
+            const y = claims.getBoundingClientRect().top + window.pageYOffset - 75;
+            window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+          }
         }
       },
       {
         step: 9,
         target: '#first-claim-telaah-btn',
         fallbackTarget: '#section-claims',
-        preferredPlacement: 'left',
+        preferredPlacement: 'docked-bottom-left',
         category: 'Human-in-the-Loop',
         icon: 'ti-stethoscope',
         title: '9. Meja Kerja Verifikasi Manual (Human-in-the-Loop)',
@@ -2855,7 +2871,10 @@
         actionEvent: 'click',
         prepare: () => {
           const btn = document.getElementById('first-claim-telaah-btn');
-          if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (btn) {
+            const y = btn.getBoundingClientRect().top + window.pageYOffset - 180;
+            window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+          }
         }
       },
       {
@@ -2981,30 +3000,76 @@
       }
     }
 
+    let tutorialCountdownTimer = null;
+    let tutorialCountdownSeconds = 5;
+
+    function cancelTutorialCountdown() {
+      if (tutorialCountdownTimer) {
+        clearInterval(tutorialCountdownTimer);
+        tutorialCountdownTimer = null;
+      }
+    }
+
+    function instantAdvanceTutorial() {
+      cancelTutorialCountdown();
+      nextTutorialStep();
+    }
+
     function notifyTutorialActionCompleted(expectedStepIndex) {
       if (!isTutorialActive) return;
       if (typeof expectedStepIndex === 'number' && currentTutorialStep !== expectedStepIndex) return;
+
+      cancelTutorialCountdown();
 
       const actionBox = document.getElementById('tut-action-box');
       const actionIcon = document.getElementById('tut-action-icon');
       const actionLabel = document.getElementById('tut-action-label');
       const actionText = document.getElementById('tut-action-text');
 
+      tutorialCountdownSeconds = 5;
+
       if (actionBox && actionLabel && actionText) {
-        actionBox.className = 'p-3 rounded-2xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 flex items-start gap-2.5 transition-all animate-pulse';
-        if (actionIcon) actionIcon.className = 'ti ti-circle-check text-[#008D4C] text-base flex-shrink-0 mt-0.5';
-        actionLabel.innerText = 'Aksi Berhasil Terdeteksi!';
+        actionBox.className = 'p-3 rounded-2xl bg-emerald-50 border-2 border-emerald-400 text-xs text-emerald-900 flex items-start gap-2.5 transition-all shadow-sm';
+        if (actionIcon) actionIcon.className = 'ti ti-circle-check text-[#008D4C] text-lg flex-shrink-0 mt-0.5 animate-bounce';
+        actionLabel.innerText = 'Aksi Berhasil Dijalankan!';
         actionLabel.className = 'font-bold block text-[11px] uppercase tracking-wider text-[#008D4C]';
-        actionText.innerHTML = 'Bagus sekali! Melanjutkan ke langkah berikutnya...';
+        actionText.innerHTML = `
+          <div class="space-y-1.5 w-full">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-emerald-950">Bagus sekali! Melangkah otomatis dalam:</span>
+              <span id="tut-countdown-badge" class="px-2 py-0.5 rounded-full bg-[#008D4C] text-white font-extrabold font-mono text-xs shadow-sm">${tutorialCountdownSeconds}s</span>
+            </div>
+            <p class="text-[11px] text-emerald-800 leading-snug">Amati perubahan data atau hasil audit di layar sebelum lanjut.</p>
+            <div class="pt-1 flex items-center gap-2">
+              <button type="button" onclick="instantAdvanceTutorial()" class="px-2.5 py-1 rounded-lg bg-[#008D4C] hover:bg-[#00733E] text-white font-bold text-[11px] inline-flex items-center gap-1 shadow-sm transition">
+                <span>Lanjut Sekarang</span>
+                <i class="ti ti-arrow-right text-xs"></i>
+              </button>
+              <span class="text-[10px] text-emerald-700 italic">Jeda 5 detik</span>
+            </div>
+          </div>
+        `;
       }
 
-      // Automatically advance after a brief visual reward
+      // Interval Countdown 5 Detik
       const targetStep = currentTutorialStep;
-      setTimeout(() => {
-        if (isTutorialActive && currentTutorialStep === targetStep) {
+      tutorialCountdownTimer = setInterval(() => {
+        if (!isTutorialActive || currentTutorialStep !== targetStep) {
+          cancelTutorialCountdown();
+          return;
+        }
+
+        tutorialCountdownSeconds--;
+        const badge = document.getElementById('tut-countdown-badge');
+        if (badge) {
+          badge.innerText = `${tutorialCountdownSeconds}s`;
+        }
+
+        if (tutorialCountdownSeconds <= 0) {
+          cancelTutorialCountdown();
           nextTutorialStep();
         }
-      }, 900);
+      }, 1000);
     }
 
     function flashTutorialCardHint() {
@@ -3016,6 +3081,7 @@
 
     function renderTutorialStep(stepIndex) {
       if (stepIndex < 0 || stepIndex >= TUTORIAL_STEPS.length) return;
+      cancelTutorialCountdown();
       currentTutorialStep = stepIndex;
       const step = TUTORIAL_STEPS[stepIndex];
 
@@ -3164,6 +3230,111 @@
       }
     }
 
+    let cardDockSide = 'left';
+
+    function toggleCardPosition() {
+      const card = document.getElementById('tutorial-card');
+      if (!card) return;
+      const vpW = window.innerWidth;
+      const cardWidth = 420;
+
+      if (cardDockSide === 'left') {
+        cardDockSide = 'right';
+        const left = vpW - cardWidth - 24;
+        card.style.left = `${Math.max(16, left)}px`;
+      } else {
+        cardDockSide = 'left';
+        const left = (vpW >= 1024) ? 276 : 24;
+        card.style.left = `${Math.max(16, left)}px`;
+      }
+    }
+
+    function initDraggableCard() {
+      const card = document.getElementById('tutorial-card');
+      const header = document.getElementById('tut-card-header');
+      if (!card || !header) return;
+
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let initialLeft = 0, initialTop = 0;
+
+      header.addEventListener('mousedown', (e) => {
+        if (e.target.closest('button')) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        const rect = card.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+        card.style.transition = 'none';
+        header.classList.add('cursor-grabbing');
+        header.classList.remove('cursor-grab');
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+        const vpW = window.innerWidth;
+        const vpH = window.innerHeight;
+        const cardW = card.offsetWidth;
+        const cardH = card.offsetHeight;
+
+        let newLeft = Math.max(10, Math.min(initialLeft + deltaX, vpW - cardW - 10));
+        let newTop = Math.max(10, Math.min(initialTop + deltaY, vpH - cardH - 10));
+
+        card.style.left = `${newLeft}px`;
+        card.style.top = `${newTop}px`;
+        card.style.bottom = 'auto';
+        card.style.right = 'auto';
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        card.style.transition = '';
+        header.classList.remove('cursor-grabbing');
+        header.classList.add('cursor-grab');
+      });
+
+      // Touch events for mobile/tablet
+      header.addEventListener('touchstart', (e) => {
+        if (e.target.closest('button')) return;
+        const touch = e.touches[0];
+        isDragging = true;
+        startX = touch.clientX;
+        startY = touch.clientY;
+        const rect = card.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+        card.style.transition = 'none';
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
+        const vpW = window.innerWidth;
+        const vpH = window.innerHeight;
+        const cardW = card.offsetWidth;
+        const cardH = card.offsetHeight;
+
+        let newLeft = Math.max(10, Math.min(initialLeft + deltaX, vpW - cardW - 10));
+        let newTop = Math.max(10, Math.min(initialTop + deltaY, vpH - cardH - 10));
+
+        card.style.left = `${newLeft}px`;
+        card.style.top = `${newTop}px`;
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        card.style.transition = '';
+      });
+    }
+
     function positionTutorialCard(targetEl, step) {
       const card = document.getElementById('tutorial-card');
       if (!card || !targetEl) return;
@@ -3188,43 +3359,45 @@
       let top, left;
       const placement = (step && step.preferredPlacement) ? step.preferredPlacement : 'auto';
 
-      if (placement === 'left') {
-        // Position to the left of target (e.g. Step 5 Preset Dropdown, Step 7 Result Box, Step 9 Telaah)
+      if (placement === 'docked-bottom-left') {
+        // Docked cleanly at bottom-left, accounting for 256px sidebar
+        left = (vpW >= 1024) ? 276 : 24;
+        top = vpH - cardHeight - 20;
+        cardDockSide = 'left';
+      } else if (placement === 'docked-bottom-right') {
+        // Docked cleanly at bottom-right
+        left = vpW - cardWidth - 24;
+        top = vpH - cardHeight - 20;
+        cardDockSide = 'right';
+      } else if (placement === 'left') {
         left = rect.left - cardWidth - gap;
         top = Math.max(70, Math.min(rect.top - 10, vpH - cardHeight - 20));
-        // Fallback if not enough space on left
         if (left < 20) {
-          left = 20;
-          top = (rect.bottom + gap + cardHeight < vpH - 10) ? rect.bottom + gap : Math.max(70, rect.top - cardHeight - gap);
+          left = (vpW >= 1024) ? 276 : 24;
+          top = vpH - cardHeight - 20;
+          cardDockSide = 'left';
         }
       } else if (placement === 'right') {
-        // Position to the right of target (e.g. Step 6 Audit CTA)
         left = rect.right + gap;
         top = Math.max(70, Math.min(rect.top - 10, vpH - cardHeight - 20));
-        // Fallback if not enough space on right
         if (left + cardWidth > vpW - 20) {
-          left = Math.max(20, rect.left - cardWidth - gap);
+          left = vpW - cardWidth - 24;
+          top = vpH - cardHeight - 20;
+          cardDockSide = 'right';
         }
       } else if (placement === 'bottom-end') {
-        // Below target, aligned to the right edge (e.g. Step 1 Dataset, Step 2 AI Mode, Step 11 Export)
         left = Math.max(20, rect.right - cardWidth);
         top = rect.bottom + gap;
         if (top + cardHeight > vpH - 10) {
           top = Math.max(70, rect.top - cardHeight - gap);
         }
       } else if (placement === 'above') {
-        // Above target element (e.g. Step 8 Claims controls)
         left = Math.max(20, Math.min(rect.left, vpW - cardWidth - 20));
         top = rect.top - cardHeight - gap;
         if (top < 70) {
           top = rect.bottom + gap;
         }
-      } else if (placement === 'docked-bottom-right') {
-        // Docked cleanly at bottom-right (e.g. Step 4 Charts, Step 10 Modal)
-        left = vpW - cardWidth - 24;
-        top = vpH - cardHeight - 24;
       } else {
-        // Auto: choose side with maximum space that doesn't overlap rect
         const spaceBelow = vpH - rect.bottom;
         const spaceAbove = rect.top;
         if (spaceBelow >= cardHeight + gap + 10) {
@@ -3233,12 +3406,10 @@
         } else if (spaceAbove >= cardHeight + gap + 70) {
           top = rect.top - cardHeight - gap;
           left = Math.max(20, Math.min(rect.left, vpW - cardWidth - 20));
-        } else if (rect.left >= cardWidth + gap + 20) {
-          left = rect.left - cardWidth - gap;
-          top = Math.max(70, Math.min(rect.top, vpH - cardHeight - 20));
         } else {
-          left = vpW - cardWidth - 20;
+          left = vpW - cardWidth - 24;
           top = vpH - cardHeight - 20;
+          cardDockSide = 'right';
         }
       }
 
@@ -3254,6 +3425,7 @@
     }
 
     function nextTutorialStep() {
+      cancelTutorialCountdown();
       if (currentTutorialStep < TUTORIAL_STEPS.length - 1) {
         renderTutorialStep(currentTutorialStep + 1);
       } else {
@@ -3262,12 +3434,14 @@
     }
 
     function prevTutorialStep() {
+      cancelTutorialCountdown();
       if (currentTutorialStep > 0) {
         renderTutorialStep(currentTutorialStep - 1);
       }
     }
 
     function skipTutorial() {
+      cancelTutorialCountdown();
       if (typeof tutorialActionCleanup === 'function') {
         tutorialActionCleanup();
         tutorialActionCleanup = null;
@@ -3285,6 +3459,7 @@
     }
 
     function finishTutorial() {
+      cancelTutorialCountdown();
       if (typeof tutorialActionCleanup === 'function') {
         tutorialActionCleanup();
         tutorialActionCleanup = null;
