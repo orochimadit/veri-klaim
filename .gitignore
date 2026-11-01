@@ -18,9 +18,9 @@ Thumbs.db
 desktop.ini
 
 # Templates and UI reference directories
-tailwindadmin-*/
-template*/
-fitur/
+/tailwindadmin-*/
+/template*/
+/fitur/
 
 # Internal task specs, color palettes, and changelog markdown (keep only README.md)
 CHANGELOG.md

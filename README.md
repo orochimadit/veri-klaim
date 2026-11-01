@@ -163,6 +163,9 @@ VeriKlaim mengusung filosofi **AI sebagai Copilot Cerdas Dokter Verifikator**, B
 4. **Jejak Audit Digital Permanen (*Audit Trail*):**  
    Setiap putusan, nama verifikator, NIP/SIP, tanggal telaah, dan catatan medis disimpan permanen ke dalam basis data audit untuk akuntabilitas hukum dan transparansi rekonsiliasi bersama rumah sakit.
 
+5. **Tutorial Interaktif Terpandu (11 Langkah Berurutan & Dual Progression):**  
+   Menyediakan panduan interaktif langsung (*interactive guided tour*) langkah demi langkah yang memandu verifikator baru menelusuri seluruh alur fitur secara berurutan. Pengguna dapat melangkah maju baik dengan menekan tombol navigasi (*Selanjutnya*) maupun dengan langsung melakukan aksi klinis pada elemen yang disorot (*action detection trigger*), lengkap dengan opsi lewati (*skip* kapan saja via tombol atau tombol `Esc`) dan dialog selebrasi penyelesaian 100%.
+
 ### Kepatuhan Regulasi & Keamanan Data
 * **Kepatuhan UU PDP (No. 27/2022):** Kebijakan *Zero PII Storage*. Identitas peserta disamarkan dengan *cryptographic hashing* SHA-256.
 * **Arsitektur Hybrid Zero-Crash:** Saklar mode AI otomatis beralih antara Google Gemini Pro Cloud (analisis semantik mendalam) dan Deterministic Rules Engine Lokal (mode darurat saat koneksi internet terputus).
