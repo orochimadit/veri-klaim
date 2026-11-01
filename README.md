@@ -206,10 +206,10 @@ python -m uvicorn app.main:app --port 8000
 ```
 
 Setelah server aktif, buka peramban:
-* **Dashboard Verifikator Live:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-* **Dokumentasi Swagger REST API:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-* **Buku Panduan Lengkap Fitur (PDF):** [http://127.0.0.1:8000/api/download-feature-guide](http://127.0.0.1:8000/api/download-feature-guide)
-* **Ekspor Berita Acara Audit (PDF):** [http://127.0.0.1:8000/api/export-pdf](http://127.0.0.1:8000/api/export-pdf)
+* **Dashboard Verifikator Live:** [https://veriklaim.absolute-tech.id/](https://veriklaim.absolute-tech.id/)
+* **Dokumentasi Swagger REST API:** [https://veriklaim.absolute-tech.id/docs](https://veriklaim.absolute-tech.id/docs)
+* **Buku Panduan Lengkap Fitur (PDF):** [https://veriklaim.absolute-tech.id/api/download-feature-guide](https://veriklaim.absolute-tech.id/api/download-feature-guide)
+* **Ekspor Berita Acara Audit (PDF):** [https://veriklaim.absolute-tech.id/api/export-pdf](https://veriklaim.absolute-tech.id/api/export-pdf)
 
 ---
 

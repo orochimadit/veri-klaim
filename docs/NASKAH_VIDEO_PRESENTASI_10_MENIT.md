@@ -11,7 +11,7 @@
 1. **Durasi Total:** Maksimal 10 menit (Target ideal rekaman: 9 menit 30 detik s.d. 9 menit 50 detik).
 2. **Platform Perekaman:** Zoom Meeting (Rekomendasi resmi panitia).
    - Pastikan webcam ketiga anggota tim menyala (foto/video wajah tampil jelas).
-   - Gunakan fitur *Share Screen* untuk menampilkan slide presentasi (`docs/project_final_healthkathon_slides.html` atau `docs/Project_Final_Healthkathon_2026_VeriKlaim.pdf`) serta browser aktif di `http://127.0.0.1:8000/` saat sesi demo.
+   - Gunakan fitur *Share Screen* untuk menampilkan slide presentasi (`docs/project_final_healthkathon_slides.html` atau `docs/Project_Final_Healthkathon_2026_VeriKlaim.pdf`) serta browser aktif di `https://veriklaim.absolute-tech.id/` saat sesi demo.
 3. **Pengaturan YouTube:** Unggah video ke YouTube dengan visibilitas **Unlisted** (Tidak Publik) atau **Private** (pastikan tautan dapat dibuka panitia).
 4. **Batas Akhir Submit:** 19 Oktober s.d. 1 November 2026 melalui Dashboard Healthkathon BPJS Kesehatan.
 
@@ -153,6 +153,6 @@
 ---
 
 ## 4. TIPS SUKSES SAAT REKAMAN ZOOM
-- **Transisi Screen Share:** Saat menit ke 04:30, Ketua Tim (Aditya) beralih dari tab slide ke tab browser dashboard live (`http://127.0.0.1:8000`). Tunjukkan tombol buka workstation dokter dan viewer 4 dokumen digital.
+- **Transisi Screen Share:** Saat menit ke 04:30, Ketua Tim (Aditya) beralih dari tab slide ke tab browser dashboard live (`https://veriklaim.absolute-tech.id/`). Tunjukkan tombol buka workstation dokter dan viewer 4 dokumen digital.
 - **Pengaturan Audio:** Gunakan headset/mikrofon eksternal agar suara tidak bergema.
 - **Ketepatan Waktu:** Pasang timer/stopwatch di samping layar laptop untuk memantau transisi bagian agar tidak melebihi batas 10 menit.
