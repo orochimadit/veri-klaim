@@ -102,6 +102,11 @@
       font-weight: 700;
       border-left: 4px solid var(--jkn-green-primary);
     }
+    .tut-highlighted-target {
+      position: relative !important;
+      z-index: 9993 !important;
+      pointer-events: auto !important;
+    }
   </style>
 </head>
 
@@ -301,11 +306,11 @@
         <div class="flex items-center gap-2 lg:gap-3">
           
           <!-- Dataset Switcher Buttons -->
-          <div id="dataset-switcher-container" class="hidden md:flex items-center p-1 bg-gray-100 rounded-xl border border-gray-200">
-            <button id="btn-mode-real" onclick="switchDataset('real')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition">
+          <div id="dataset-switcher-container" class="flex items-center p-0.5 sm:p-1 bg-gray-100 rounded-xl border border-gray-200">
+            <button id="btn-mode-real" onclick="switchDataset('real')" class="px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition">
               <i class="ti ti-shield-check me-1"></i>Data Riil (50k)
             </button>
-            <button id="btn-mode-synth" onclick="switchDataset('synth')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition">
+            <button id="btn-mode-synth" onclick="switchDataset('synth')" class="px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition">
               Simulasi (10k)
             </button>
           </div>
@@ -1445,12 +1450,18 @@
   <!-- 9E. SPOTLIGHT & FLOATING TUTORIAL CARD SYSTEM -->
   <!-- ========================================================================= -->
   <div id="tutorial-container" class="hidden">
-    <!-- Spotlight Backdrop -->
-    <div id="tutorial-backdrop" class="fixed inset-0 z-[9990] pointer-events-none transition-all duration-300">
-      <div id="tutorial-spotlight" class="absolute rounded-2xl pointer-events-auto transition-all duration-300 ease-out" 
-           style="box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.72), 0 0 25px rgba(0, 141, 76, 0.5); border: 2.5px solid #008D4C;">
+    <!-- 4-Mask Backdrop Panels (Leave the spotlight cutout area 100% open & clickable) -->
+    <div id="tutorial-backdrop" class="fixed inset-0 z-[9990] pointer-events-none">
+      <div id="tut-mask-top" class="fixed top-0 left-0 bg-slate-900/70 pointer-events-auto transition-all duration-150 ease-out" onclick="flashTutorialCardHint()"></div>
+      <div id="tut-mask-bottom" class="fixed left-0 bg-slate-900/70 pointer-events-auto transition-all duration-150 ease-out" onclick="flashTutorialCardHint()"></div>
+      <div id="tut-mask-left" class="fixed left-0 bg-slate-900/70 pointer-events-auto transition-all duration-150 ease-out" onclick="flashTutorialCardHint()"></div>
+      <div id="tut-mask-right" class="fixed bg-slate-900/70 pointer-events-auto transition-all duration-150 ease-out" onclick="flashTutorialCardHint()"></div>
+
+      <!-- Spotlight Glowing Ring (Visual highlight only, pointer-events-none so all clicks go to the underlying element) -->
+      <div id="tutorial-spotlight" class="fixed rounded-2xl pointer-events-none z-[9992] transition-all duration-150 ease-out" 
+           style="border: 2.5px solid #008D4C; box-shadow: 0 0 25px rgba(0, 141, 76, 0.6);">
         <!-- Glowing step badge on top-right of spotlight -->
-        <span class="absolute -top-3 -right-3 flex h-6 w-6">
+        <span class="absolute -top-3 -right-3 flex h-6 w-6 pointer-events-none">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#008D4C] opacity-75"></span>
           <span id="tut-spotlight-step-badge" class="relative inline-flex rounded-full h-6 w-6 bg-[#008D4C] text-white text-[11px] font-black items-center justify-center shadow-lg">1</span>
         </span>
@@ -1553,6 +1564,9 @@
     function selectCase(type) {
       document.getElementById('preset-dropdown-menu').classList.add('hidden');
       loadCase(type);
+      if (typeof notifyTutorialActionCompleted === 'function') {
+        notifyTutorialActionCompleted(4);
+      }
     }
 
     function openArchitectureModal() {
@@ -1619,6 +1633,10 @@
       } catch (err) {
         console.error('Gagal toggle mode LLM:', err);
       }
+
+      if (typeof notifyTutorialActionCompleted === 'function') {
+        notifyTutorialActionCompleted(1);
+      }
     }
 
     async function checkLLMSystemStatus() {
@@ -1638,17 +1656,23 @@
       const btnSynth = document.getElementById('btn-mode-synth');
       const subtitle = document.getElementById('kpi-dataset-subtitle');
 
-      if (mode === 'real') {
-        btnReal.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition';
-        btnSynth.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition';
-        subtitle.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#27AE60]"></span><span>Kohor Longitudinal FKRTL Asli</span>';
-      } else {
-        btnSynth.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition';
-        btnReal.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition';
-        subtitle.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#0B4F6C]"></span><span>10.000 Kasus Simulasi Komprehensif</span>';
+      if (btnReal && btnSynth) {
+        if (mode === 'real') {
+          btnReal.className = 'px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition';
+          btnSynth.className = 'px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition';
+          if (subtitle) subtitle.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#27AE60]"></span><span>Kohor Longitudinal FKRTL Asli</span>';
+        } else {
+          btnSynth.className = 'px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-lg bg-[#008D4C] text-white shadow-sm transition';
+          btnReal.className = 'px-2 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold rounded-lg text-[#6B7280] hover:text-[#1F2937] transition';
+          if (subtitle) subtitle.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#0B4F6C]"></span><span>10.000 Kasus Simulasi Komprehensif</span>';
+        }
       }
       loadStats();
       loadTableClaims(1);
+
+      if (typeof notifyTutorialActionCompleted === 'function') {
+        notifyTutorialActionCompleted(0);
+      }
     }
 
     async function loadStats() {
@@ -1782,8 +1806,6 @@
           <td class="px-4 py-3 text-center whitespace-nowrap">
             <div class="flex items-center justify-center gap-1.5">
               <button ${index === 0 ? 'id="first-claim-telaah-btn"' : ''} class="px-2.5 py-1 rounded-lg bg-[#008D4C] text-white hover:bg-[#00733E] font-bold text-[11px] transition inline-flex items-center gap-1 shadow-sm" onclick="openDocumentModal('${c.NO_SEP}')">
-                <i class="ti ti-file-certificate"></i>Telaah
-              </button>
                 <i class="ti ti-file-certificate"></i>Telaah
               </button>
               <button class="px-2 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold text-[11px] transition inline-flex items-center gap-1" onclick='loadExistingClaim(${JSON.stringify(c)})'>
@@ -2134,6 +2156,10 @@
         li.innerText = r;
         recommsUl.appendChild(li);
       });
+
+      if (typeof notifyTutorialActionCompleted === 'function') {
+        notifyTutorialActionCompleted(5);
+      }
     }
 
     // =========================================================================
@@ -2192,6 +2218,10 @@
         // 4. Render Active Document (Default to SEP)
         switchDocTab('sep');
 
+        if (typeof notifyTutorialActionCompleted === 'function') {
+          notifyTutorialActionCompleted(8);
+        }
+
       } catch (err) {
         console.error('Gagal memuat dokumen klaim:', err);
         document.getElementById('doc-canvas-content').innerHTML = `
@@ -2222,6 +2252,10 @@
       });
 
       renderActiveDocContent(tabName);
+
+      if (typeof notifyTutorialActionCompleted === 'function' && isTutorialActive && currentTutorialStep === 9 && tabName !== 'sep') {
+        notifyTutorialActionCompleted(9);
+      }
     }
 
     function renderActiveDocContent(tab) {
@@ -2674,7 +2708,7 @@
         subtitle: 'Peralihan Instan 50.000 Rekor Klaim Riil BPJS',
         desc: 'VeriKlaim menyediakan dua mode dataset: <strong>50.000 Data Sampel Riil FKRTL BPJS Kesehatan</strong> (teranonimasi aman sesuai UU PDP No. 27/2022) dan <strong>10.000 Data Skenario Simulasi</strong>. Mesin dioptimalkan dengan in-memory indexing sehingga perpindahan dataset berlangsung seketika (< 20 milidetik).',
         actionText: 'Klik tombol "Simulasi (10k)" atau "Data Riil (50k)" di atas, atau klik tombol Selanjutnya.',
-        actionSelector: '#btn-mode-real, #btn-mode-synth',
+        actionSelector: '#btn-mode-real, #btn-mode-synth, #dataset-switcher-container button',
         actionEvent: 'click'
       },
       {
@@ -2687,8 +2721,8 @@
         subtitle: 'Hybrid Google Gemini Pro Cloud & Deterministik Lokal',
         desc: 'Sistem dirancang tangguh (*fault-tolerant*). Pada <strong>Mode Online</strong>, VeriKlaim memanfaatkan Google Gemini Pro AI Cloud untuk menghasilkan narasi telaah klinis mendalam. Jika koneksi faskes atau kantor cabang terputus, sistem secara otomatis beralih ke <strong>Mesin Aturan Deterministik Permenkes</strong> tanpa gangguan operasional.',
         actionText: 'Coba klik saklar AI Online/Offline di atas atau tekan Selanjutnya.',
-        actionSelector: '#nav-llm-toggle',
-        actionEvent: 'change'
+        actionSelector: '#nav-llm-toggle, #nav-llm-mode-container',
+        actionEvent: 'click, change'
       },
       {
         step: 3,
@@ -2877,6 +2911,60 @@
       renderTutorialStep(currentTutorialStep);
     }
 
+    let currentElevatedEl = null;
+
+    function elevateTarget(el) {
+      if (currentElevatedEl && currentElevatedEl !== el) {
+        currentElevatedEl.classList.remove('tut-highlighted-target');
+      }
+      if (el && el !== document.body) {
+        el.classList.add('tut-highlighted-target');
+        currentElevatedEl = el;
+      } else {
+        currentElevatedEl = null;
+      }
+    }
+
+    function clearTargetElevation() {
+      if (currentElevatedEl) {
+        currentElevatedEl.classList.remove('tut-highlighted-target');
+        currentElevatedEl = null;
+      }
+    }
+
+    function notifyTutorialActionCompleted(expectedStepIndex) {
+      if (!isTutorialActive) return;
+      if (typeof expectedStepIndex === 'number' && currentTutorialStep !== expectedStepIndex) return;
+
+      const actionBox = document.getElementById('tut-action-box');
+      const actionIcon = document.getElementById('tut-action-icon');
+      const actionLabel = document.getElementById('tut-action-label');
+      const actionText = document.getElementById('tut-action-text');
+
+      if (actionBox && actionLabel && actionText) {
+        actionBox.className = 'p-3 rounded-2xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 flex items-start gap-2.5 transition-all animate-pulse';
+        if (actionIcon) actionIcon.className = 'ti ti-circle-check text-[#008D4C] text-base flex-shrink-0 mt-0.5';
+        actionLabel.innerText = 'Aksi Berhasil Terdeteksi!';
+        actionLabel.className = 'font-bold block text-[11px] uppercase tracking-wider text-[#008D4C]';
+        actionText.innerHTML = 'Bagus sekali! Melanjutkan ke langkah berikutnya...';
+      }
+
+      // Automatically advance after a brief visual reward
+      const targetStep = currentTutorialStep;
+      setTimeout(() => {
+        if (isTutorialActive && currentTutorialStep === targetStep) {
+          nextTutorialStep();
+        }
+      }, 900);
+    }
+
+    function flashTutorialCardHint() {
+      const card = document.getElementById('tutorial-card');
+      if (!card) return;
+      card.classList.add('ring-4', 'ring-[#008D4C]/60');
+      setTimeout(() => card.classList.remove('ring-4', 'ring-[#008D4C]/60'), 400);
+    }
+
     function renderTutorialStep(stepIndex) {
       if (stepIndex < 0 || stepIndex >= TUTORIAL_STEPS.length) return;
       currentTutorialStep = stepIndex;
@@ -2899,6 +2987,9 @@
         targetEl = document.querySelector(step.fallbackTarget);
       }
       if (!targetEl) targetEl = document.body;
+
+      // Elevate target above backdrop so it is 100% interactive
+      elevateTarget(targetEl);
 
       // Smooth scroll target into view
       if (targetEl && targetEl !== document.body) {
@@ -2950,24 +3041,18 @@
         const actionEls = document.querySelectorAll(step.actionSelector);
         if (actionEls && actionEls.length > 0) {
           const handler = () => {
-            // Give instant visual reward
-            actionBox.className = 'p-3 rounded-2xl bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 flex items-start gap-2.5 transition-all animate-pulse';
-            actionIcon.className = 'ti ti-circle-check text-[#008D4C] text-base flex-shrink-0 mt-0.5';
-            actionLabel.innerText = 'Aksi Berhasil Terdeteksi!';
-            actionLabel.className = 'font-bold block text-[11px] uppercase tracking-wider text-[#008D4C]';
-            actionText.innerHTML = 'Bagus sekali! Melanjutkan ke langkah berikutnya...';
-
-            setTimeout(() => {
-              if (isTutorialActive && currentTutorialStep === stepIndex) {
-                nextTutorialStep();
-              }
-            }, 1100);
+            notifyTutorialActionCompleted(stepIndex);
           };
 
-          actionEls.forEach(el => el.addEventListener(step.actionEvent, handler, { once: true }));
+          const eventTypes = step.actionEvent.split(',').map(s => s.trim());
+          eventTypes.forEach(evt => {
+            actionEls.forEach(el => el.addEventListener(evt, handler, { once: true }));
+          });
 
           tutorialActionCleanup = () => {
-            actionEls.forEach(el => el.removeEventListener(step.actionEvent, handler));
+            eventTypes.forEach(evt => {
+              actionEls.forEach(el => el.removeEventListener(evt, handler));
+            });
           };
         }
       }
@@ -2982,13 +3067,48 @@
 
       const top = Math.max(0, rect.top - padding);
       const left = Math.max(0, rect.left - padding);
-      const width = rect.width + (padding * 2);
-      const height = rect.height + (padding * 2);
+      const width = Math.min(window.innerWidth - left, rect.width + (padding * 2));
+      const height = Math.min(window.innerHeight - top, rect.height + (padding * 2));
 
+      // Spotlight ring
       spotlight.style.top = `${top}px`;
       spotlight.style.left = `${left}px`;
       spotlight.style.width = `${width}px`;
       spotlight.style.height = `${height}px`;
+
+      // 4 Masking backdrop panels
+      const maskTop = document.getElementById('tut-mask-top');
+      const maskBottom = document.getElementById('tut-mask-bottom');
+      const maskLeft = document.getElementById('tut-mask-left');
+      const maskRight = document.getElementById('tut-mask-right');
+
+      const vpW = window.innerWidth;
+      const vpH = window.innerHeight;
+
+      if (maskTop) {
+        maskTop.style.top = '0px';
+        maskTop.style.left = '0px';
+        maskTop.style.width = '100vw';
+        maskTop.style.height = `${top}px`;
+      }
+      if (maskBottom) {
+        maskBottom.style.top = `${top + height}px`;
+        maskBottom.style.left = '0px';
+        maskBottom.style.width = '100vw';
+        maskBottom.style.height = `${Math.max(0, vpH - (top + height))}px`;
+      }
+      if (maskLeft) {
+        maskLeft.style.top = `${top}px`;
+        maskLeft.style.left = '0px';
+        maskLeft.style.width = `${left}px`;
+        maskLeft.style.height = `${height}px`;
+      }
+      if (maskRight) {
+        maskRight.style.top = `${top}px`;
+        maskRight.style.left = `${left + width}px`;
+        maskRight.style.width = `${Math.max(0, vpW - (left + width))}px`;
+        maskRight.style.height = `${height}px`;
+      }
     }
 
     function positionTutorialCard(targetEl, step) {
@@ -3056,6 +3176,7 @@
         tutorialActionCleanup = null;
       }
 
+      clearTargetElevation();
       isTutorialActive = false;
       const container = document.getElementById('tutorial-container');
       if (container) container.classList.add('hidden');
@@ -3072,6 +3193,7 @@
         tutorialActionCleanup = null;
       }
 
+      clearTargetElevation();
       isTutorialActive = false;
       const container = document.getElementById('tutorial-container');
       if (container) container.classList.add('hidden');
@@ -3108,6 +3230,15 @@
         positionTutorialCard(targetEl, step);
       }
     });
+
+    window.addEventListener('scroll', () => {
+      if (isTutorialActive && currentTutorialStep >= 0 && currentTutorialStep < TUTORIAL_STEPS.length) {
+        const step = TUTORIAL_STEPS[currentTutorialStep];
+        let targetEl = document.querySelector(step.target) || document.querySelector(step.fallbackTarget) || document.body;
+        positionSpotlight(targetEl);
+        positionTutorialCard(targetEl, step);
+      }
+    }, { passive: true });
 
     window.onload = initDashboard;
   </script>
