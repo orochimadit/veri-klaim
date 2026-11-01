@@ -792,7 +792,7 @@ def draw_slide_6_demo_prototype(c):
     
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(WHITE)
-    c.drawString(108, 446, "VeriKlaim - Workstation Verifikator BPJS (http://127.0.0.1:8000)")
+    c.drawString(108, 446, "VeriKlaim - Workstation BPJS (https://veriklaim.absolute-tech.id)")
     
     # Stats row
     draw_card(c, 64, 375, 128, 48, bg_color=HexColor("#1E293B"), border_color=HexColor("#334155"), radius=4)
@@ -870,7 +870,7 @@ def draw_slide_6_demo_prototype(c):
 
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(BPJS_GREEN_LIGHT)
-    c.drawCentredString(48 + left_w / 2, 75, "Server Live: http://127.0.0.1:8000 | Latensi End-to-End: 2.37 ms")
+    c.drawCentredString(48 + left_w / 2, 75, "Live Cloud Server: https://veriklaim.absolute-tech.id | Latensi E2E: 2.37 ms")
 
     # Right Column: SKENARIO DEMO
     right_x = 48 + left_w + 16
@@ -925,9 +925,9 @@ def draw_slide_6_demo_prototype(c):
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(BPJS_GREEN_DARK)
     c.drawString(right_x + 28, 116, "TAUTAN PROTOTYPE LIVE & BUKU PANDUAN")
-    c.setFont("Helvetica-Bold", 10.5)
+    c.setFont("Helvetica-Bold", 9.0)
     c.setFillColor(BPJS_BLUE)
-    c.drawString(right_x + 28, 98, "http://127.0.0.1:8000")
+    c.drawString(right_x + 28, 98, "https://veriklaim.absolute-tech.id")
     c.setFont("Helvetica", 8)
     c.setFillColor(TEXT_DARK)
     c.drawString(right_x + 28, 80, "Unduh Buku Panduan Fitur: /api/download-feature-guide")
@@ -1150,16 +1150,14 @@ def draw_slide_8_architecture(c):
     c.setFont("Helvetica", 8.2)
     c.setFillColor(TEXT_DARK)
     b3_lines = [
-        "- Latensi Eksekusi Core: < 1 ms / klaim",
-        "  (In-memory tensor execution).",
+        "- Spesifikasi Uji: 10 Core, 20 Thread, RAM 32 GB.",
+        "- Kebutuhan Min.: 6 Core, 12 Thread, RAM 16 GB.",
+        "- Latensi Eksekusi Core: < 1 ms / klaim.",
         "- Latensi End-to-End API: ~2.4 ms.",
-        "- Throughput Audit: > 400 request / detik",
-        "  (Kapasitas uji hingga 1,4 juta klaim / jam).",
-        "- Sensitivitas / Recall: 98.6% - 100%",
-        "  (Tinggi pada batasan aturan baku Kemenkes).",
-        "- Presisi Deteksi: 96.4% (Meminimalkan alarm palsu).",
-        "- ROC-AUC Score: 0.998 - 1.000.",
-        "- Resource Footprint: Ringan (< 500 MB RAM)."
+        "- Throughput Audit: > 400 req/dtk (> 1,4 jt/jam).",
+        "- Sensitivitas / Recall: 98.6% - 100%.",
+        "- Presisi Deteksi: 96.4% (Minim False Alarm).",
+        "- ROC-AUC: 0.998 - 1.000 | Footprint: < 500 MB.",
     ]
     y = bot_y + bot_h - 44
     for l in b3_lines:
@@ -1384,8 +1382,8 @@ def draw_slide_10_validation_readiness(c):
     req_lines = [
         "1. Integrasi API Gateway: Menghubungkan endpoint REST FastAPI",
         "   VeriKlaim dengan pipeline VClaim atau e-Klaim Kemenkes.",
-        "2. Spesifikasi Server Minimal: 2 instance vCPU 4-core, RAM 8GB,",
-        "   mampu melayani hingga ribuan klaim per detik dengan aman.",
+        "2. Spesifikasi Testing: 10 Core, 20 Thread, RAM 32 GB;",
+        "   Kebutuhan Minimal Lapangan: 6 Core, 12 Thread, RAM 16 GB.",
         "3. Sertifikasi Verifikator: Pelatihan singkat workstation verifikasi",
         "   berbasis Buku Panduan Fitur Platform VeriKlaim resmi."
     ]
@@ -1458,19 +1456,19 @@ def draw_slide_11_closing(c):
     c.setFillColor(WHITE)
     c.drawString(x1 + 18, card_y + card_h - 58, "Demo Live Sistem")
     
-    c.setFont("Helvetica-Bold", 11)
+    c.setFont("Helvetica-Bold", 9.0)
     c.setFillColor(BPJS_GREEN_LIGHT)
-    c.drawString(x1 + 18, card_y + card_h - 85, "http://127.0.0.1:8000")
+    c.drawString(x1 + 18, card_y + card_h - 85, "https://veriklaim.absolute-tech.id")
     
     c.setFont("Helvetica", 8.8)
     c.setFillColor(TEXT_LIGHT)
     demo_notes = [
-        "- Uvicorn / FastAPI Backend Active",
+        "- Live Production Cloud Server (HTTPS)",
+        "- Spek Testing: 10 Core, 20 Thread, RAM 32 GB",
+        "- Spek Minimal: 6 Core, 12 Thread, RAM 16 GB",
         "- Workstation Verifikasi Human-in-the-Loop",
-        "- Viewer 4 Dokumen Digital Terpadu",
         "- 6 Klaster Deteksi Blueprint Kemenkes",
-        "- Explainable AI TreeSHAP Breakdown",
-        "- Unduh Berita Acara & Buku Panduan PDF"
+        "- Unduh Berita Acara & Panduan PDF"
     ]
     dy = card_y + card_h - 110
     for dn in demo_notes:

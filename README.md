@@ -12,6 +12,9 @@ Repositori resmi sistem deteksi anomali klaim rumah sakit untuk **BPJS Kesehatan
 * **Kategori Lomba:** Efisiensi Risiko pada Faskes / KLAIM (Kode C03.04)
 * **Kasus Penggunaan:** Deteksi anomali/fraud klaim FKRTL pre-payment, evaluasi kepatuhan tarif INA-CBG, dan penerbitan Berita Acara Audit resmi otomatis
 * **Titik Integrasi:** VClaim BPJS, e-Klaim Kemenkes, SIMRS, VIDI, dan AUDIA
+* **Live Production Cloud URL:** [https://veriklaim.absolute-tech.id/](https://veriklaim.absolute-tech.id/)
+* **Spesifikasi Server Testing:** 10 Core, 20 Thread, RAM 32 GB
+* **Kebutuhan Minimal Operasional:** 6 Core, 12 Thread, RAM 16 GB
 
 ---
 

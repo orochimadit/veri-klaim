@@ -25,7 +25,7 @@
 | **00:30 - 01:30** | 60 detik | Slide 3 | Judul Ide, Nilai Utama, Deskripsi & 3 Tujuan Terukur | **Aditya Pratama** |
 | **01:30 - 03:00** | 90 detik | Slide 4 | Latar Belakang Masalah (KPK/BPK) & 3 Indikator Dampak | **M. Ali Maulana** |
 | **03:00 - 04:30** | 90 detik | Slide 5 | Alur Proses Aplikasi (Input, Proses, AI, Output, Tindak Lanjut) | **Nurman Hariyanto** |
-| **04:30 - 07:30** | 180 detik | Slide 6 & Web | **DEMO LANGSUNG APLIKASI (Live Workstation http://127.0.0.1:8000)** | **Aditya Pratama** |
+| **04:30 - 07:30** | 180 detik | Slide 6 & Web | **DEMO LANGSUNG APLIKASI (Live Workstation https://veriklaim.absolute-tech.id)** | **Aditya Pratama** |
 | **07:30 - 09:00** | 90 detik | Slide 7 | Penjelasan 4 Fitur Utama Solusi | **Nurman Hariyanto** & **M. Ali Maulana** |
 | **09:00 - 10:00** | 60 detik | Slide 8 - 11 | Arsitektur, Keamanan PDP, Validasi Realistis & Penutup | **Aditya Pratama** |
 
@@ -94,10 +94,10 @@
 ---
 
 ### BAGIAN 5: DEMO APLIKASI & PROTOTYPE LANGSUNG (04:30 - 07:30 | 180 Detik / 3 Menit)
-**[Pindah Screen Share ke Browser aktif di http://127.0.0.1:8000/]**
+**[Pindah Screen Share ke Browser aktif di https://veriklaim.absolute-tech.id/]**
 
 > **Aditya Pratama:**  
-> *"Sekarang mari kita saksikan demo langsung sistem VeriKlaim yang sedang berjalan aktif pada server lokal kami di port 8000.  
+> *"Sekarang mari kita saksikan demo langsung sistem VeriKlaim yang telah berjalan aktif dan dapat diakses publik pada domain produksi https://veriklaim.absolute-tech.id/. Pengujian performa sistem telah kami laksanakan pada server spesifikasi 10 Core, 20 Thread, RAM 32 GB, dengan rekomendasi spesifikasi minimal operasional lapangan 6 Core, 12 Thread, RAM 16 GB.  
 >  
 > **Skenario 1: Monitoring Portofolio Klaim & 6 Klaster Kemenkes**  
 > Di layar terlihat dashboard monitoring operasional dengan palet resmi Mobile JKN. Pada dataset riil BPJS 50.000 klaim, VeriKlaim secara tepat memvalidasi 64 klaim yang terpotong overclaim oleh verifikator senilai Rp 61 Juta. Sementara pada dataset skenario uji stres 10.000 klaim, sistem mendeteksi potensi overclaim multi-klaster senilai Rp 14,34 Miliar. Kita dapat memfilter klaim berdasarkan 6 klaster deteksi Kemenkes secara real-time.  
