@@ -1193,7 +1193,7 @@
           <div class="lg:col-span-7 space-y-3 flex flex-col">
             
             <!-- Tab Selector -->
-            <div class="flex items-center gap-1.5 p-1 bg-gray-200/80 rounded-xl border border-gray-200 text-xs font-bold overflow-x-auto">
+            <div id="doc-modal-tabs" class="flex items-center gap-1.5 p-1 bg-gray-200/80 rounded-xl border border-gray-200 text-xs font-bold overflow-x-auto">
               <button id="tab-btn-sep" onclick="switchDocTab('sep')" class="px-3.5 py-1.5 rounded-lg bg-white text-[#008D4C] shadow-sm transition flex items-center gap-1.5">
                 <i class="ti ti-file-text"></i><span>1. Surat SEP Digital</span>
               </button>
@@ -1468,67 +1468,67 @@
       </div>
     </div>
 
-    <!-- Floating Interactive Tutorial Card -->
-    <div id="tutorial-card" class="fixed z-[9995] w-[92vw] sm:w-[480px] bg-white rounded-3xl border-2 border-[#008D4C] shadow-2xl overflow-hidden transition-all duration-300 pointer-events-auto">
+    <!-- Floating Interactive Tutorial Card (Compact, Responsive, Collision-Free) -->
+    <div id="tutorial-card" class="fixed z-[9995] w-[92vw] sm:w-[420px] max-w-[430px] bg-white rounded-2xl border-2 border-[#008D4C] shadow-2xl overflow-hidden transition-all duration-300 pointer-events-auto">
       
       <!-- Card Header -->
-      <div class="px-5 py-3.5 bg-gradient-to-r from-emerald-50 via-white to-blue-50/70 border-b border-[#E5E7EB] flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span id="tut-step-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#008D4C] text-white shadow-sm">Langkah 1 dari 11</span>
-          <span id="tut-category-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-100 text-[#0B4F6C]">Basis Data</span>
+      <div class="px-4 py-2.5 bg-gradient-to-r from-emerald-50 via-white to-blue-50/70 border-b border-[#E5E7EB] flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <span id="tut-step-badge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#008D4C] text-white shadow-sm">Langkah 1 dari 11</span>
+          <span id="tut-category-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-[#0B4F6C]">Basis Data</span>
         </div>
         <button onclick="skipTutorial()" class="text-gray-400 hover:text-gray-700 p-1 rounded-lg hover:bg-gray-100 transition" title="Lewati Tutorial (Esc)">
-          <i class="ti ti-x text-lg"></i>
+          <i class="ti ti-x text-base"></i>
         </button>
       </div>
 
       <!-- Card Body -->
-      <div class="p-5 space-y-3.5">
-        <div class="flex items-start gap-3">
-          <div id="tut-icon-box" class="w-10 h-10 rounded-xl bg-emerald-50 text-[#008D4C] flex items-center justify-center text-xl flex-shrink-0 shadow-sm border border-emerald-100">
+      <div class="p-4 space-y-2.5">
+        <div class="flex items-start gap-2.5">
+          <div id="tut-icon-box" class="w-8 h-8 rounded-lg bg-emerald-50 text-[#008D4C] flex items-center justify-center text-lg flex-shrink-0 shadow-sm border border-emerald-100">
             <i id="tut-icon-i" class="ti ti-database"></i>
           </div>
           <div>
-            <h4 id="tut-title" class="font-extrabold text-sm sm:text-base text-[#1F2937] leading-snug">Judul Fitur</h4>
-            <p id="tut-subtitle" class="text-[11px] text-[#6B7280]">Subjudul Panduan Fitur</p>
+            <h4 id="tut-title" class="font-extrabold text-xs sm:text-sm text-[#1F2937] leading-snug">Judul Fitur</h4>
+            <p id="tut-subtitle" class="text-[10px] text-[#6B7280]">Subjudul Panduan Fitur</p>
           </div>
         </div>
 
-        <div id="tut-desc" class="text-xs text-[#1F2937] leading-relaxed bg-[#F5F7FA] p-3.5 rounded-2xl border border-[#E5E7EB]">
+        <div id="tut-desc" class="text-[11px] text-[#1F2937] leading-relaxed bg-[#F5F7FA] p-2.5 rounded-xl border border-[#E5E7EB]">
           Penjelasan langkah dan fungsi fitur...
         </div>
 
         <!-- Action Box -->
-        <div id="tut-action-box" class="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5 transition-all">
-          <i id="tut-action-icon" class="ti ti-hand-click text-amber-600 text-base flex-shrink-0 mt-0.5"></i>
+        <div id="tut-action-box" class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-900 flex items-start gap-2 transition-all">
+          <i id="tut-action-icon" class="ti ti-hand-click text-amber-600 text-sm flex-shrink-0 mt-0.5"></i>
           <div class="flex-1">
-            <span id="tut-action-label" class="font-bold block text-[11px] uppercase tracking-wider text-amber-800">Aksi yang Disarankan:</span>
-            <span id="tut-action-text">Lakukan aksi pada elemen yang disorot, atau klik tombol Selanjutnya.</span>
+            <span id="tut-action-label" class="font-bold block text-[10px] uppercase tracking-wider text-amber-800">Aksi yang Disarankan:</span>
+            <span id="tut-action-text" class="text-[11px]">Lakukan aksi pada elemen yang disorot, atau klik tombol Selanjutnya.</span>
           </div>
         </div>
 
         <!-- Progress Indicator -->
         <div class="space-y-1">
-          <div class="flex justify-between text-[11px] font-semibold text-gray-500">
+          <div class="flex justify-between text-[10px] font-semibold text-gray-500">
             <span>Progres Panduan</span>
             <span id="tut-progress-pct">9% Selesai</span>
           </div>
-          <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <div class="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
             <div id="tut-progress-bar" class="h-full bg-gradient-to-r from-[#008D4C] to-[#27AE60] transition-all duration-300" style="width: 9%;"></div>
           </div>
         </div>
       </div>
 
       <!-- Card Footer Controls -->
-      <div class="px-5 py-3 bg-gray-50/90 border-t border-[#E5E7EB] flex items-center justify-between">
-        <button onclick="skipTutorial()" class="text-xs font-semibold text-gray-500 hover:text-gray-800 transition">
+      <div class="px-4 py-2.5 bg-gray-50/90 border-t border-[#E5E7EB] flex items-center justify-between">
+        <button onclick="skipTutorial()" class="text-[11px] font-semibold text-gray-500 hover:text-gray-800 transition">
           Lewati Tutorial
         </button>
-        <div class="flex items-center gap-2">
-          <button id="tut-btn-prev" onclick="prevTutorialStep()" class="px-3 py-1.5 text-xs font-bold rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition inline-flex items-center gap-1 disabled:opacity-40 disabled:pointer-events-none">
+        <div class="flex items-center gap-1.5">
+          <button id="tut-btn-prev" onclick="prevTutorialStep()" class="px-2.5 py-1 text-[11px] font-bold rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition inline-flex items-center gap-1 disabled:opacity-40 disabled:pointer-events-none">
             <i class="ti ti-arrow-left"></i><span>Sebelumnya</span>
           </button>
-          <button id="tut-btn-next" onclick="nextTutorialStep()" class="px-4 py-1.5 text-xs font-bold rounded-xl bg-[#008D4C] hover:bg-[#00733E] text-white shadow-sm transition inline-flex items-center gap-1.5">
+          <button id="tut-btn-next" onclick="nextTutorialStep()" class="px-3.5 py-1 text-[11px] font-bold rounded-lg bg-[#008D4C] hover:bg-[#00733E] text-white shadow-sm transition inline-flex items-center gap-1">
             <span id="tut-btn-next-label">Selanjutnya</span>
             <i id="tut-btn-next-icon" class="ti ti-arrow-right"></i>
           </button>
@@ -2702,6 +2702,7 @@
         step: 1,
         target: '#dataset-switcher-container',
         fallbackTarget: 'header',
+        preferredPlacement: 'bottom-end',
         category: 'Basis Data FKRTL',
         icon: 'ti-database',
         title: '1. Pemilihan Mode Dataset (Data Riil vs Simulasi)',
@@ -2709,12 +2710,16 @@
         desc: 'VeriKlaim menyediakan dua mode dataset: <strong>50.000 Data Sampel Riil FKRTL BPJS Kesehatan</strong> (teranonimasi aman sesuai UU PDP No. 27/2022) dan <strong>10.000 Data Skenario Simulasi</strong>. Mesin dioptimalkan dengan in-memory indexing sehingga perpindahan dataset berlangsung seketika (< 20 milidetik).',
         actionText: 'Klik tombol "Simulasi (10k)" atau "Data Riil (50k)" di atas, atau klik tombol Selanjutnya.',
         actionSelector: '#btn-mode-real, #btn-mode-synth, #dataset-switcher-container button',
-        actionEvent: 'click'
+        actionEvent: 'click',
+        prepare: () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       },
       {
         step: 2,
         target: '#nav-llm-mode-container',
         fallbackTarget: 'header',
+        preferredPlacement: 'bottom-end',
         category: 'Ketahanan AI',
         icon: 'ti-cpu',
         title: '2. Saklar Mode AI Cerdas (Zero-Crash Architecture)',
@@ -2722,34 +2727,48 @@
         desc: 'Sistem dirancang tangguh (*fault-tolerant*). Pada <strong>Mode Online</strong>, VeriKlaim memanfaatkan Google Gemini Pro AI Cloud untuk menghasilkan narasi telaah klinis mendalam. Jika koneksi faskes atau kantor cabang terputus, sistem secara otomatis beralih ke <strong>Mesin Aturan Deterministik Permenkes</strong> tanpa gangguan operasional.',
         actionText: 'Coba klik saklar AI Online/Offline di atas atau tekan Selanjutnya.',
         actionSelector: '#nav-llm-toggle, #nav-llm-mode-container',
-        actionEvent: 'click, change'
+        actionEvent: 'click, change',
+        prepare: () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       },
       {
         step: 3,
         target: '#section-kpi',
         fallbackTarget: '#section-kpi',
+        preferredPlacement: 'bottom-end',
         category: 'Dashboard Eksekutif',
         icon: 'ti-layout-dashboard',
         title: '3. Dashboard Eksekutif & KPI Portofolio Klaim',
         subtitle: 'Pemantauan Keuangan & Risiko JKN Real-Time',
         desc: 'Panel kendali utama bagi jajaran Direksi dan Kepala Cabang BPJS Kesehatan. Memantau kesehatan portofolio secara makro: <strong>Total Klaim</strong> (50.000 klaim), <strong>Klaim Terindikasi Anomali</strong> (137 kasus berisiko), serta <strong>Potensi Penyelamatan Dana JKN</strong> mencapai <strong>Rp 14,34 Miliar</strong>.',
-        actionText: 'Amati 4 indikator KPI utama di atas, lalu tekan Selanjutnya.'
+        actionText: 'Amati 4 indikator KPI utama di atas, lalu tekan Selanjutnya.',
+        prepare: () => {
+          const kpi = document.getElementById('section-kpi');
+          if (kpi) kpi.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       },
       {
         step: 4,
         target: '#section-charts-container',
         fallbackTarget: '#section-charts-container',
+        preferredPlacement: 'docked-bottom-right',
         category: 'Analitik Visual',
         icon: 'ti-chart-pie',
         title: '4. Visualisasi Forensik & Sebaran Anomali Faskes',
         subtitle: 'Bagan Interaktif Profil Risiko Rumah Sakit',
         desc: 'Visualisasi analitik Chart.js interaktif yang membedah sebaran 6 klaster anomali klaim (Upcoding, Phantom Billing, Unbundling, Disputed Klaim) serta perbandingan rasio beban klaim berdasarkan kelas rumah sakit (Kelas A, B, C, D) untuk pemetaan risiko faskes yang objektif.',
-        actionText: 'Arahkan kursor ke diagram lingkaran atau batang di atas, lalu tekan Selanjutnya.'
+        actionText: 'Arahkan kursor ke diagram lingkaran atau batang di atas, lalu tekan Selanjutnya.',
+        prepare: () => {
+          const charts = document.getElementById('section-charts-container');
+          if (charts) charts.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       },
       {
         step: 5,
         target: '#preset-dropdown-container',
         fallbackTarget: '#section-simulator',
+        preferredPlacement: 'left',
         category: 'Simulator Klaim',
         icon: 'ti-flask',
         title: '5. Simulator Forensik Pemeriksaan Klaim (< 1 ms)',
@@ -2757,12 +2776,17 @@
         desc: 'Kotak instrumen pra-audit yang memungkinkan faskes atau verifikator menguji berkas baru sebelum diajukan secara resmi. Tersedia tombol <strong>"Contoh Kasus 6 Klaster"</strong> yang memuat simulasi kasus riil sesuai Blueprint Kemenkes RI (Upcoding, Phantom Billing, Top-up Special CMG, dll.).',
         actionText: 'Klik tombol "Contoh Kasus 6 Klaster" dan pilih salah satu kasus (misal Upcoding), atau tekan Selanjutnya.',
         actionSelector: '#btn-preset-dropdown, #preset-dropdown-menu button',
-        actionEvent: 'click'
+        actionEvent: 'click',
+        prepare: () => {
+          const sim = document.getElementById('section-simulator');
+          if (sim) sim.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       },
       {
         step: 6,
         target: '#btn-run-live-audit',
         fallbackTarget: '#section-simulator',
+        preferredPlacement: 'right',
         category: 'Deteksi AI',
         icon: 'ti-scan',
         title: '6. Eksekusi Audit AI & Deteksi Kecurangan Seketika',
@@ -2770,12 +2794,17 @@
         desc: 'Menekan tombol ini akan mengirimkan data klaim ke mesin deteksi ensemble AI (XGBoost + Isolation Forest) dan matriks regulasi Permenkes No. 26/2021 & No. 16/2019. Eksekusi inti model berlangsung secepat kilat dalam waktu <strong>< 0.1 milidetik</strong>.',
         actionText: 'Klik tombol "Eksekusi Audit Klaim AI" untuk membuktikan kecepatan inferensi!',
         actionSelector: '#btn-run-live-audit',
-        actionEvent: 'click'
+        actionEvent: 'click',
+        prepare: () => {
+          const btn = document.getElementById('btn-run-live-audit');
+          if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       },
       {
         step: 7,
         target: '#audit-result-box',
         fallbackTarget: '#section-simulator',
+        preferredPlacement: 'left',
         category: 'Explainable AI',
         icon: 'ti-brain',
         title: '7. Transparansi Keputusan AI (Explainable AI TreeSHAP)',
@@ -2784,9 +2813,12 @@
         actionText: 'Perhatikan rincian vonis dan kontribusi variabel medis di atas, lalu tekan Selanjutnya.',
         prepare: () => {
           const box = document.getElementById('audit-result-box');
-          if (box && (box.style.display === 'none' || !box.style.display)) {
-            selectCase('upcoding');
-            runLiveAudit();
+          if (box) {
+            if (box.style.display === 'none' || !box.style.display) {
+              selectCase('upcoding');
+              runLiveAudit();
+            }
+            box.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         }
       },
@@ -2794,6 +2826,7 @@
         step: 8,
         target: '#section-claims-controls',
         fallbackTarget: '#section-claims',
+        preferredPlacement: 'above',
         category: 'Penjelajah Berkas',
         icon: 'ti-list-search',
         title: '8. Penjelajah Berkas 50.000 Klaim (Pencarian Kilat & Dua Status)',
@@ -2801,12 +2834,17 @@
         desc: 'Gudang arsip digital 50.000 klaim FKRTL dengan waktu muat sangat responsif. Tabel menampilkan <strong>Dua Status Berdampingan</strong>: <em>Status Audit AI</em> (hasil pemindaian mesin) dan <em>Status Verifikasi Manual</em> (keputusan verifikator manusia). Dilengkapi filter nomor SEP, diagnosa, dan jenis anomali.',
         actionText: 'Coba ketik nomor SEP pada kotak pencarian atau ganti filter kategori, lalu tekan Selanjutnya.',
         actionSelector: '#table-search, #table-filter-type, #table-filter-verif',
-        actionEvent: 'change'
+        actionEvent: 'input, change',
+        prepare: () => {
+          const claims = document.getElementById('section-claims');
+          if (claims) claims.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       },
       {
         step: 9,
         target: '#first-claim-telaah-btn',
         fallbackTarget: '#section-claims',
+        preferredPlacement: 'left',
         category: 'Human-in-the-Loop',
         icon: 'ti-stethoscope',
         title: '9. Meja Kerja Verifikasi Manual (Human-in-the-Loop)',
@@ -2814,18 +2852,25 @@
         desc: 'Sesuai prinsip etika AI kedokteran, keputusan pembayaran klaim mutlak berada di tangan Dokter Verifikator Manusia. Klik tombol <strong>"Telaah"</strong> pada baris berkas klaim untuk membuka Workstation Verifikasi Manual terintegrasi.',
         actionText: 'Klik tombol hijau "Telaah" di baris klaim pertama untuk membuka lembar kerja berkas!',
         actionSelector: '#first-claim-telaah-btn',
-        actionEvent: 'click'
+        actionEvent: 'click',
+        prepare: () => {
+          const btn = document.getElementById('first-claim-telaah-btn');
+          if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       },
       {
         step: 10,
-        target: '#doc-modal-container-card',
+        target: '#doc-modal-tabs',
         fallbackTarget: '#documentVerificationModal',
+        preferredPlacement: 'docked-bottom-right',
         category: 'Verifikasi Klinis',
         icon: 'ti-file-certificate',
         title: '10. Penelaahan 4 Dokumen Digital Klinis & Audit Trail',
         subtitle: 'Validasi Silang Rekam Medik Otentik & Rekam Jejak Hukum',
         desc: 'Verifikator dapat membandingkan temuan AI dengan 4 dokumen digital resmi: (1) SEP Digital, (2) Resume Medis Pasien Pulang DPJP, (3) Rincian Billing RS, dan (4) Surat Rujukan FKTP. Verifikator kemudian mengesahkan putusan resmi (Layak Bayar, Ditolak/Fraud, Dispute, atau Klarifikasi RS) yang tersimpan permanen ke jejak audit (*audit trail*).',
         actionText: 'Jelajahi tab dokumen di atas atau tutup modal dengan tombol (X) di kanan atas untuk melanjutkan tur.',
+        actionSelector: '#tab-btn-sep, #tab-btn-resume, #tab-btn-billing, #tab-btn-rujukan',
+        actionEvent: 'click',
         prepare: () => {
           const modal = document.getElementById('documentVerificationModal');
           if (modal && modal.classList.contains('hidden')) {
@@ -2837,14 +2882,18 @@
         step: 11,
         target: '#header-export-group',
         fallbackTarget: 'header',
+        preferredPlacement: 'bottom-end',
         category: 'Ekspor & Integrasi',
         icon: 'ti-award',
         title: '11. Berita Acara Audit, Buku Panduan Fitur & Swagger API',
         subtitle: 'Dokumen Legal Resmi & Interoperabilitas SIMRS',
         desc: 'Selamat, Anda telah menyelesaikan seluruh rangkaian tur! Anda dapat mengunduh Berita Acara Audit resmi dalam format PDF berstandar BPJS Kesehatan, mengunduh Buku Panduan Lengkap Fitur Platform 5 Halaman, atau membuka antarmuka Swagger REST API (/docs) untuk menghubungkan SIMRS rumah sakit secara langsung.',
         actionText: 'Klik tombol "Selesai & Mulai Eksplorasi" untuk mulai menggunakan VeriKlaim!',
+        actionSelector: '#header-export-group button, #header-export-group a',
+        actionEvent: 'click',
         prepare: () => {
           closeDocumentModal();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
     ];
@@ -2991,18 +3040,22 @@
       // Elevate target above backdrop so it is 100% interactive
       elevateTarget(targetEl);
 
-      // Smooth scroll target into view
-      if (targetEl && targetEl !== document.body) {
-        try {
-          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-        } catch(e) {}
+      // Smooth scroll target into view if offscreen and prepare hook didn't handle it
+      if (targetEl && targetEl !== document.body && typeof step.prepare !== 'function') {
+        const targetRect = targetEl.getBoundingClientRect();
+        const isInView = (targetRect.top >= 70 && targetRect.bottom <= window.innerHeight - 70);
+        if (!isInView) {
+          try {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+          } catch(e) {}
+        }
       }
 
       // Allow DOM to settle then position spotlight and card
       setTimeout(() => {
         positionSpotlight(targetEl);
         positionTutorialCard(targetEl, step);
-      }, 150);
+      }, 180);
 
       // Update Card Content
       document.getElementById('tut-step-badge').innerText = `Langkah ${step.step} dari ${TUTORIAL_STEPS.length}`;
@@ -3115,10 +3168,10 @@
       const card = document.getElementById('tutorial-card');
       if (!card || !targetEl) return;
 
-      const isMobile = window.innerWidth < 640;
+      const isMobile = window.innerWidth < 768;
       if (isMobile) {
         card.style.top = 'auto';
-        card.style.bottom = '16px';
+        card.style.bottom = '12px';
         card.style.left = '4vw';
         card.style.right = '4vw';
         card.style.width = '92vw';
@@ -3126,28 +3179,72 @@
       }
 
       const rect = targetEl.getBoundingClientRect();
-      const cardWidth = 480;
-      const cardHeight = card.offsetHeight || 360;
+      const cardWidth = 420;
+      const cardHeight = card.offsetHeight || 310;
       const gap = 16;
+      const vpW = window.innerWidth;
+      const vpH = window.innerHeight;
 
       let top, left;
+      const placement = (step && step.preferredPlacement) ? step.preferredPlacement : 'auto';
 
-      left = rect.left;
-      if (left + cardWidth > window.innerWidth - 20) {
-        left = window.innerWidth - cardWidth - 20;
-      }
-      if (left < 20) left = 20;
-
-      const fitsBelow = (rect.bottom + gap + cardHeight < window.innerHeight - 10);
-      const fitsAbove = (rect.top - gap - cardHeight > 10);
-
-      if (fitsBelow) {
+      if (placement === 'left') {
+        // Position to the left of target (e.g. Step 5 Preset Dropdown, Step 7 Result Box, Step 9 Telaah)
+        left = rect.left - cardWidth - gap;
+        top = Math.max(70, Math.min(rect.top - 10, vpH - cardHeight - 20));
+        // Fallback if not enough space on left
+        if (left < 20) {
+          left = 20;
+          top = (rect.bottom + gap + cardHeight < vpH - 10) ? rect.bottom + gap : Math.max(70, rect.top - cardHeight - gap);
+        }
+      } else if (placement === 'right') {
+        // Position to the right of target (e.g. Step 6 Audit CTA)
+        left = rect.right + gap;
+        top = Math.max(70, Math.min(rect.top - 10, vpH - cardHeight - 20));
+        // Fallback if not enough space on right
+        if (left + cardWidth > vpW - 20) {
+          left = Math.max(20, rect.left - cardWidth - gap);
+        }
+      } else if (placement === 'bottom-end') {
+        // Below target, aligned to the right edge (e.g. Step 1 Dataset, Step 2 AI Mode, Step 11 Export)
+        left = Math.max(20, rect.right - cardWidth);
         top = rect.bottom + gap;
-      } else if (fitsAbove) {
-        top = rect.top - gap - cardHeight;
+        if (top + cardHeight > vpH - 10) {
+          top = Math.max(70, rect.top - cardHeight - gap);
+        }
+      } else if (placement === 'above') {
+        // Above target element (e.g. Step 8 Claims controls)
+        left = Math.max(20, Math.min(rect.left, vpW - cardWidth - 20));
+        top = rect.top - cardHeight - gap;
+        if (top < 70) {
+          top = rect.bottom + gap;
+        }
+      } else if (placement === 'docked-bottom-right') {
+        // Docked cleanly at bottom-right (e.g. Step 4 Charts, Step 10 Modal)
+        left = vpW - cardWidth - 24;
+        top = vpH - cardHeight - 24;
       } else {
-        top = Math.max(20, Math.min(rect.top, window.innerHeight - cardHeight - 20));
+        // Auto: choose side with maximum space that doesn't overlap rect
+        const spaceBelow = vpH - rect.bottom;
+        const spaceAbove = rect.top;
+        if (spaceBelow >= cardHeight + gap + 10) {
+          top = rect.bottom + gap;
+          left = Math.max(20, Math.min(rect.left, vpW - cardWidth - 20));
+        } else if (spaceAbove >= cardHeight + gap + 70) {
+          top = rect.top - cardHeight - gap;
+          left = Math.max(20, Math.min(rect.left, vpW - cardWidth - 20));
+        } else if (rect.left >= cardWidth + gap + 20) {
+          left = rect.left - cardWidth - gap;
+          top = Math.max(70, Math.min(rect.top, vpH - cardHeight - 20));
+        } else {
+          left = vpW - cardWidth - 20;
+          top = vpH - cardHeight - 20;
+        }
       }
+
+      // Constrain strictly within viewport boundaries
+      left = Math.max(16, Math.min(left, vpW - cardWidth - 16));
+      top = Math.max(16, Math.min(top, vpH - cardHeight - 16));
 
       card.style.top = `${top}px`;
       card.style.bottom = 'auto';
