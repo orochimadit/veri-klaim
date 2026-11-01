@@ -35,6 +35,9 @@ WHITE = HexColor("#FFFFFF")
 PAGE_WIDTH = 960.0
 PAGE_HEIGHT = 540.0
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ASSETS_DIR = os.path.join(BASE_DIR, "docs", "assets")
+
 
 def draw_header(c, title_text, slide_num_label="", current_slide=1, total_slides=11):
     """Draws standardized template header and footer."""
@@ -182,7 +185,7 @@ def draw_slide_1_cover(c):
 
 
 def draw_slide_2_team(c):
-    """Slide 2: Perkenalan Tim strictly according to Page 4 of template."""
+    """Slide 2: Perkenalan Tim strictly according to Page 4 of template with real member photos."""
     draw_header(c, "Perkenalan Tim", slide_num_label="1", current_slide=2, total_slides=11)
     
     c.setFont("Helvetica", 10)
@@ -202,32 +205,42 @@ def draw_slide_2_team(c):
     card_w = (PAGE_WIDTH - 96 - 32) / 3.0
     card_h = 360
     card_y = 52
+    avatar_sz = 68
+    pill_w = 70
+    pill_h = 15
     
     # Member 1: Aditya Pratama
     x1 = 48
     draw_card(c, x1, card_y, card_w, card_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
-    draw_card(c, x1 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=35)
-    c.setFont("Helvetica-Bold", 20)
+    
+    img_aditya = os.path.join(ASSETS_DIR, "avatar_aditya.png")
+    if os.path.exists(img_aditya):
+        c.drawImage(img_aditya, x1 + (card_w - avatar_sz) / 2, card_y + card_h - 84, avatar_sz, avatar_sz, mask='auto')
+    else:
+        draw_card(c, x1 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=35)
+        c.setFont("Helvetica-Bold", 20)
+        c.setFillColor(BPJS_GREEN_DARK)
+        c.drawCentredString(x1 + card_w / 2, card_y + card_h - 48, "AP")
+    
+    draw_card(c, x1 + (card_w - pill_w) / 2, card_y + card_h - 104, pill_w, pill_h, bg_color=BPJS_GREEN_LIGHT, border_color=BPJS_GREEN, radius=7.5)
+    c.setFont("Helvetica-Bold", 7.5)
     c.setFillColor(BPJS_GREEN_DARK)
-    c.drawCentredString(x1 + card_w / 2, card_y + card_h - 48, "AP")
-    c.setFont("Helvetica-Bold", 8)
-    c.setFillColor(BPJS_GREEN)
-    c.drawCentredString(x1 + card_w / 2, card_y + card_h - 75, "ANGGOTA 1")
+    c.drawCentredString(x1 + card_w / 2, card_y + card_h - 97, "KETUA TIM")
     
-    c.setFont("Helvetica-Bold", 12.5)
+    c.setFont("Helvetica-Bold", 12.0)
     c.setFillColor(TEXT_DARK)
-    c.drawCentredString(x1 + card_w / 2, card_y + card_h - 105, "Aditya Pratama, S.T., M.T.")
+    c.drawCentredString(x1 + card_w / 2, card_y + card_h - 120, "Aditya Pratama, S.T., M.T.")
     
-    c.setFont("Helvetica-Bold", 9.5)
+    c.setFont("Helvetica-Bold", 9.0)
     c.setFillColor(BPJS_BLUE)
-    c.drawCentredString(x1 + card_w / 2, card_y + card_h - 122, "Ketua Tim / Lead AI & Arsitektur")
+    c.drawCentredString(x1 + card_w / 2, card_y + card_h - 134, "Ketua Tim / Lead AI & Arsitektur")
     
     c.setStrokeColor(BORDER_LIGHT)
-    c.line(x1 + 16, card_y + card_h - 134, x1 + card_w - 16, card_y + card_h - 134)
+    c.line(x1 + 16, card_y + card_h - 144, x1 + card_w - 16, card_y + card_h - 144)
     
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(BPJS_GREEN_DARK)
-    c.drawString(x1 + 16, card_y + card_h - 152, "AFILIASI & REKAM JEJAK:")
+    c.drawString(x1 + 16, card_y + card_h - 160, "AFILIASI & REKAM JEJAK:")
     
     lines_m1 = [
         "- Dosen Tetap Prodi Sistem Informasi,",
@@ -241,36 +254,43 @@ def draw_slide_2_team(c):
         "  dan integrasi model LLM pendukung",
         "- Kontak WA: 0856-5441-1081"
     ]
-    cur_y = card_y + card_h - 170
+    cur_y = card_y + card_h - 176
     for line in lines_m1:
         c.drawString(x1 + 16, cur_y, line)
-        cur_y -= 14
+        cur_y -= 13.5
         
     # Member 2: Nurman Hariyanto
     x2 = x1 + card_w + 16
     draw_card(c, x2, card_y, card_w, card_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
-    draw_card(c, x2 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=BPJS_BLUE_LIGHT, border_color=BPJS_BLUE, radius=35)
-    c.setFont("Helvetica-Bold", 20)
-    c.setFillColor(BPJS_BLUE)
-    c.drawCentredString(x2 + card_w / 2, card_y + card_h - 48, "NH")
-    c.setFont("Helvetica-Bold", 8)
-    c.setFillColor(BPJS_BLUE)
-    c.drawCentredString(x2 + card_w / 2, card_y + card_h - 75, "ANGGOTA 2")
     
-    c.setFont("Helvetica-Bold", 12.5)
+    img_nurman = os.path.join(ASSETS_DIR, "avatar_nurman.png")
+    if os.path.exists(img_nurman):
+        c.drawImage(img_nurman, x2 + (card_w - avatar_sz) / 2, card_y + card_h - 84, avatar_sz, avatar_sz, mask='auto')
+    else:
+        draw_card(c, x2 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=BPJS_BLUE_LIGHT, border_color=BPJS_BLUE, radius=35)
+        c.setFont("Helvetica-Bold", 20)
+        c.setFillColor(BPJS_BLUE)
+        c.drawCentredString(x2 + card_w / 2, card_y + card_h - 48, "NH")
+        
+    draw_card(c, x2 + (card_w - pill_w) / 2, card_y + card_h - 104, pill_w, pill_h, bg_color=BPJS_BLUE_LIGHT, border_color=BPJS_BLUE, radius=7.5)
+    c.setFont("Helvetica-Bold", 7.5)
+    c.setFillColor(BPJS_BLUE)
+    c.drawCentredString(x2 + card_w / 2, card_y + card_h - 97, "ANGGOTA 1")
+    
+    c.setFont("Helvetica-Bold", 12.0)
     c.setFillColor(TEXT_DARK)
-    c.drawCentredString(x2 + card_w / 2, card_y + card_h - 105, "Nurman Hariyanto, S.ST., M.T.")
+    c.drawCentredString(x2 + card_w / 2, card_y + card_h - 120, "Nurman Hariyanto, S.ST., M.T.")
     
-    c.setFont("Helvetica-Bold", 9.5)
+    c.setFont("Helvetica-Bold", 9.0)
     c.setFillColor(BPJS_BLUE)
-    c.drawCentredString(x2 + card_w / 2, card_y + card_h - 122, "Lead Rekayasa Data & Infrastruktur")
+    c.drawCentredString(x2 + card_w / 2, card_y + card_h - 134, "Lead Rekayasa Data & Infrastruktur")
     
     c.setStrokeColor(BORDER_LIGHT)
-    c.line(x2 + 16, card_y + card_h - 134, x2 + card_w - 16, card_y + card_h - 134)
+    c.line(x2 + 16, card_y + card_h - 144, x2 + card_w - 16, card_y + card_h - 144)
     
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(BPJS_BLUE)
-    c.drawString(x2 + 16, card_y + card_h - 152, "AFILIASI & REKAM JEJAK:")
+    c.drawString(x2 + 16, card_y + card_h - 160, "AFILIASI & REKAM JEJAK:")
     
     lines_m2 = [
         "- Dosen Tetap Prodi Sistem Informasi,",
@@ -283,36 +303,43 @@ def draw_slide_2_team(c):
         "  the-Loop & Integrasi 6-Klaster Kemenkes",
         "- Spesialisasi: Cloud Systems & Reliability"
     ]
-    cur_y = card_y + card_h - 170
+    cur_y = card_y + card_h - 176
     for line in lines_m2:
         c.drawString(x2 + 16, cur_y, line)
-        cur_y -= 14
+        cur_y -= 13.5
 
     # Member 3: M. Ali Maulana
     x3 = x2 + card_w + 16
     draw_card(c, x3, card_y, card_w, card_h, bg_color=WHITE, border_color=BORDER_LIGHT, radius=8)
-    draw_card(c, x3 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=HexColor("#F3E8FF"), border_color=HexColor("#7E22CE"), radius=35)
-    c.setFont("Helvetica-Bold", 20)
-    c.setFillColor(HexColor("#7E22CE"))
-    c.drawCentredString(x3 + card_w / 2, card_y + card_h - 48, "AM")
-    c.setFont("Helvetica-Bold", 8)
-    c.setFillColor(HexColor("#7E22CE"))
-    c.drawCentredString(x3 + card_w / 2, card_y + card_h - 75, "ANGGOTA 3")
     
-    c.setFont("Helvetica-Bold", 12.5)
+    img_ali = os.path.join(ASSETS_DIR, "avatar_ali.png")
+    if os.path.exists(img_ali):
+        c.drawImage(img_ali, x3 + (card_w - avatar_sz) / 2, card_y + card_h - 84, avatar_sz, avatar_sz, mask='auto')
+    else:
+        draw_card(c, x3 + (card_w - 70) / 2, card_y + card_h - 85, 70, 70, bg_color=HexColor("#F3E8FF"), border_color=HexColor("#7E22CE"), radius=35)
+        c.setFont("Helvetica-Bold", 20)
+        c.setFillColor(HexColor("#7E22CE"))
+        c.drawCentredString(x3 + card_w / 2, card_y + card_h - 48, "AM")
+        
+    draw_card(c, x3 + (card_w - pill_w) / 2, card_y + card_h - 104, pill_w, pill_h, bg_color=HexColor("#F3E8FF"), border_color=HexColor("#7E22CE"), radius=7.5)
+    c.setFont("Helvetica-Bold", 7.5)
+    c.setFillColor(HexColor("#7E22CE"))
+    c.drawCentredString(x3 + card_w / 2, card_y + card_h - 97, "ANGGOTA 2")
+    
+    c.setFont("Helvetica-Bold", 12.0)
     c.setFillColor(TEXT_DARK)
-    c.drawCentredString(x3 + card_w / 2, card_y + card_h - 105, "M. Ali Maulana, M.Kep.")
+    c.drawCentredString(x3 + card_w / 2, card_y + card_h - 120, "M. Ali Maulana, M.Kep.")
     
-    c.setFont("Helvetica-Bold", 9.5)
+    c.setFont("Helvetica-Bold", 9.0)
     c.setFillColor(BPJS_BLUE)
-    c.drawCentredString(x3 + card_w / 2, card_y + card_h - 122, "Lead Domain Klinis & Kepatuhan")
+    c.drawCentredString(x3 + card_w / 2, card_y + card_h - 134, "Lead Domain Klinis & Kepatuhan")
     
     c.setStrokeColor(BORDER_LIGHT)
-    c.line(x3 + 16, card_y + card_h - 134, x3 + card_w - 16, card_y + card_h - 134)
+    c.line(x3 + 16, card_y + card_h - 144, x3 + card_w - 16, card_y + card_h - 144)
     
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(HexColor("#7E22CE"))
-    c.drawString(x3 + 16, card_y + card_h - 152, "AFILIASI & REKAM JEJAK:")
+    c.drawString(x3 + 16, card_y + card_h - 160, "AFILIASI & REKAM JEJAK:")
     
     lines_m3 = [
         "- Dosen Tetap Prodi Keperawatan,",
@@ -325,10 +352,11 @@ def draw_slide_2_team(c):
         "  (Fraud JKN) & Blueprint Kemenkes RI",
         "- Validasi klinis 4 berkas digital medis"
     ]
-    cur_y = card_y + card_h - 170
+    cur_y = card_y + card_h - 176
     for line in lines_m3:
         c.drawString(x3 + 16, cur_y, line)
-        cur_y -= 14
+        cur_y -= 13.5
+
 
 
 def draw_slide_3_idea(c):

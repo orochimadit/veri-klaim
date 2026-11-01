@@ -309,6 +309,10 @@ veri-klaim/
 
 ## 8. Profil Tim Pengusul
 
+| <img src="docs/assets/avatar_aditya.png" width="100" style="border-radius:50%"> | <img src="docs/assets/avatar_nurman.png" width="100" style="border-radius:50%"> | <img src="docs/assets/avatar_ali.png" width="100" style="border-radius:50%"> |
+| :---: | :---: | :---: |
+| **Aditya Pratama, S.T., M.T.**<br><sub>Ketua Tim / Lead AI & Arsitektur</sub> | **Nurman Hariyanto, S.ST., M.T.**<br><sub>Lead Rekayasa Data & Infrastruktur</sub> | **M. Ali Maulana, M.Kep.**<br><sub>Lead Domain Klinis & Kepatuhan</sub> |
+
 * **Aditya Pratama, S.T., M.T.**  
   **Peran:** Ketua Tim / Lead AI & Arsitektur Sistem  
   **Afiliasi:** Dosen Tetap Program Studi Sistem Informasi, Universitas Nahdlatul Ulama Kalimantan Barat (UNU Kalbar)  
