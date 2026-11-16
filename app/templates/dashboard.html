@@ -896,9 +896,15 @@
                 </div>
                 <p id="res-saving-text" class="text-xs font-bold text-[#008D4C]"></p>
               </div>
-              <div class="bg-white px-4 py-2.5 rounded-xl border border-gray-200 text-right shadow-sm">
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Tingkat Risiko Klaim</p>
-                <h3 id="res-confidence" class="text-2xl font-black text-gray-900">0.0%</h3>
+              <div class="flex items-center gap-3">
+                <button id="btn-banner-view-doc" type="button" onclick="openDocumentModal(lastAuditedSep)" class="px-3.5 py-2 rounded-xl bg-white hover:bg-emerald-50 text-[#008D4C] border border-emerald-300 font-bold text-xs transition flex items-center gap-1.5 shadow-xs hover:shadow">
+                  <i class="ti ti-file-text text-base"></i>
+                  <span>Buka 4 Dokumen Digital</span>
+                </button>
+                <div class="bg-white px-4 py-2 rounded-xl border border-gray-200 text-right shadow-sm">
+                  <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Tingkat Risiko Klaim</p>
+                  <h3 id="res-confidence" class="text-2xl font-black text-gray-900">0.0%</h3>
+                </div>
               </div>
             </div>
 
@@ -2600,6 +2606,7 @@
     let fraudChart = null;
     let rsChart = null;
     let loadedTableClaimsMap = {};
+    let lastAuditedSep = '238520624V001808';
 
     function toggleSidebar() {
       const sidebar = document.getElementById('main-sidebar');
@@ -3233,6 +3240,8 @@
     }
 
     async function runLiveAudit() {
+      const sepVal = document.getElementById('inp-no-sep').value || '238520624V001808';
+      lastAuditedSep = sepVal;
       const icdRaw = document.getElementById('inp-icd10').value.split('|');
       const diagMasuk = document.getElementById('inp-diag-masuk').value;
       const isUnreferral = (document.getElementById('inp-rujukan').value === 'BYPASS');
@@ -3455,6 +3464,7 @@
 
     async function executeManualClaimAudit() {
       const sep = document.getElementById('man-sep').value.trim();
+      lastAuditedSep = sep || '238520624V001808';
       const rujukan = document.getElementById('man-rujukan').value.trim();
       const faskes = document.getElementById('man-faskes').value;
       const pel = document.getElementById('man-pelayanan').value;

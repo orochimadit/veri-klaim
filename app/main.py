@@ -84,6 +84,9 @@ DASHBOARD_HTML_PATH = os.path.join(APP_DIR, "templates", "dashboard.html")
 # Initialize Engine
 engine = VeriKlaimEngine()
 
+# Cache untuk menyimpan riwayat audit manual agar langsung dapat direkonstruksi menjadi 4 Dokumen Digital
+MANUAL_AUDITS_CACHE: Dict[str, Dict[str, Any]] = {}
+
 # Load Data & Precompute Index for Sub-Millisecond Response
 print("Loading and Preprocessing Datasets...")
 df_synth = pd.read_csv(CSV_SYNTH_PATH) if os.path.exists(CSV_SYNTH_PATH) else pd.DataFrame()
@@ -214,7 +217,10 @@ def audit_claim(claim: ClaimInput):
     Dilengkapi dekomposisi TreeSHAP Feature Contribution dan narasi telaah medis DPJP verifikator.
     """
     t_start = time.perf_counter()
-    result = engine.audit_single_claim(claim.model_dump())
+    claim_dict = claim.model_dump()
+    if claim.no_sep:
+        MANUAL_AUDITS_CACHE[str(claim.no_sep)] = claim_dict
+    result = engine.audit_single_claim(claim_dict)
     result["execution_latency_ms"] = round((time.perf_counter() - t_start) * 1000.0, 4)
     return result
 
@@ -616,7 +622,26 @@ def get_claim_documents_endpoint(no_sep: str, dataset: str = "real"):
     * **Analisis Pencocokan Silang (Cross-Check):** Membandingkan temuan AI dengan dokumen klinis.
     """
     target_row = None
-    if dataset == "real" and not df_real.empty:
+    if str(no_sep) in MANUAL_AUDITS_CACHE:
+        mc = MANUAL_AUDITS_CACHE[str(no_sep)]
+        target_row = {
+            "NO_SEP": str(no_sep),
+            "ID_PESERTA": mc.get("id_peserta") or "PST-MANUAL-01",
+            "TIPE_FASKES": mc.get("tipe_faskes") or "RS Kelas C",
+            "PELAYANAN": mc.get("pelayanan") or ("RJTL" if "V" in str(no_sep) else "RITL"),
+            "KODE_ICD10": mc.get("kode_icd10") or "K25.0",
+            "NAMA_DIAGNOSA": mc.get("nama_diagnosa") or "Diagnosa Input Manual",
+            "KODE_INACBG": mc.get("kode_inacbg") or "M-4-10-III",
+            "LOS_HARI": mc.get("los_hari", 2),
+            "los_clean": mc.get("los_hari", 2),
+            "display_tagih": float(mc.get("biaya_tagih") or 14500000.0),
+            "BIAYA_RIIL_RS": float(mc.get("biaya_riil") or 3200000.0),
+            "KODE_ICD9_PROSEDUR": mc.get("kode_icd9") or "-",
+            "SEVERITY_LEVEL": int(mc.get("severity_level") or 3),
+            "TGL_MASUK": "2024-06-06",
+            "TGL_PULANG": "2024-06-08"
+        }
+    elif dataset == "real" and not df_real.empty:
         matched = df_real[df_real['FKL02'].astype(str) == str(no_sep)]
         if not matched.empty:
             target_row = matched.iloc[0].to_dict()
