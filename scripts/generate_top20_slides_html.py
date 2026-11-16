@@ -1,0 +1,1257 @@
+"""
+Generator Script: Generate docs/project_final_healthkathon_slides.html for Top 20 BPJS Healthkathon 2026.
+Matches the 12-slide structure from scripts/generate_top20_slides_pdf.py and strictly addresses the 4 mentor feedbacks.
+"""
+
+import os
+
+HTML_CONTENT = """<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriKlaim - Project Final Top 20 Healthkathon 2026 BPJS Kesehatan</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    :root {
+      --bpjs-green: #00875a;
+      --bpjs-green-dark: #006644;
+      --bpjs-green-light: #e6f4ea;
+      --bpjs-blue: #0b69a3;
+      --bpjs-blue-light: #ebf5fb;
+      --navy-dark: #0a192f;
+      --navy-card: #112240;
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --text-light: #94a3b8;
+      --border-color: #e2e8f0;
+      --bg-light: #f8fafc;
+      --danger: #de350b;
+      --danger-light: #ffebe6;
+      --warning: #d97706;
+      --warning-light: #fffbeb;
+      --purple: #7e22ce;
+      --purple-light: #f3e8ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #020617;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .viewport {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .slide-deck {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      overflow: hidden;
+      transform-origin: center center;
+    }
+
+    .slide {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 40px 52px 36px;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #ffffff;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .slide-header {
+      border-bottom: 1.5px solid var(--border-color);
+      padding-bottom: 12px;
+      position: relative;
+    }
+
+    .slide-top-bar {
+      height: 6px;
+      background: linear-gradient(90deg, var(--bpjs-green) 0%, var(--bpjs-blue) 100%);
+      position: absolute;
+      top: -40px;
+      left: -52px;
+      right: -52px;
+    }
+
+    .brand-meta {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--bpjs-green-dark);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-meta span {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .slide-title-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .slide-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--navy-dark);
+      letter-spacing: -0.5px;
+    }
+
+    .slide-badge {
+      background: var(--bpjs-green-light);
+      color: var(--bpjs-green-dark);
+      border: 1px solid var(--bpjs-green);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .slide-body {
+      flex: 1;
+      padding: 16px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-footer {
+      border-top: 1px solid var(--border-color);
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+      color: #ffffff;
+      font-size: 13px;
+    }
+
+    .btn {
+      background: var(--bpjs-green);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn:hover {
+      background: var(--bpjs-green-dark);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--bg-light);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .card-dark {
+      background: var(--navy-dark);
+      color: #ffffff;
+      border: 1px solid #233554;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .card-accent {
+      background: var(--bpjs-green-light);
+      border: 1px solid var(--bpjs-green);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .card-blue {
+      background: var(--bpjs-blue-light);
+      border: 1px solid var(--bpjs-blue);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .card-danger {
+      background: var(--danger-light);
+      border: 1px solid var(--danger);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .card-amber {
+      background: var(--warning-light);
+      border: 1px solid var(--warning);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--navy-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .metric-box {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--bpjs-green);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .table-custom {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .table-custom th {
+      background: var(--navy-dark);
+      color: white;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .table-custom td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-dark);
+      vertical-align: top;
+    }
+
+    .table-custom tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .tag-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .tag-green { background: var(--bpjs-green-light); color: var(--bpjs-green-dark); }
+    .tag-red { background: var(--danger-light); color: var(--danger); }
+    .tag-blue { background: var(--bpjs-blue-light); color: var(--bpjs-blue); }
+    .tag-amber { background: var(--warning-light); color: var(--warning); }
+
+    .code-snippet {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 8px 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      line-height: 1.4;
+    }
+
+    /* SLIDE 1 COVER SPECIAL */
+    .slide-cover {
+      background: radial-gradient(circle at 80% 20%, #112240 0%, #0a192f 100%);
+      color: #ffffff;
+      padding: 60px 70px;
+    }
+    .slide-cover .slide-header { border-bottom: none; }
+    .slide-cover .slide-footer { border-top-color: #233554; color: var(--text-light); }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+    <div class="slide-deck" id="deck">
+
+      <!-- ========================================== -->
+      <!-- SLIDE 1: COVER -->
+      <!-- ========================================== -->
+      <div class="slide slide-cover active" id="slide-1">
+        <div style="height: 6px; background: linear-gradient(90deg, #00875a 0%, #00b887 50%, #0b69a3 100%); position: absolute; top: 0; left: 0; right: 0;"></div>
+        
+        <div>
+          <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <span class="tag-badge" style="background: rgba(0,135,90,0.3); color: #4ade80; border: 1px solid #22c55e; padding: 4px 12px; font-size: 12px;">HEALTHKATHON BPJS KESEHATAN 2026</span>
+            <span class="tag-badge" style="background: rgba(11,105,163,0.3); color: #38bdf8; border: 1px solid #0284c7; padding: 4px 12px; font-size: 12px;">TAHAP 20 BESAR &bull; PEMBERI KERJA</span>
+          </div>
+
+          <h1 style="font-size: 46px; font-weight: 800; line-height: 1.15; margin-bottom: 12px; letter-spacing: -1px;">
+            VeriKlaim <span style="font-size: 24px; font-weight: 600; color: #4ade80;">&bull; Aqila Digital</span>
+          </h1>
+          <h2 style="font-size: 18px; font-weight: 600; color: #94a3b8; max-width: 900px; line-height: 1.4; margin-bottom: 24px;">
+            Sistem Asistensi Audit Pra-Bayar Klaim INA-CBG Berbasis Explainable AI SHAP, 6-Klaster Regulasi Kemenkes, & Workstation Human-in-the-Loop 4 Dokumen Digital
+          </h2>
+          <p style="font-size: 14px; color: #cbd5e1; max-width: 800px; line-height: 1.6;">
+            Solusi Terkalibrasi Mitigasi Upcoding, Unbundling, dan Phantom Billing pada Fasilitas Kesehatan Rujukan Tingkat Lanjut (FKRTL) Menuju Final Offline.
+          </p>
+        </div>
+
+        <div class="grid-3" style="margin-top: 20px;">
+          <div style="background: rgba(255,255,255,0.06); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 11px; text-transform: uppercase; color: #4ade80; font-weight: 700;">Nama Tim & Kategori</div>
+            <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin-top: 4px;">Aqila Digital</div>
+            <div style="font-size: 12px; color: #94a3b8;">Kategori: Pemberi Kerja</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 11px; text-transform: uppercase; color: #38bdf8; font-weight: 700;">Status Implementasi</div>
+            <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin-top: 4px;">Live Production Ready</div>
+            <div style="font-size: 12px; color: #94a3b8;">https://veriklaim.absolute-tech.id</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 11px; text-transform: uppercase; color: #facc15; font-weight: 700;">Hasil Sesi Coaching</div>
+            <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin-top: 4px;">4 Masukan Selesai 100%</div>
+            <div style="font-size: 12px; color: #94a3b8;">Upload &bull; Ensemble &bull; Resume &bull; Infra</div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Panduan 20 Besar Healthkathon 2026 &bull; BPJS Kesehatan RI</div>
+          <div>Slide 1 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 2: PERKENALAN TIM -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-2">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Top 20 Healthkathon 2026 <span>| Kategori: Pemberi Kerja &bull; Tim Aqila Digital</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Perkenalan Tim Pengembang: Aqila Digital</div>
+            <div class="slide-badge">Bagian 1: Tim (1 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <!-- Member 1 -->
+            <div class="card" style="border-top: 4px solid var(--bpjs-green);">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <img src="assets/avatar_aditya.png" alt="Aditya" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bpjs-green);">
+                <div>
+                  <div style="font-size: 15px; font-weight: 800; color: var(--navy-dark);">Aditya Pratama, S.T., M.T.</div>
+                  <div style="font-size: 11px; font-weight: 700; color: var(--bpjs-green);">Ketua Tim / Lead AI & Arsitektur</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">Dosen SI UNU Kalbar &bull; S1 & S2 STEI ITB</div>
+                </div>
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.5; padding-left: 16px;">
+                <li>Arsitek Dual-Engine Audit (6-Klaster Kemenkes + Machine Learning).</li>
+                <li>Riset: Explainable AI TreeSHAP, Tabular Fraud Detection, FastAPI High-Throughput.</li>
+                <li>Kontak: 0856-5441-1081</li>
+              </ul>
+            </div>
+
+            <!-- Member 2 -->
+            <div class="card" style="border-top: 4px solid var(--bpjs-blue);">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <img src="assets/avatar_nurman.png" alt="Nurman" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bpjs-blue);">
+                <div>
+                  <div style="font-size: 15px; font-weight: 800; color: var(--navy-dark);">Nurman Hariyanto, S.ST., M.T.</div>
+                  <div style="font-size: 11px; font-weight: 700; color: var(--bpjs-blue);">Lead Rekayasa Data & Pipeline</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">Dosen SI UNU Kalbar &bull; S2 STEI ITB & Polban</div>
+                </div>
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.5; padding-left: 16px;">
+                <li>Perancang Batch Upload Processing & SIMRS Webhook Gateway.</li>
+                <li>Riset: Distributed Big Data Pipeline, Kepatuhan Anonimisasi NIK SHA-256 (UU PDP).</li>
+                <li>Infrastruktur Deployment & Scale Benchmarking.</li>
+              </ul>
+            </div>
+
+            <!-- Member 3 -->
+            <div class="card" style="border-top: 4px solid var(--purple);">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <img src="assets/avatar_ali.png" alt="Ali" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--purple);">
+                <div>
+                  <div style="font-size: 15px; font-weight: 800; color: var(--navy-dark);">M. Ali Maulana, M.Kep.</div>
+                  <div style="font-size: 11px; font-weight: 700; color: var(--purple);">Lead Domain Klinis & Regulasi</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">Dosen Keperawatan FK UNTAN</div>
+                </div>
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.5; padding-left: 16px;">
+                <li>Penyelarasan Kaidah Koding ICD-10/ICD-9-CM & Permenkes No. 26/2021.</li>
+                <li>Desain Protokol Rekam Medis Terstruktur Faskes (UU PDP & Permenkes 24/2022).</li>
+                <li>Validasi Alur Kerja Workstation Verifikator BPJS.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Kolaborasi Multidisiplin: Artificial Intelligence, Data Engineering, & Manajemen Layanan Klinis</div>
+          <div>Slide 2 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 3: PERUBAHAN SETELAH COACHING -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-3">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Paling Dicermati Dewan Juri <span>| Evaluasi & Eksekusi Masukan Coach</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Perubahan Setelah Coaching: 4 Masukan & Solusi Nyata</div>
+            <div class="slide-badge">Bagian 2: Coaching (2 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <!-- Poin 1 -->
+            <div class="card-accent">
+              <div class="card-title">
+                <span class="tag-badge tag-green">Masukan 1</span>
+                Upload & Integrasi Data Klaim Faskes
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                <strong>Catatan Coach:</strong> Belum tersedia fitur upload atau integrasi data klaim yang dapat diproses oleh sistem.
+              </p>
+              <div style="background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--bpjs-green); font-size: 11px; color: var(--navy-dark);">
+                <strong>Eksekusi Solusi Tim:</strong> Implementasi modul Drag-and-Drop Batch Upload (CSV, XLSX, JSON) dengan auto-parsing, download template terstandar, dan endpoint Webhook SIMRS <code>POST /api/claims/batch-audit</code>.
+              </div>
+            </div>
+
+            <!-- Poin 2 -->
+            <div class="card-blue">
+              <div class="card-title">
+                <span class="tag-badge tag-blue">Masukan 2</span>
+                Pembobotan Skoring AI XGBoost & Random Forest
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                <strong>Catatan Coach:</strong> Belum ada pembobotan skoring akurasi dari hasil penggunaan XGBoost dan Random Forest.
+              </p>
+              <div style="background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--bpjs-blue); font-size: 11px; color: var(--navy-dark);">
+                <strong>Eksekusi Solusi Tim:</strong> Perumusan Calibrated Ensemble 60% XGBoost + 40% Random Forest. Menghasilkan akurasi 98.44%, Recall 100%, Brier Score rendah (0.0156), dan latensi audit &lt; 0.15 ms/klaim.
+              </div>
+            </div>
+
+            <!-- Poin 3 -->
+            <div class="card-amber">
+              <div class="card-title">
+                <span class="tag-badge tag-amber">Masukan 3</span>
+                Mekanisme Klarifikasi Resume Medis Faskes
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
+                <strong>Catatan Coach:</strong> Klarifikasi RS yang meminta resume medis pasien belum ditentukan mekanisme pemberian datanya.
+              </p>
+              <div style="background: white; padding: 10px; border-radius: 6px; border-left: 3px solid var(--warning); font-size: 11px; color: var(--navy-dark);">
+                <strong>Eksekusi Solusi Tim:</strong> Desain Protokol Text-Only Structured Snippet dari DPJP sesuai UU PDP No. 27/2022 & Permenkes No. 24/2022. Tanpa upload berkas mentah PDF, dievaluasi semantik objektif oleh AI.
+              </div>
+            </div>
+
+            <!-- Poin 4 -->
+            <div class="card-dark">
+              <div class="card-title" style="color: white;">
+                <span class="tag-badge" style="background: #38bdf8; color: #0f172a;">Masukan 4</span>
+                Kalkulasi Infrastruktur Skala Nasional
+              </div>
+              <p style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">
+                <strong>Catatan Coach:</strong> Hitung kebutuhan infrastruktur untuk sistem tersebut jika diimplementasikan nasional.
+              </p>
+              <div style="background: rgba(255,255,255,0.08); padding: 10px; border-radius: 6px; border-left: 3px solid #38bdf8; font-size: 11px; color: #f8fafc;">
+                <strong>Eksekusi Solusi Tim:</strong> Perhitungan matematis beban 120 Juta Klaim/Tahun (~400.000 klaim/hari, peak 150 TPS). Cluster 4-Node On-Premise HA (128 vCPU, 256 GB RAM) berkapasitas 1.600 TPS (> 10x headroom).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Seluruh 4 Catatan Coach Telah Diimplementasikan Penuh pada Kode Sumber & Live Production</div>
+          <div>Slide 3 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 4: SEBELUM VS SESUDAH COACHING -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-4">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Tabel Bukti Terukur <span>| Verifikasi Komparasi Sebelum vs Sesudah Coaching</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Bukti Nyata Sebelum vs Sesudah Coaching</div>
+            <div class="slide-badge">Bagian 2: Coaching (2 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th style="width: 20%;">Aspek / Fitur</th>
+                <th style="width: 35%;">Kondisi Sebelum Coaching</th>
+                <th style="width: 45%;">Kondisi Sesudah Coaching (Versi Final)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Ingesti Data Klaim</strong></td>
+                <td>Hanya input manual 1 per 1 form transaksi via REST API uji coba.</td>
+                <td><span class="tag-badge tag-green">Selesai</span> Drag-and-Drop Batch Upload (CSV/XLSX/JSON), Webhook SIMRS otomatis, auto-parsing skema BPJS.</td>
+              </tr>
+              <tr>
+                <td><strong>2. Model AI & Skoring</strong></td>
+                <td>Model XGBoost berdiri sendiri, belum ada kalibrasi probabilitas antar algoritma.</td>
+                <td><span class="tag-badge tag-blue">Selesai</span> Calibrated Ensemble 60% XGBoost + 40% Random Forest. Akurasi 98.44%, Recall 100%, latensi &lt; 0.15 ms.</td>
+              </tr>
+              <tr>
+                <td><strong>3. Alur Rekam Medis RS</strong></td>
+                <td>Asumsi verifikator meminta dokumen PDF lengkap tanpa batasan privasi data pasien.</td>
+                <td><span class="tag-badge tag-amber">Selesai</span> Protokol Text-Only Snippet DPJP ber-Digital Signature, bebas risiko kebocoran data (UU PDP No. 27/2022).</td>
+              </tr>
+              <tr>
+                <td><strong>4. Perencanaan Infrastruktur</strong></td>
+                <td>Spesifikasi server lokal statis (hanya workstation developer tunggal).</td>
+                <td><span class="tag-badge tag-green">Selesai</span> Blue-print arsitektur nasional 4-Node HA Cluster, kapasitas 1.600 TPS (> 10x beban puncak BPJS 150 TPS).</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="grid-4" style="margin-top: 14px;">
+            <div class="metric-box">
+              <div class="metric-value">100%</div>
+              <div class="metric-label">Recall Regulasi</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-value" style="color: var(--bpjs-blue);">98.44%</div>
+              <div class="metric-label">Akurasi Ensemble</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-value" style="color: var(--purple);">&lt; 0.15 ms</div>
+              <div class="metric-label">Latensi per Klaim</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-value" style="color: var(--navy-dark);">1.600 TPS</div>
+              <div class="metric-label">Kapasitas Nasional</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>VeriKlaim Berevolusi dari Prototype Laboratorium Menjadi Solusi Enterprise Siap Skala Nasional</div>
+          <div>Slide 4 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 5: RINGKASAN SOLUSI & ALUR -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-5">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">End-to-End Pipeline <span>| Arsitektur Alur Proses 5-Tahap</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Ringkasan Solusi & Alur Proses VeriKlaim</div>
+            <div class="slide-badge">Bagian 3: Alur (1 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-4" style="grid-template-columns: repeat(5, 1fr); gap: 10px;">
+            <!-- Step 1 -->
+            <div class="card" style="border-top: 3px solid var(--bpjs-green);">
+              <div style="font-size: 10px; font-weight: 800; color: var(--bpjs-green); text-transform: uppercase;">Tahap 1</div>
+              <div style="font-size: 13px; font-weight: 800; color: var(--navy-dark); margin: 4px 0;">Ingesti Klaim</div>
+              <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                Penerimaan berkas klaim via API VClaim BPJS, Drag-and-Drop Batch Upload, atau SIMRS Webhook.
+              </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="card" style="border-top: 3px solid var(--bpjs-blue);">
+              <div style="font-size: 10px; font-weight: 800; color: var(--bpjs-blue); text-transform: uppercase;">Tahap 2</div>
+              <div style="font-size: 13px; font-weight: 800; color: var(--navy-dark); margin: 4px 0;">Validasi & PDP</div>
+              <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                Validasi skema INA-CBG, hashing NIK SHA-256 (UU PDP), & feature engineering (Cost Velocity).
+              </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="card" style="border-top: 3px solid var(--purple);">
+              <div style="font-size: 10px; font-weight: 800; color: var(--purple); text-transform: uppercase;">Tahap 3</div>
+              <div style="font-size: 13px; font-weight: 800; color: var(--navy-dark); margin: 4px 0;">Dual-Engine AI</div>
+              <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                6 Klaster Kemenkes (Deterministik 100% Recall) + Calibrated ML Ensemble 60% XGBoost + 40% RF.
+              </p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="card" style="border-top: 3px solid var(--warning);">
+              <div style="font-size: 10px; font-weight: 800; color: var(--warning); text-transform: uppercase;">Tahap 4</div>
+              <div style="font-size: 13px; font-weight: 800; color: var(--navy-dark); margin: 4px 0;">Workstation HITL</div>
+              <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                Dokter Verifikator telaah klaim berisiko, visualisasi TreeSHAP, & Text-Only Snippet DPJP.
+              </p>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="card" style="border-top: 3px solid var(--danger);">
+              <div style="font-size: 10px; font-weight: 800; color: var(--danger); text-transform: uppercase;">Tahap 5</div>
+              <div style="font-size: 13px; font-weight: 800; color: var(--navy-dark); margin: 4px 0;">Putusan & Output</div>
+              <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+                Penerbitan Berita Acara Audit PDF ber-QR Code, feedback loop model, & integrasi ke E-Klaim.
+              </p>
+            </div>
+          </div>
+
+          <div class="card-accent" style="margin-top: 14px; padding: 12px;">
+            <div style="font-size: 12px; font-weight: 700; color: var(--bpjs-green-dark); margin-bottom: 4px;">
+              Tiga Aktor Utama Pengguna Platform:
+            </div>
+            <div style="display: flex; gap: 20px; font-size: 11px; color: var(--navy-dark);">
+              <div><strong>1. Dokter Verifikator Cabang BPJS:</strong> Pengambilan keputusan akhir klaim berisiko tinggi.</div>
+              <div><strong>2. Tim PK-RS (Pencegahan Kecurangan RS):</strong> Internal audit pra-pengajuan klaim.</div>
+              <div><strong>3. Manajemen Risiko Kantor Pusat BPJS:</strong> Pemantauan dashboard makro nasional.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Prinsip Human-in-the-Loop Menjamin AI Hanya Bertindak Sebagai Asistensi, Keputusan Tetap pada Dokter</div>
+          <div>Slide 5 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 6: DEMO FITUR BATCH UPLOAD -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-6">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Demo Fitur Baru <span>| Menjawab Masukan Coach Poin 1</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Fitur Baru: Batch Upload & Integrasi Webhook SIMRS</div>
+            <div class="slide-badge">Bagian 4: Demo (3.5 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">
+                <span class="tag-badge tag-green">Fitur UI</span>
+                Drag-and-Drop Batch Upload Portal
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.6; padding-left: 16px; margin-bottom: 10px;">
+                <li>Mendukung file format <strong>CSV, Excel (.xlsx), dan JSON</strong>.</li>
+                <li><strong>Auto-Parsing & Validasi Skema:</strong> Memeriksa kelengkapan kolom diagnosis ICD-10, prosedur ICD-9-CM, tarif INA-CBG, dan lama rawat.</li>
+                <li><strong>Download Template Terstandar:</strong> Menyediakan format template klaim siap pakai melalui tombol <code>Unduh Template Klaim</code>.</li>
+                <li>Mampu memproses 10.000 baris klaim dalam waktu kurang dari 2 detik.</li>
+              </ul>
+              <div class="code-snippet">
+POST /api/claims/upload<br>
+Content-Type: multipart/form-data<br>
+Response: { "processed": 1000, "flagged": 42, "total_overclaim": 145000000 }
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="tag-badge tag-blue">API Enterprise</span>
+                Integrasi Webhook SIMRS Terotomasi
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.6; padding-left: 16px; margin-bottom: 10px;">
+                <li><strong>Endpoint Batch Audit:</strong> <code>POST /api/claims/batch-audit</code> untuk integrasi langsung sistem billing rumah sakit.</li>
+                <li><strong>Asynchronous Queue:</strong> Menerima ribuan berkas klaim serentak tanpa blocking, mengembalikan Task ID untuk tracking.</li>
+                <li><strong>Pre-Submission Warning:</strong> Rumah sakit mengetahui potensi disputed claims sebelum mengirimkan berkas resmi ke BPJS.</li>
+                <li>Mengurangi sengketa klaim faskes hingga 80% di hulu.</li>
+              </ul>
+              <div class="code-snippet">
+// Webhook Response Contoh Klaster Upcoding:<br>
+{ "claim_id": "CLM-2026-001", "risk_score": 0.984,<br>
+  "cluster": "Upcoding Severity", "action": "REVIEW_SNIPPET" }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Tersedia di Dashboard Live: https://veriklaim.absolute-tech.id &bull; Siap Diuji Coba Langsung</div>
+          <div>Slide 6 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 7: DEMO LIVE WORKSTATION & SHAP -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-7">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Live Workstation <span>| Human-in-the-Loop & Explainable AI</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Workstation Dokter & Explainable AI SHAP</div>
+            <div class="slide-badge">Bagian 4: Demo (3.5 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card-dark">
+              <div class="card-title" style="color: white;">
+                <span class="tag-badge tag-green">Workstation Terpadu</span>
+                4 Dokumen Digital Terkoreksi
+              </div>
+              <p style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">
+                Dokter Verifikator cukup membuka modal 1 layar tanpa bolak-balik berkas fisik:
+              </p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+                <div style="background: rgba(255,255,255,0.06); padding: 8px; border-radius: 4px;">
+                  <strong style="color: #4ade80;">1. SEP Digital</strong><br>Status kepesertaan & eligibilitas.
+                </div>
+                <div style="background: rgba(255,255,255,0.06); padding: 8px; border-radius: 4px;">
+                  <strong style="color: #38bdf8;">2. Resume Medis</strong><br>Snippet terstruktur dari DPJP.
+                </div>
+                <div style="background: rgba(255,255,255,0.06); padding: 8px; border-radius: 4px;">
+                  <strong style="color: #facc15;">3. Billing RS</strong><br>Rincian tarif riil vs tarif INA-CBG.
+                </div>
+                <div style="background: rgba(255,255,255,0.06); padding: 8px; border-radius: 4px;">
+                  <strong style="color: #f87171;">4. Rujukan FKTP</strong><br>Validasi berjenjang rujukan.
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="tag-badge tag-blue">Transparansi AI</span>
+                Explainability Berbasis TreeSHAP
+              </div>
+              <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px;">
+                AI tidak menjadi "Black Box", melainkan menjelaskan alasan penandaan anomali secara transparan:
+              </p>
+              <ul style="font-size: 11px; color: var(--text-dark); line-height: 1.5; padding-left: 16px; margin-bottom: 10px;">
+                <li><strong>Feature Contribution Waterfall:</strong> Menampilkan kontribusi eksak lama rawat, rasio biaya, dan diagnosa sekunder.</li>
+                <li><strong>Dasar Regulasi Otomatis:</strong> Langsung mengutip pasal Permenkes No. 26/2021 dan Permenkes No. 16/2019 terkait.</li>
+                <li><strong>Audit Trail Terenkripsi:</strong> Mencatat nama dokter verifikator, waktu telaah, dan putusan akhir.</li>
+              </ul>
+              <div style="background: var(--bpjs-green-light); padding: 8px 12px; border-radius: 6px; font-size: 11px; color: var(--bpjs-green-dark); font-weight: 700;">
+                Menurunkan waktu audit per berkas dari 15-20 menit menjadi 1-2 menit saja.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Menerbitkan Berita Acara Audit Resmi Format PDF Ber-QR Code sebagai Bukti Sah Sengketa Klaim</div>
+          <div>Slide 7 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 8: PEMBOBOTAN ENSEMBLE AI -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-8">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Metodologi Machine Learning <span>| Menjawab Masukan Coach Poin 2</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Pembobotan Skoring AI: Calibrated Ensemble 60:40</div>
+            <div class="slide-badge">Bagian 5: Dampak (1.5 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">
+                <span class="tag-badge tag-blue">Formulasi Skoring</span>
+                Kombinasi XGBoost (60%) + Random Forest (40%)
+              </div>
+              <div class="code-snippet" style="margin-bottom: 8px;">
+P_ensemble = 0.60 * P_XGBoost + 0.40 * P_RandomForest<br>
+Risk_Score = CalibratedProbability(P_ensemble, method='isotonic')
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.5; padding-left: 16px;">
+                <li><strong>XGBoost (Bobot 60%):</strong> Unggul dalam memisahkan pola non-linear kompleks pada disparitas tarif dan fitur Cost Velocity Ratio.</li>
+                <li><strong>Random Forest (Bobot 40%):</strong> Berfungsi sebagai penstabil varians (variance dampener) guna mencegah overfitting pada sampel langka.</li>
+                <li><strong>Isotonic Calibration:</strong> Memastikan probabilitas keluaran model benar-benar mencerminkan tingkat risiko empiris (Brier Score: 0.0156).</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="tag-badge tag-green">Hasil Benchmark Model</span>
+                Performa Komparasi Algoritma
+              </div>
+              <table class="table-custom" style="margin-top: 4px;">
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>Akurasi</th>
+                    <th>Recall</th>
+                    <th>Presisi</th>
+                    <th>Latensi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Single XGBoost</td>
+                    <td>97.10%</td>
+                    <td>96.5%</td>
+                    <td>95.2%</td>
+                    <td>0.08 ms</td>
+                  </tr>
+                  <tr>
+                    <td>Single Random Forest</td>
+                    <td>96.40%</td>
+                    <td>94.8%</td>
+                    <td>96.1%</td>
+                    <td>0.12 ms</td>
+                  </tr>
+                  <tr style="background: #e6f4ea; font-weight: 700;">
+                    <td>Ensemble 60:40 (VeriKlaim)</td>
+                    <td>98.44%</td>
+                    <td>100.0%</td>
+                    <td>96.4%</td>
+                    <td>0.14 ms</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style="font-size: 11px; color: var(--bpjs-green-dark); margin-top: 8px; font-weight: 600;">
+                Recall 100% pada kaidah aturan baku memastikan tidak ada klaim fraud yang lolos (Zero False Negative).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Kombinasi Dual-Engine: Rule-Based Deterministik + Machine Learning Terkalibrasi</div>
+          <div>Slide 8 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 9: MEKANISME REKAM MEDIS & PDP -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-9">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Kepatuhan Regulasi & Privasi <span>| Menjawab Masukan Coach Poin 3</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Mekanisme Klarifikasi RS & Protokol Rekam Medis</div>
+            <div class="slide-badge">Bagian 5: Dampak (1.5 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card-amber">
+              <div class="card-title">
+                <span class="tag-badge tag-amber">Tantangan & Regulasi</span>
+                Kepatuhan UU PDP No. 27/2022 & Permenkes 24/2022
+              </div>
+              <ul style="font-size: 11px; color: var(--navy-dark); line-height: 1.5; padding-left: 16px;">
+                <li>Data rekam medis pasien merupakan <strong>Data Pribadi Spesifik</strong> yang dilarang ditransmisikan sembarangan.</li>
+                <li>Pengiriman berkas mentah (PDF/foto rekam medis manual) rentan kebocoran data dan membebani storage BPJS hingga terabyte.</li>
+                <li>Klarifikasi rumah sakit seringkali berlarut-larut (14-30 hari) karena format data yang tidak seragam.</li>
+              </ul>
+            </div>
+
+            <div class="card-accent">
+              <div class="card-title">
+                <span class="tag-badge tag-green">Solusi VeriKlaim</span>
+                Protokol Text-Only Structured Snippet DPJP
+              </div>
+              <ul style="font-size: 11px; color: var(--navy-dark); line-height: 1.5; padding-left: 16px;">
+                <li><strong>Bebas Upload File Mentah:</strong> RS hanya menginput intisari klinis teks terstruktur yang diverifikasi tanda tangan digital DPJP.</li>
+                <li><strong>Evaluasi Semantik Objektif AI:</strong> Engine AI mendeteksi keberadaan bukti objektif (tanda vital, hasil lab, laporan operasi) vs teks klise/fiktif.</li>
+                <li><strong>Audit Trail & Watermarking:</strong> Setiap akses data dicatat persisten dengan penanda digital sesuai standar audit Kementerian Kesehatan.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 14px; background: #f1f5f9; padding: 12px;">
+            <div style="font-size: 11px; font-weight: 700; color: var(--navy-dark); margin-bottom: 4px;">Alur Kerja Klarifikasi Rumah Sakit:</div>
+            <div style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">
+              Klaim Berisiko Terdeteksi &rarr; Sistem Menerbitkan Permintaan Snippet Otomatis ke SIMRS &rarr; Dokter DPJP Mengisi 3 Poin Kritis Klinis &rarr; Evaluasi Semantik Instan &rarr; Dokter Verifikator Memutuskan (Selesai dalam 1-2 Hari Kerja).
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Menjamin Zero Raw Medical Record Leakage & Memangkas Durasi Klarifikasi dari 30 Hari Menjadi 2 Hari</div>
+          <div>Slide 9 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 10: HASIL UJI VALIDASI TERUKUR -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-10">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Validasi Empiris <span>| Dataset Riil BPJS & Skenario Uji Stres</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Hasil Uji Validasi Terukur: Efisiensi Nyata DJS</div>
+            <div class="slide-badge">Bagian 5: Dampak (1.5 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">
+                <span class="tag-badge tag-green">Uji Data Riil BPJS</span>
+                Validasi 50.000 Klaim Historis
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.6; padding-left: 16px;">
+                <li>VeriKlaim diuji pada 50.000 sampel data klaim riil BPJS Kesehatan.</li>
+                <li><strong>Validasi Pemotongan Overclaim:</strong> Sistem secara tepat memvalidasi 64 klaim yang telah dipotong oleh dokter verifikator dengan nilai riil <strong>Rp 61.240.000</strong>.</li>
+                <li><strong>Zero False Rejection:</strong> Tidak ada klaim sah yang ditolak keliru berkat ambang batas multi-tier.</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <div class="card-title">
+                <span class="tag-badge tag-danger">Skenario Uji Stres</span>
+                Simulasi 10.000 Kasus Ekstrem
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.6; padding-left: 16px;">
+                <li>Diuji pada simulasi fraud multi-klaster (Upcoding persalinan sesar, Phantom Billing, Unbundling katarak).</li>
+                <li>Mendeteksi potensi kebocoran dana sebesar <strong>Rp 14,34 Miliar</strong> secara otomatis.</li>
+                <li>Sistem memberikan peringatan dini seketika dengan TreeSHAP feature explanation.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top: 14px;">
+            <div class="card-accent" style="text-align: center; padding: 12px;">
+              <div style="font-size: 22px; font-weight: 800; color: var(--bpjs-green);">&gt; 85%</div>
+              <div style="font-size: 11px; font-weight: 700; color: var(--bpjs-green-dark);">Efisiensi Waktu Audit</div>
+              <div style="font-size: 10px; color: var(--text-muted);">1-2 menit vs 15-20 menit manual</div>
+            </div>
+            <div class="card-blue" style="text-align: center; padding: 12px;">
+              <div style="font-size: 22px; font-weight: 800; color: var(--bpjs-blue);">1-2 Hari</div>
+              <div style="font-size: 11px; font-weight: 700; color: var(--bpjs-blue);">Penyelesaian Dispute</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Dari sebelumnya 14-30 hari kalender</div>
+            </div>
+            <div class="card-dark" style="text-align: center; padding: 12px;">
+              <div style="font-size: 22px; font-weight: 800; color: #38bdf8;">100%</div>
+              <div style="font-size: 11px; font-weight: 700; color: #f8fafc;">Cakupan Pre-Payment</div>
+              <div style="font-size: 10px; color: #94a3b8;">Menyaring seluruh berkas sebelum dibayar</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Mencegah Kebocoran Dana Jaminan Sosial (DJS) Sebelum Pembayaran Dilakukan (Pre-Payment Defense)</div>
+          <div>Slide 10 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 11: KALKULASI INFRASTRUKTUR NASIONAL -->
+      <!-- ========================================== -->
+      <div class="slide" id="slide-11">
+        <div class="slide-header">
+          <div class="slide-top-bar"></div>
+          <div class="brand-meta">Kesiapan Implementasi <span>| Menjawab Masukan Coach Poin 4</span></div>
+          <div class="slide-title-wrap">
+            <div class="slide-title">Kalkulasi Kebutuhan Infrastruktur Skala Nasional</div>
+            <div class="slide-badge">Bagian 6: Infrastruktur (1 Menit)</div>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-title">
+                <span class="tag-badge tag-blue">Beban Kerja Nasional</span>
+                Volume Klaim BPJS Kesehatan
+              </div>
+              <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.6; padding-left: 16px;">
+                <li><strong>Total Klaim Tahunan:</strong> ~120 Juta Klaim FKRTL per tahun.</li>
+                <li><strong>Rata-Rata Harian:</strong> ~400.000 klaim per hari kerja (8 jam operasional).</li>
+                <li><strong>Traffic Normal:</strong> ~15 Transaksi per Detik (TPS).</li>
+                <li><strong>Peak Traffic Jam Sibuk:</strong> Estimasi lonjakan hingga <strong>150 TPS</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="card-dark">
+              <div class="card-title" style="color: white;">
+                <span class="tag-badge tag-green">Arsitektur Rekomendasi</span>
+                4-Node High-Availability Cluster On-Premise
+              </div>
+              <ul style="font-size: 11px; color: #94a3b8; line-height: 1.6; padding-left: 16px;">
+                <li><strong>Node Spesifikasi:</strong> 4 Unit Server (Masing-masing 32 vCPU, 64 GB RAM, 1 TB NVMe).</li>
+                <li><strong>Total Kapasitas Cluster:</strong> 128 vCPU, 256 GB RAM, 4 TB Storage SSD NVMe.</li>
+                <li><strong>Throughput Pengujian:</strong> Engine FastAPI + C-Optimized Inference mampu melayani <strong>1.600 TPS</strong>.</li>
+                <li><strong>Headroom Kapasitas:</strong> Lebih dari <strong>10x lipat</strong> dari beban puncak nasional BPJS.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card-accent" style="margin-top: 14px; padding: 12px;">
+            <div style="font-size: 12px; font-weight: 700; color: var(--bpjs-green-dark); margin-bottom: 4px;">Topologi Deployment Data Center BPJS Kesehatan:</div>
+            <div style="font-size: 11px; color: var(--navy-dark); line-height: 1.5;">
+              Load Balancer NGINX HA &rarr; 4 Worker Nodes FastAPI (Docker Swarm / Kubernetes K8s) &rarr; In-Memory Caching Redis Cluster &rarr; Database Audit Trail PostgreSQL Multi-AZ &bull; Kepatuhan Lokalisasi Data Nasional (PP No. 71/2019).
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Arsitektur On-Premise Menjamin Kedaulatan Data Medis & Skalabilitas Tanpa Ketergantungan Cloud Asing</div>
+          <div>Slide 11 / 12</div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SLIDE 12: PENUTUP & DEMO LINK -->
+      <!-- ========================================== -->
+      <div class="slide slide-cover" id="slide-12" style="padding: 50px 70px;">
+        <div style="height: 6px; background: linear-gradient(90deg, #00875a 0%, #00b887 50%, #0b69a3 100%); position: absolute; top: 0; left: 0; right: 0;"></div>
+
+        <div>
+          <span class="tag-badge" style="background: rgba(0,135,90,0.3); color: #4ade80; border: 1px solid #22c55e; padding: 4px 12px; font-size: 12px; margin-bottom: 14px;">KESIMPULAN & PENUTUP</span>
+          <h2 style="font-size: 34px; font-weight: 800; line-height: 1.2; margin-bottom: 12px;">
+            VeriKlaim Siap Menjadi Garda Terdepan Perlindungan Dana Jaminan Sosial
+          </h2>
+          <p style="font-size: 14px; color: #cbd5e1; max-width: 850px; line-height: 1.6; margin-bottom: 20px;">
+            Dengan menggabungkan kepatuhan mutlak pada regulasi klinis Kemenkes, akurasi tinggi Calibrated Ensemble AI, dan transparansi workstation Human-in-the-Loop, VeriKlaim siap diimplementasikan secara nasional demi mewujudkan Program JKN yang berkelanjutan, adil, dan transparan.
+          </p>
+        </div>
+
+        <div class="grid-3" style="margin-top: 10px;">
+          <div style="background: rgba(255,255,255,0.06); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 11px; text-transform: uppercase; color: #4ade80; font-weight: 700;">Tautan Live System</div>
+            <div style="font-size: 14px; font-weight: 800; color: #ffffff; margin-top: 4px;">veriklaim.absolute-tech.id</div>
+            <div style="font-size: 11px; color: #94a3b8;">Siap diakses & diuji dewan juri</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 11px; text-transform: uppercase; color: #38bdf8; font-weight: 700;">Repository Kode Sumber</div>
+            <div style="font-size: 14px; font-weight: 800; color: #ffffff; margin-top: 4px;">github.com/orochimadit/veri-klaim</div>
+            <div style="font-size: 11px; color: #94a3b8;">Branch: main &bull; Clean Architecture</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 11px; text-transform: uppercase; color: #facc15; font-weight: 700;">Komitmen Tim Aqila Digital</div>
+            <div style="font-size: 14px; font-weight: 800; color: #ffffff; margin-top: 4px;">Siap Menuju Final Offline</div>
+            <div style="font-size: 11px; color: #94a3b8;">Pontianak &bull; Jakarta BPJS Pusat</div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <div>Terima Kasih Dewan Juri & Panitia Healthkathon BPJS Kesehatan 2026 &bull; Tim Aqila Digital</div>
+          <div>Slide 12 / 12</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NAVIGATION CONTROLS -->
+  <div class="controls">
+    <button class="btn btn-secondary" onclick="prevSlide()">&larr; Prev</button>
+    <span id="slideIndicator" style="font-weight: 700; min-width: 90px; text-align: center;">Slide 1 / 12</span>
+    <button class="btn" onclick="nextSlide()">Next &rarr;</button>
+    <button class="btn btn-secondary" onclick="toggleFullscreen()" style="margin-left: 8px;">Fullscreen [F]</button>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 12;
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      for (let i = 1; i <= totalSlides; i++) {
+        const slide = document.getElementById('slide-' + i);
+        if (slide) {
+          if (i === currentSlide) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        }
+      }
+
+      document.getElementById('slideIndicator').innerText = `Slide ${currentSlide} / ${totalSlides}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(err);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        showSlide(1);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        showSlide(totalSlides);
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    });
+
+    function adjustScale() {
+      const deck = document.getElementById('deck');
+      const targetWidth = 1280;
+      const targetHeight = 720;
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      const scaleX = (windowWidth - 40) / targetWidth;
+      const scaleY = (windowHeight - 80) / targetHeight;
+      const scale = Math.min(scaleX, scaleY, 1.25);
+
+      deck.style.transform = `scale(${Math.max(scale, 0.45)})`;
+    }
+
+    window.addEventListener('resize', adjustScale);
+    window.addEventListener('load', () => {
+      adjustScale();
+      showSlide(1);
+    });
+  </script>
+</body>
+</html>
+"""
+
+def main():
+    target_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs", "project_final_healthkathon_slides.html")
+    with open(target_path, "w", encoding="utf-8") as f:
+        f.write(HTML_CONTENT)
+    print(f"SUCCESS: Generated {target_path} (12 slides)")
+
+if __name__ == "__main__":
+    main()
