@@ -3688,6 +3688,57 @@
       }
     }
 
+    function populateSimulator(item) {
+      if (!item) return;
+      // Scroll ke simulator
+      const simSection = document.getElementById('audit-section') || document.getElementById('simulator-section');
+      if (simSection) {
+        simSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 400, behavior: 'smooth' });
+      }
+
+      // Isi nilai ke mode form manual
+      const elSep = document.getElementById('inp-no-sep');
+      if (elSep && (item.no_sep || item.FKL02)) elSep.value = item.no_sep || item.FKL02;
+      const elManSep = document.getElementById('man-sep');
+      if (elManSep && (item.no_sep || item.FKL02)) elManSep.value = item.no_sep || item.FKL02;
+
+      const diagVal = item.kode_icd10 || item.FKL17A;
+      const diagNama = item.nama_diagnosa || item.FKL18A || 'Diagnosa Medis';
+      const elManDiag = document.getElementById('man-diag-utama');
+      if (elManDiag && diagVal) elManDiag.value = diagVal;
+      const elManNama = document.getElementById('man-diag-nama');
+      if (elManNama) elManNama.value = diagNama;
+
+      const procVal = item.kode_icd9 || item.FKL30;
+      const elIcd9 = document.getElementById('inp-icd9');
+      if (elIcd9 && procVal) elIcd9.value = procVal;
+      const elManProc = document.getElementById('man-prosedur');
+      if (elManProc && procVal) elManProc.value = procVal;
+
+      const tagihVal = item.biaya_tagih || item.display_tagih || item.FKL47;
+      const elTagih = document.getElementById('inp-biaya-tagih');
+      if (elTagih && tagihVal) elTagih.value = tagihVal;
+      const elManTagih = document.getElementById('man-tagih');
+      if (elManTagih && tagihVal) elManTagih.value = tagihVal;
+
+      const riilVal = item.biaya_riil || item.FKL48;
+      const elRiil = document.getElementById('inp-biaya-riil');
+      if (elRiil && riilVal) elRiil.value = riilVal;
+      const elManRiil = document.getElementById('man-riil');
+      if (elManRiil && riilVal) elManRiil.value = riilVal;
+
+      const losVal = item.los_hari !== undefined ? item.los_hari : item.LOS_HARI;
+      const elLos = document.getElementById('inp-los');
+      if (elLos && losVal !== undefined) elLos.value = losVal;
+      const elManLos = document.getElementById('man-los');
+      if (elManLos && losVal !== undefined) elManLos.value = losVal;
+
+      // Jalankan audit langsung
+      runLiveAudit();
+    }
+
     function openInacbgDictionaryModal() {
       const modal = document.getElementById('inacbgDictionaryModal');
       if (!modal) return;
