@@ -168,13 +168,6 @@
               </button>
             </li>
             <li>
-              <a href="/hitl-portal" target="_blank" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-900 bg-emerald-50 hover:bg-emerald-100 font-bold transition text-left border border-emerald-300 shadow-sm">
-                <i class="ti ti-shield-lock text-lg text-[#008D4C]"></i>
-                <span>Portal HITL v2.5</span>
-                <span class="ms-auto text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-200 text-emerald-900">Baru</span>
-              </a>
-            </li>
-            <li>
               <a href="#section-kpi" class="sidebar-active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#008D4C] transition">
                 <i class="ti ti-layout-dashboard text-lg"></i>
                 <span class="font-semibold">Dashboard &amp; KPI</span>
@@ -968,6 +961,184 @@
                     <div id="hybrid-prog-online" class="bg-purple-600 h-2 rounded-full transition-all duration-500" style="width: 95.8%;"></div>
                   </div>
 
+                  <!-- Pembobotan Model AI Ensemble (XGBoost 60% : Random Forest 40%) -->
+                  <div class="p-3 rounded-xl bg-white/95 border border-purple-200/90 shadow-2xs space-y-2.5">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-black text-gray-900 flex items-center gap-1.5">
+                        <i class="ti ti-scale text-purple-700"></i> Pembobotan Skoring Akurasi Model AI (Ensemble)
+                      </span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-purple-100 text-purple-800 border border-purple-200">
+                        Skor Tertimbang
+                      </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                      <div class="p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100 space-y-1">
+                        <div class="flex justify-between items-center">
+                          <span class="font-bold text-gray-800 text-[11px] flex items-center gap-1">
+                            <i class="ti ti-bolt text-emerald-600"></i> XGBoost
+                          </span>
+                          <span class="font-mono font-black text-[#008D4C] text-[11px]">Bobot 60%</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-gray-600">
+                          <span>Akurasi: <strong class="text-gray-900 font-mono">98.6%</strong></span>
+                          <span>Recall: <strong class="text-emerald-700 font-mono">100%</strong></span>
+                        </div>
+                        <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                          <div class="bg-[#008D4C] h-1.5 rounded-full" style="width: 60%;"></div>
+                        </div>
+                        <span class="text-[9px] text-gray-400 block pt-0.5">Deteksi anomali ekstrem (Zero False Negative)</span>
+                      </div>
+
+                      <div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-100 space-y-1">
+                        <div class="flex justify-between items-center">
+                          <span class="font-bold text-gray-800 text-[11px] flex items-center gap-1">
+                            <i class="ti ti-trees text-blue-600"></i> Random Forest
+                          </span>
+                          <span class="font-mono font-black text-[#0B4F6C] text-[11px]">Bobot 40%</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-gray-600">
+                          <span>Akurasi: <strong class="text-gray-900 font-mono">98.2%</strong></span>
+                          <span>Presisi: <strong class="text-blue-700 font-mono">97.8%</strong></span>
+                        </div>
+                        <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                          <div class="bg-[#0B4F6C] h-1.5 rounded-full" style="width: 40%;"></div>
+                        </div>
+                        <span class="text-[9px] text-gray-400 block pt-0.5">Stabilitas generalisasi variasi faskes</span>
+                      </div>
+                    </div>
+
+                    <div class="p-2 rounded-lg bg-gray-50 border border-gray-200 flex flex-wrap items-center justify-between text-[11px] gap-1">
+                      <span class="text-gray-600 font-medium">Rumus Skoring: <code class="text-xs font-mono font-bold text-gray-900 bg-white px-1.5 py-0.5 rounded border border-gray-300">(0.60 × XGBoost) + (0.40 × Random Forest)</code></span>
+                      <span class="font-bold text-[#008D4C] font-mono">Akurasi Gabungan: 98.44%</span>
+                    </div>
+
+                    <!-- Penjelasan Faktor Penentu Skor Tertimbang & Variabel Dokumen Klaim -->
+                    <div class="p-3 rounded-xl bg-gradient-to-br from-purple-50/70 via-white to-emerald-50/70 border border-purple-200/90 space-y-2.5 text-gray-700">
+                      <div class="flex items-center justify-between pb-1.5 border-b border-purple-100">
+                        <span class="font-extrabold text-gray-900 flex items-center gap-1.5 text-xs">
+                          <i class="ti ti-report-medical text-purple-700 text-sm"></i>
+                          <span>Penjelasan Faktor Penentu Skor &amp; Variabel Dokumen:</span>
+                        </span>
+                        <span class="text-[10px] text-purple-800 font-extrabold bg-purple-100 px-2 py-0.5 rounded-md border border-purple-300">
+                          Viewer 4 Dokumen Digital
+                        </span>
+                      </div>
+
+                      <!-- 3 Faktor Utama Pembobotan Skor -->
+                      <div class="space-y-1">
+                        <span class="text-[10.5px] font-bold text-gray-800 block">3 Faktor Utama Penentu Skor Tertimbang:</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[10.5px]">
+                          <div class="p-2.5 rounded-lg bg-white border border-emerald-200 shadow-2xs space-y-1">
+                            <div class="flex items-center gap-1.5 text-[#008D4C] font-bold text-[11px]">
+                              <i class="ti ti-cash text-xs"></i>
+                              <span>1. Disparitas Finansial (60%)</span>
+                            </div>
+                            <p class="text-gray-600 text-[10px] leading-snug">
+                              Menilai deviasi biaya riil rumah sakit terhadap batas plafon tarif paket INA-CBG, lonjakan rasio biaya harian (<em>cost velocity</em>), dan klaim suplemen alat/obat khusus (<em>Top-Up Special CMG</em>).
+                            </p>
+                          </div>
+
+                          <div class="p-2.5 rounded-lg bg-white border border-blue-200 shadow-2xs space-y-1">
+                            <div class="flex items-center gap-1.5 text-blue-700 font-bold text-[11px]">
+                              <i class="ti ti-stethoscope text-xs"></i>
+                              <span>2. Koherensi Klinis (40%)</span>
+                            </div>
+                            <p class="text-gray-600 text-[10px] leading-snug">
+                              Menilai keselarasan diagnosis primer (ICD-10) vs tindakan medis (ICD-9-CM), keabsahan diagnosis komorbiditas berat (MCC) tanpa penempelan fiktif (<em>padding</em>), dan kecocokan <em>Severity Level</em>.
+                            </p>
+                          </div>
+
+                          <div class="p-2.5 rounded-lg bg-white border border-purple-200 shadow-2xs space-y-1">
+                            <div class="flex items-center gap-1.5 text-purple-700 font-bold text-[11px]">
+                              <i class="ti ti-gavel text-xs"></i>
+                              <span>3. Regulasi &amp; Administrasi</span>
+                            </div>
+                            <p class="text-gray-600 text-[10px] leading-snug">
+                              Memvalidasi masa aktif rujukan FKTP (&le; 90 hari), kewajaran lama hari rawat inap (LOS), kepatuhan kelas faskes, serta pencegahan pemecahan episode klaim (<em>unbundling</em> &lt; 48 jam).
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 4 Dokumen Medis & Rincian Variabel yang Dianalisis -->
+                      <div class="pt-1.5 border-t border-purple-100 space-y-1.5">
+                        <span class="text-[10.5px] font-bold text-gray-800 block">Daftar Variabel yang Diekstraksi dari Dokumen Klaim:</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px]">
+                          <!-- Dokumen 1: SEP -->
+                          <div class="p-2 rounded-lg bg-white border border-gray-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                              <span class="font-bold text-emerald-800 flex items-center gap-1 text-[11px]">
+                                <i class="ti ti-file-certificate text-[#008D4C]"></i> 1. Lembar SEP (Surat Eligibilitas Peserta)
+                              </span>
+                              <span class="text-[9px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.2 rounded">VClaim BPJS</span>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed text-[10px]">
+                              Variabel: <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">no_sep</code> (Nomor Registrasi SEP), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">tgl_sep</code> (Tanggal Pelayanan), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">tipe_faskes</code> (RS Kelas A/B/C/D), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">pelayanan</code> (RITL / RJTL), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">poli_tujuan</code> (Klinik Spesialis), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">kls_rawat</code> (Hak Kelas Perawatan).
+                            </p>
+                          </div>
+
+                          <!-- Dokumen 2: Resume Medis -->
+                          <div class="p-2 rounded-lg bg-white border border-gray-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                              <span class="font-bold text-blue-800 flex items-center gap-1 text-[11px]">
+                                <i class="ti ti-notes text-blue-600"></i> 2. Resume Medis / Catatan DPJP
+                              </span>
+                              <span class="text-[9px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.2 rounded">SIMRS Klinis</span>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed text-[10px]">
+                              Variabel: <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">kode_icd10</code> (Diagnosis Primer Utama), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">icd10_sekunder</code> (Komorbiditas / MCC), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">icd9cm_prosedur</code> (Tindakan Medis / Operasi), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">severity_level</code> (Tingkat Keparahan I/II/III), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">los_hari</code> (Lama Rawat Inap), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">status_pulang</code> (Kondisi Keluar Pasien).
+                            </p>
+                          </div>
+
+                          <!-- Dokumen 3: Billing RS & INA-CBG -->
+                          <div class="p-2 rounded-lg bg-white border border-gray-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                              <span class="font-bold text-amber-800 flex items-center gap-1 text-[11px]">
+                                <i class="ti ti-receipt text-amber-600"></i> 3. Billing Riil RS &amp; Formulir INA-CBG
+                              </span>
+                              <span class="text-[9px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.2 rounded">e-Klaim Kemenkes</span>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed text-[10px]">
+                              Variabel: <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">biaya_riil</code> (Akumulasi Tagihan Riil RS), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">biaya_ina_cbg</code> (Tarif Paket Baku INA-CBG), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">topup_cmg</code> (Tagihan Khusus Obat/Alat Bedah), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">cost_velocity_ratio</code> (Rasio Biaya per Hari Rawat), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">disparitas_tarif</code> (Selisih Biaya Riil vs Plafon).
+                            </p>
+                          </div>
+
+                          <!-- Dokumen 4: Surat Rujukan -->
+                          <div class="p-2 rounded-lg bg-white border border-gray-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                              <span class="font-bold text-purple-800 flex items-center gap-1 text-[11px]">
+                                <i class="ti ti-git-fork text-purple-600"></i> 4. Surat Rujukan FKTP / Faskes Primer
+                              </span>
+                              <span class="text-[9px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.2 rounded">P-Care BPJS</span>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed text-[10px]">
+                              Variabel: <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">no_rujukan</code> (Legalitas Nomor Rujukan), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">tgl_rujukan</code> (Tanggal Terbit Faskes Perujuk), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">masa_berlaku_hari</code> (Masa Aktif &le; 90 Hari), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">diagnosa_rujukan</code> (Diagnosa Awal FKTP), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">is_emergency</code> (Indikasi Masuk IGD / Bypass Rujukan).
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <!-- Maksud Scoring Online -->
                   <div class="space-y-1.5 text-[11px] text-gray-700 pt-1 border-t border-purple-100">
                     <strong class="text-purple-900 font-bold block flex items-center gap-1">
@@ -1075,6 +1246,131 @@
                     <div class="p-2 rounded-lg bg-gray-50 border border-gray-200 flex flex-wrap items-center justify-between text-[11px] gap-1">
                       <span class="text-gray-600 font-medium">Rumus Skoring: <code class="text-xs font-mono font-bold text-gray-900 bg-white px-1.5 py-0.5 rounded border border-gray-300">(0.60 × XGBoost) + (0.40 × Random Forest)</code></span>
                       <span class="font-bold text-[#008D4C] font-mono">Akurasi Gabungan: 98.44%</span>
+                    </div>
+
+                    <!-- Penjelasan Faktor Penentu Skor Tertimbang & Variabel Dokumen Klaim -->
+                    <div class="p-3 rounded-xl bg-gradient-to-br from-emerald-50/70 via-white to-blue-50/70 border border-emerald-200/90 space-y-2.5 text-gray-700">
+                      <div class="flex items-center justify-between pb-1.5 border-b border-emerald-100">
+                        <span class="font-extrabold text-gray-900 flex items-center gap-1.5 text-xs">
+                          <i class="ti ti-report-medical text-[#008D4C] text-sm"></i>
+                          <span>Penjelasan Faktor Penentu Skor &amp; Variabel Dokumen:</span>
+                        </span>
+                        <span class="text-[10px] text-emerald-800 font-extrabold bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
+                          Viewer 4 Dokumen Digital
+                        </span>
+                      </div>
+
+                      <!-- 3 Faktor Utama Pembobotan Skor -->
+                      <div class="space-y-1">
+                        <span class="text-[10.5px] font-bold text-gray-800 block">3 Faktor Utama Penentu Skor Tertimbang:</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[10.5px]">
+                          <div class="p-2.5 rounded-lg bg-white border border-emerald-200 shadow-2xs space-y-1">
+                            <div class="flex items-center gap-1.5 text-[#008D4C] font-bold text-[11px]">
+                              <i class="ti ti-cash text-xs"></i>
+                              <span>1. Disparitas Finansial (60%)</span>
+                            </div>
+                            <p class="text-gray-600 text-[10px] leading-snug">
+                              Menilai deviasi biaya riil rumah sakit terhadap batas plafon tarif paket INA-CBG, lonjakan rasio biaya harian (<em>cost velocity</em>), dan klaim suplemen alat/obat khusus (<em>Top-Up Special CMG</em>).
+                            </p>
+                          </div>
+
+                          <div class="p-2.5 rounded-lg bg-white border border-blue-200 shadow-2xs space-y-1">
+                            <div class="flex items-center gap-1.5 text-blue-700 font-bold text-[11px]">
+                              <i class="ti ti-stethoscope text-xs"></i>
+                              <span>2. Koherensi Klinis (40%)</span>
+                            </div>
+                            <p class="text-gray-600 text-[10px] leading-snug">
+                              Menilai keselarasan diagnosis primer (ICD-10) vs tindakan medis (ICD-9-CM), keabsahan diagnosis komorbiditas berat (MCC) tanpa penempelan fiktif (<em>padding</em>), dan kecocokan <em>Severity Level</em>.
+                            </p>
+                          </div>
+
+                          <div class="p-2.5 rounded-lg bg-white border border-purple-200 shadow-2xs space-y-1">
+                            <div class="flex items-center gap-1.5 text-purple-700 font-bold text-[11px]">
+                              <i class="ti ti-gavel text-xs"></i>
+                              <span>3. Regulasi &amp; Administrasi</span>
+                            </div>
+                            <p class="text-gray-600 text-[10px] leading-snug">
+                              Memvalidasi masa aktif rujukan FKTP (&le; 90 hari), kewajaran lama hari rawat inap (LOS), kepatuhan kelas faskes, serta pencegahan pemecahan episode klaim (<em>unbundling</em> &lt; 48 jam).
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 4 Dokumen Medis & Rincian Variabel yang Dianalisis -->
+                      <div class="pt-1.5 border-t border-emerald-100 space-y-1.5">
+                        <span class="text-[10.5px] font-bold text-gray-800 block">Daftar Variabel yang Diekstraksi dari Dokumen Klaim:</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px]">
+                          <!-- Dokumen 1: SEP -->
+                          <div class="p-2 rounded-lg bg-white border border-gray-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                              <span class="font-bold text-emerald-800 flex items-center gap-1 text-[11px]">
+                                <i class="ti ti-file-certificate text-[#008D4C]"></i> 1. Lembar SEP (Surat Eligibilitas Peserta)
+                              </span>
+                              <span class="text-[9px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.2 rounded">VClaim BPJS</span>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed text-[10px]">
+                              Variabel: <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">no_sep</code> (Nomor Registrasi SEP), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">tgl_sep</code> (Tanggal Pelayanan), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">tipe_faskes</code> (RS Kelas A/B/C/D), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">pelayanan</code> (RITL / RJTL), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">poli_tujuan</code> (Klinik Spesialis), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">kls_rawat</code> (Hak Kelas Perawatan).
+                            </p>
+                          </div>
+
+                          <!-- Dokumen 2: Resume Medis -->
+                          <div class="p-2 rounded-lg bg-white border border-gray-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                              <span class="font-bold text-blue-800 flex items-center gap-1 text-[11px]">
+                                <i class="ti ti-notes text-blue-600"></i> 2. Resume Medis / Catatan DPJP
+                              </span>
+                              <span class="text-[9px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.2 rounded">SIMRS Klinis</span>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed text-[10px]">
+                              Variabel: <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">kode_icd10</code> (Diagnosis Primer Utama), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">icd10_sekunder</code> (Komorbiditas / MCC), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">icd9cm_prosedur</code> (Tindakan Medis / Operasi), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">severity_level</code> (Tingkat Keparahan I/II/III), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">los_hari</code> (Lama Rawat Inap), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">status_pulang</code> (Kondisi Keluar Pasien).
+                            </p>
+                          </div>
+
+                          <!-- Dokumen 3: Billing RS & INA-CBG -->
+                          <div class="p-2 rounded-lg bg-white border border-gray-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                              <span class="font-bold text-amber-800 flex items-center gap-1 text-[11px]">
+                                <i class="ti ti-receipt text-amber-600"></i> 3. Billing Riil RS &amp; Formulir INA-CBG
+                              </span>
+                              <span class="text-[9px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.2 rounded">e-Klaim Kemenkes</span>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed text-[10px]">
+                              Variabel: <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">biaya_riil</code> (Akumulasi Tagihan Riil RS), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">biaya_ina_cbg</code> (Tarif Paket Baku INA-CBG), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">topup_cmg</code> (Tagihan Khusus Obat/Alat Bedah), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">cost_velocity_ratio</code> (Rasio Biaya per Hari Rawat), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">disparitas_tarif</code> (Selisih Biaya Riil vs Plafon).
+                            </p>
+                          </div>
+
+                          <!-- Dokumen 4: Surat Rujukan -->
+                          <div class="p-2 rounded-lg bg-white border border-gray-200 space-y-1">
+                            <div class="flex items-center justify-between">
+                              <span class="font-bold text-purple-800 flex items-center gap-1 text-[11px]">
+                                <i class="ti ti-git-fork text-purple-600"></i> 4. Surat Rujukan FKTP / Faskes Primer
+                              </span>
+                              <span class="text-[9px] font-semibold text-gray-500 bg-gray-100 px-1.5 py-0.2 rounded">P-Care BPJS</span>
+                            </div>
+                            <p class="text-gray-600 leading-relaxed text-[10px]">
+                              Variabel: <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">no_rujukan</code> (Legalitas Nomor Rujukan), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">tgl_rujukan</code> (Tanggal Terbit Faskes Perujuk), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">masa_berlaku_hari</code> (Masa Aktif &le; 90 Hari), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">diagnosa_rujukan</code> (Diagnosa Awal FKTP), 
+                              <code class="bg-gray-100 px-1 py-0.5 rounded text-[10px] text-gray-800 font-semibold font-mono">is_emergency</code> (Indikasi Masuk IGD / Bypass Rujukan).
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -2022,23 +2318,65 @@
           </div>
 
           <!-- Ensemble Weighting Callout -->
-          <div class="p-3.5 rounded-2xl bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-200 flex flex-wrap items-center justify-between gap-2 text-xs">
-            <div class="flex items-center gap-2">
-              <span class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
-                <i class="ti ti-scale"></i>
-              </span>
-              <div>
-                <strong class="text-gray-900 block font-bold">Pembobotan Skoring Akurasi Model AI (Ensemble):</strong>
-                <span class="text-gray-600 text-[11px]">XGBoost: <strong>Bobot 60%</strong> (Akurasi 98.6%) • Random Forest: <strong>Bobot 40%</strong> (Akurasi 98.2%)</span>
+          <div class="p-3.5 rounded-2xl bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-200 space-y-2.5 text-xs">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                  <i class="ti ti-scale"></i>
+                </span>
+                <div>
+                  <strong class="text-gray-900 block font-bold">Pembobotan Skoring Akurasi Model AI (Ensemble):</strong>
+                  <span class="text-gray-600 text-[11px]">XGBoost: <strong>Bobot 60%</strong> (Akurasi 98.6%) • Random Forest: <strong>Bobot 40%</strong> (Akurasi 98.2%)</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-lg bg-white border border-emerald-300 font-mono font-bold text-[#008D4C] text-xs shadow-2xs">
+                  Akurasi Gabungan: 98.44%
+                </span>
+                <button type="button" onclick="exportUploadResultsCSV()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 font-bold transition flex items-center gap-1.5 shadow-2xs">
+                  <i class="ti ti-download text-xs"></i><span>Ekspor Hasil (CSV)</span>
+                </button>
               </div>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="px-2.5 py-1 rounded-lg bg-white border border-emerald-300 font-mono font-bold text-[#008D4C] text-xs shadow-2xs">
-                Akurasi Gabungan: 98.44%
-              </span>
-              <button type="button" onclick="exportUploadResultsCSV()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-gray-100 text-gray-700 border border-gray-300 font-bold transition flex items-center gap-1.5 shadow-2xs">
-                <i class="ti ti-download text-xs"></i><span>Ekspor Hasil (CSV)</span>
-              </button>
+
+            <!-- Penjelasan Faktor & Variabel Dokumen di Modal Upload -->
+            <div class="p-2.5 rounded-xl bg-white/90 border border-blue-100 text-[11px] text-gray-700 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-gray-900 flex items-center gap-1.5 text-xs">
+                  <i class="ti ti-report-medical text-blue-600"></i>
+                  <span>Faktor Penentu Skor Tertimbang &amp; Variabel Dokumen Klaim:</span>
+                </span>
+                <span class="text-[9.5px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
+                  Viewer 4 Dokumen Digital
+                </span>
+              </div>
+
+              <!-- 3 Faktor Utama -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-1.5 text-[10px]">
+                <div class="p-1.5 rounded bg-emerald-50/60 border border-emerald-100 space-y-0.5">
+                  <strong class="text-emerald-900 block font-bold">1. Disparitas Finansial (60%)</strong>
+                  <span class="text-gray-600 leading-tight block">Deviasi Biaya Riil vs Plafon INA-CBG, lonjakan rasio biaya harian (cost velocity), dan top-up obat/alat khusus.</span>
+                </div>
+                <div class="p-1.5 rounded bg-blue-50/60 border border-blue-100 space-y-0.5">
+                  <strong class="text-blue-900 block font-bold">2. Koherensi Klinis (40%)</strong>
+                  <span class="text-gray-600 leading-tight block">Kesesuaian ICD-10 primer vs ICD-9-CM prosedur, keabsahan komorbiditas MCC, dan severity level (I/II/III).</span>
+                </div>
+                <div class="p-1.5 rounded bg-purple-50/60 border border-purple-100 space-y-0.5">
+                  <strong class="text-purple-900 block font-bold">3. Regulasi &amp; Administrasi</strong>
+                  <span class="text-gray-600 leading-tight block">Masa aktif rujukan FKTP (&le; 90 hari), kewajaran hari rawat (LOS), dan kesesuaian kelas fasilitas kesehatan.</span>
+                </div>
+              </div>
+
+              <!-- Variabel 4 Dokumen -->
+              <div class="pt-1 border-t border-gray-100 text-[9.5px] text-gray-600 space-y-0.5">
+                <span class="font-bold text-gray-800 block">Daftar Variabel Berkas yang Dianalisis:</span>
+                <div class="flex flex-wrap gap-1">
+                  <span class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-mono">SEP: no_sep, tgl_sep, tipe_faskes, pelayanan (RITL/RJTL), kls_rawat</span>
+                  <span class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-mono">Resume: kode_icd10, icd10_sekunder, icd9cm_prosedur, severity_level, los_hari</span>
+                  <span class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-mono">Billing: biaya_riil, biaya_ina_cbg, topup_cmg, cost_velocity_ratio</span>
+                  <span class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-mono">Rujukan: no_rujukan, tgl_rujukan, masa_berlaku_hari (&le;90 hari), is_emergency</span>
+                </div>
+              </div>
             </div>
           </div>
 

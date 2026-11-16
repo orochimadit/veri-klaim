@@ -97,7 +97,43 @@ class VeriKlaimEngine:
             "ensemble_score": ens_score,
             "calibrated_accuracy": 98.44,
             "formula": "Skor AI = (0.60 × Skor XGBoost) + (0.40 × Skor Random Forest)",
-            "formula_label": "Bobot Ensemble: 60% XGBoost + 40% Random Forest"
+            "formula_label": "Bobot Ensemble: 60% XGBoost + 40% Random Forest",
+            "scoring_factors": [
+                {
+                    "faktor": "Disparitas Finansial & Tarif (Bobot 60%)",
+                    "deskripsi": "Menilai margin selisih biaya riil RS terhadap batas tarif plafon INA-CBG, lonjakan rasio biaya harian (cost velocity), dan tagihan suplemen obat/alat khusus (top-up CMG)."
+                },
+                {
+                    "faktor": "Koherensi Klinis & Prosedur Medis (Bobot 40%)",
+                    "deskripsi": "Mengevaluasi keselarasan antara diagnosis primer (ICD-10) vs tindakan medis/operasi (ICD-9-CM), keabsahan diagnosis sekunder komorbiditas (MCC), dan severity level."
+                },
+                {
+                    "faktor": "Kepatuhan Regulasi & Alur Administrasi",
+                    "deskripsi": "Memvalidasi masa aktif surat rujukan FKTP (maks. 90 hari), kewajaran lama rawat inap (LOS), kepatuhan kelas faskes, dan pencegahan split-billing < 48 jam."
+                }
+            ],
+            "document_variables": {
+                "sep": {
+                    "dokumen": "Surat Eligibilitas Peserta (SEP)",
+                    "sumber": "VClaim BPJS",
+                    "variabel": ["no_sep", "tgl_sep", "tipe_faskes", "pelayanan (RITL/RJTL)", "poli_tujuan", "kls_rawat"]
+                },
+                "resume_medis": {
+                    "dokumen": "Resume Medis / Catatan DPJP",
+                    "sumber": "SIMRS Klinis",
+                    "variabel": ["kode_icd10 (Primer)", "icd10_sekunder (Komorbid)", "icd9cm (Prosedur)", "severity_level", "los_hari", "status_pulang"]
+                },
+                "billing_inacbg": {
+                    "dokumen": "Billing Riil RS & Formulir INA-CBG",
+                    "sumber": "e-Klaim Kemenkes",
+                    "variabel": ["biaya_riil", "biaya_ina_cbg", "topup_cmg", "cost_velocity_ratio", "disparitas_tarif"]
+                },
+                "surat_rujukan": {
+                    "dokumen": "Surat Rujukan FKTP",
+                    "sumber": "P-Care BPJS",
+                    "variabel": ["no_rujukan", "tgl_rujukan", "masa_berlaku_hari (<=90 hari)", "diagnosa_rujukan", "is_emergency"]
+                }
+            }
         }
 
     def audit_single_claim(self, claim: Dict[str, Any]) -> Dict[str, Any]:
