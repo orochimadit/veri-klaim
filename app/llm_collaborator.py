@@ -180,9 +180,15 @@ class LLMCollaborator:
         return None
 
     def _build_prompt(self, claim: Dict[str, Any], audit: Dict[str, Any]) -> str:
+        def _to_num(v):
+            try:
+                return int(float(str(v).replace(",", "").strip()))
+            except (ValueError, TypeError):
+                return 0
+
         extra_info = []
         if audit.get("topup_flag"):
-            extra_info.append(f"Top-Up Special CMG: {claim.get('topup_special_cmg')} senilai Rp {claim.get('biaya_topup', 0):,}")
+            extra_info.append(f"Top-Up Special CMG: {claim.get('topup_special_cmg')} senilai Rp {_to_num(claim.get('biaya_topup', 0)):,}")
         if audit.get("coding_drift_flag"):
             extra_info.append(f"Disparitas Koding: Masuk IGD diagnosa {claim.get('diag_masuk_icd10')}, keluar klaim diagnosa {claim.get('kode_icd10')}")
         if audit.get("cost_velocity_ratio", 1.0) >= 3.0:
@@ -194,6 +200,9 @@ class LLMCollaborator:
 
         extra_text = ("\n- Indikasi Khusus: " + " | ".join(extra_info)) if extra_info else ""
 
+        tagih_num = _to_num(claim.get('biaya_tagih', 0))
+        riil_num = _to_num(claim.get('biaya_riil', 0))
+
         return (
             f"Anda adalah dokter verifikator senior BPJS Kesehatan. Buat catatan telaah medis singkat dan wajar (2-3 kalimat santai tapi profesional, seperti catatan verifikator rumah sakit sungguhan, jangan kaku atau terdengar seperti robot/AI) untuk klaim ini:\n"
             f"- Nomor SEP: {claim.get('no_sep')}\n"
@@ -201,7 +210,7 @@ class LLMCollaborator:
             f"- Diagnosa: {claim.get('nama_diagnosa')} ({claim.get('kode_icd10')})\n"
             f"- INA-CBG: {claim.get('kode_inacbg')} (Level {claim.get('severity_level')})\n"
             f"- Lama Rawat: {claim.get('los_hari')} hari | Pelayanan: {claim.get('pelayanan', 'RITL')}\n"
-            f"- Biaya Tagih: Rp {claim.get('biaya_tagih', 0):,} | Biaya Riil RS: Rp {claim.get('biaya_riil', 0):,}\n"
+            f"- Biaya Tagih: Rp {tagih_num:,} | Biaya Riil RS: Rp {riil_num:,}\n"
             f"- Temuan: {'; '.join(audit.get('audit_findings', []))}{extra_text}\n\n"
             "Tulis langsung intinya: kenapa klaim ini lolos atau ditahan, dan apa langkah konkret yang harus diambil petugas (misal: minta berkas DPJP, turunkan level, batalkan biaya implan, atau setujui klaim). Hindari kata-kata klise robot seperti 'Berdasarkan analisis machine learning'."
         )
@@ -215,10 +224,16 @@ class LLMCollaborator:
         fraud_type = audit.get("fraud_type", "NORMAL")
         no_sep = claim.get("no_sep", "SEP")
         diagnosa = claim.get("nama_diagnosa", claim.get("kode_icd10", "Medis"))
-        tagih = claim.get("biaya_tagih", 0)
-        riil = claim.get("biaya_riil", 0)
-        los = claim.get("los_hari", 0)
-        sev = claim.get("severity_level", 1)
+        def safe_float(v, default=0.0):
+            try:
+                return float(str(v).replace(",", "").strip())
+            except (ValueError, TypeError):
+                return default
+
+        tagih = safe_float(claim.get("biaya_tagih", 0))
+        riil = safe_float(claim.get("biaya_riil", 0))
+        los = int(safe_float(claim.get("los_hari", 0)))
+        sev = int(safe_float(claim.get("severity_level", 1)))
 
         if not is_fraud or fraud_type == "NORMAL":
             return (
@@ -229,7 +244,7 @@ class LLMCollaborator:
         # Klaster 1: Special CMG Top-Up
         if audit.get("topup_flag"):
             topup_name = claim.get("topup_special_cmg", "Special CMG")
-            topup_val = claim.get("biaya_topup", 0)
+            topup_val = safe_float(claim.get("biaya_topup", 0))
             return (
                 f"Klaim SEP {no_sep} ditahan (Phantom Top-Up): Ada tagihan tambahan {topup_name} senilai Rp {topup_val:,.0f}, "
                 f"tapi tidak tercatat prosedur operasi atau intervensi klinis yang sesuai di lembar tindakan. Batalkan komponen Special CMG "

@@ -4,7 +4,7 @@
     "verification_status": "APPROVED",
     "status_label": "Diverifikasi: Layak Bayar",
     "verified_by": "dr. Ali Maulana, M.Kep. (Verifikator Ahli)",
-    "verified_at": "2026-11-01 16:25:29",
+    "verified_at": "2026-11-16 12:49:41",
     "notes": "Telah diverifikasi silang dengan Resume Medis DPJP. Diagnosa kontrol rawat jalan wajar dan layak bayar.",
     "checklist": {
       "check_sep": true,
@@ -15,5 +15,46 @@
       "check_billing": true
     },
     "claim_meta": {}
+  },
+  "0089R0011126V000123": {
+    "no_sep": "0089R0011126V000123",
+    "verification_status": "APPROVED",
+    "status_label": "Diverifikasi: Layak Bayar",
+    "verified_by": "AI Evaluator (Gemini Foundation Model (Clinical HITL Evaluator))",
+    "verified_at": "2026-11-16 12:49:43",
+    "notes": "Klaim Disetujui berdasarkan bukti klinis objektif CPPT DPJP (dr. Sutrisno, Sp.PD (DPJP-SPPD-99)): Bukti klinis diverifikasi valid oleh DPJP (dr. Sutrisno, Sp.PD (DPJP-SPPD-99)). Terdapat parameter medis objektif: Tanda vital tercatat: {'tekanan_darah': '80/50'}; Nilai laboratorium: {'hemoglobin': '6.8 g/dL'}; Tindakan/kondisi kritis: SYOK, HEMOSTASIS, TRANSFUSI.",
+    "checklist": {
+      "check_sep": true,
+      "check_diagnosa": true,
+      "check_prosedur": true,
+      "check_los": true,
+      "check_rujukan": true,
+      "check_billing": true
+    },
+    "claim_meta": {
+      "clarification_snippet": "Pasien syok hipovolemik, Hb 6.8 g/dL, TD 80/50. Dilakukan transfusi dan hemostasis segera.",
+      "dpjp_id": "dr. Sutrisno, Sp.PD (DPJP-SPPD-99)",
+      "timestamp_entry": "2026-11-10 11:00:00",
+      "evidence_eval": {
+        "is_nihil": false,
+        "nihil_reason": null,
+        "evidence_detected": [
+          "SYOK",
+          "HEMOSTASIS",
+          "TRANSFUSI"
+        ],
+        "vital_signs_found": {
+          "tekanan_darah": "80/50"
+        },
+        "lab_values_found": {
+          "hemoglobin": "6.8 g/dL"
+        },
+        "objective_evidence_score": 1.0,
+        "verdict": "APPROVED_BY_EVIDENCE",
+        "ai_provider": "Gemini Foundation Model (Clinical HITL Evaluator)",
+        "ai_reasoning": "Bukti klinis diverifikasi valid oleh DPJP (dr. Sutrisno, Sp.PD (DPJP-SPPD-99)). Terdapat parameter medis objektif: Tanda vital tercatat: {'tekanan_darah': '80/50'}; Nilai laboratorium: {'hemoglobin': '6.8 g/dL'}; Tindakan/kondisi kritis: SYOK, HEMOSTASIS, TRANSFUSI.",
+        "compliance_score_adjustment": 0.25
+      }
+    }
   }
 }

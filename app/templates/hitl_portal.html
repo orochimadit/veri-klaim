@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Klarifikasi Faskes &amp; Hybrid HITL — VeriKlaim v2.5</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tabler Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bpjs: {
+              green: '#008D4C',
+              darkgreen: '#006B38',
+              navy: '#0B4F6C',
+              light: '#E8F5E9',
+              gold: '#D4AF37'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- TOP NAVBAR & REGULATORY COMPLIANCE BADGE -->
+  <!-- ========================================================================= -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <a href="/" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition flex items-center justify-center" title="Kembali ke Dashboard Utama">
+          <i class="ti ti-arrow-left text-lg"></i>
+        </a>
+        <div class="w-10 h-10 rounded-2xl bg-bpjs-green text-white flex items-center justify-center font-black text-xl shadow-md">
+          <i class="ti ti-shield-lock"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-base sm:text-lg text-bpjs-navy leading-tight">
+              VeriKlaim <span class="text-bpjs-green">HITL Portal</span>
+            </h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-bpjs-green border border-emerald-300">
+              v2.5 Hybrid Online
+            </span>
+          </div>
+          <p class="text-xs text-slate-500">
+            Portal Klarifikasi Sengketa Klaim Berbasis Teks Terstruktur &bull; UU PDP &amp; PMK 24/2022
+          </p>
+        </div>
+      </div>
+
+      <!-- Compliance Tags & Quick Action -->
+      <div class="flex items-center flex-wrap gap-2 text-xs">
+        <span class="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-bold border border-blue-200">
+          <i class="ti ti-lock-check"></i> UU No. 27/2022 (PDP)
+        </span>
+        <span class="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-teal-50 text-teal-700 font-bold border border-teal-200">
+          <i class="ti ti-file-text"></i> PMK No. 24/2022 (RME)
+        </span>
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 font-bold border border-purple-200">
+          <i class="ti ti-math-symbols"></i> Hybrid 40:60
+        </span>
+        <button onclick="runLiveBenchmark()" class="px-3 py-1.5 rounded-xl bg-bpjs-navy hover:bg-slate-800 text-white font-bold transition flex items-center gap-1.5 shadow-sm text-xs">
+          <i class="ti ti-bolt text-yellow-400"></i>
+          <span>Uji DUMMY-HITL-001</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN WORKSPACE CONTAINER -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Highlight Banner: Regulatory Privacy Notice -->
+    <div class="bg-gradient-to-r from-blue-900 via-slate-900 to-teal-900 text-white rounded-3xl p-5 shadow-lg relative overflow-hidden">
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1 max-w-3xl">
+          <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+            <i class="ti ti-shield-alert"></i> PANDUAN KERAHASIAAN DATA MEDIS
+          </div>
+          <h2 class="text-lg sm:text-xl font-black">
+            Klarifikasi Sengketa Klaim Wajib Menggunakan Teks Terstruktur (Text-Only HITL)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Sesuai regulasi UU PDP dan PMK 24/2022, faskes <strong>DILARANG</strong> mengunggah file berkas Rekam Medis Elektronik (RME) utuh. Sanggahan dan bukti klinis hanya disampaikan melalui potongan kutipan CPPT / catatan DPJP terverifikasi digital.
+          </p>
+        </div>
+        <div class="flex-shrink-0 flex md:flex-col gap-2">
+          <a href="/docs" target="_blank" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/20 transition flex items-center justify-center gap-1.5">
+            <i class="ti ti-api"></i> Dokumentasi API
+          </a>
+          <a href="/" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+            <i class="ti ti-dashboard"></i> Dashboard Utama
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex items-center gap-2 border-b border-slate-200 overflow-x-auto pb-1 text-xs sm:text-sm font-bold">
+      <button id="tab-btn-clarify" onclick="switchMainTab('clarify')" class="px-4 py-2.5 rounded-xl bg-bpjs-green text-white shadow-sm flex items-center gap-2 transition">
+        <i class="ti ti-message-2-code text-base"></i>
+        <span>1. Portal Sanggah Teks RS (HITL)</span>
+      </button>
+      <button id="tab-btn-hybrid" onclick="switchMainTab('hybrid')" class="px-4 py-2.5 rounded-xl bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 transition">
+        <i class="ti ti-calculator text-base"></i>
+        <span>2. Formula Hybrid AI (40:60)</span>
+      </button>
+      <button id="tab-btn-referral" onclick="switchMainTab('referral')" class="px-4 py-2.5 rounded-xl bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 transition">
+        <i class="ti ti-route text-base"></i>
+        <span>3. Validasi Rujukan FKTP &amp; IGD</span>
+      </button>
+      <button id="tab-btn-audit" onclick="switchMainTab('audit')" class="px-4 py-2.5 rounded-xl bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 transition">
+        <i class="ti ti-history text-base"></i>
+        <span>4. Audit Trail Log (BPK/Kemenkes)</span>
+      </button>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 1: PORTAL SANGGAH TEKS FASKES (TEXT-ONLY HITL) -->
+    <!-- ======================================================================= -->
+    <section id="section-clarify" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Kolom Kiri: Form Input Respons Teks RS (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div>
+              <h3 class="font-black text-base text-bpjs-navy flex items-center gap-2">
+                <i class="ti ti-clipboard-text text-bpjs-green"></i>
+                Formulir Klarifikasi Sengketa Rumah Sakit
+              </h3>
+              <p class="text-xs text-slate-500">Diisi oleh Petugas Koding / Dokter Penanggung Jawab Pasien (DPJP)</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+              SLA: 3x24 Jam
+            </span>
+          </div>
+
+          <!-- Metadata Tiket Sengketa -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Nomor SEP:</label>
+              <input id="input-sep" type="text" value="0089R0011126V999001" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono font-bold bg-slate-50 text-slate-800">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Kode Sengketa:</label>
+              <input id="input-code" type="text" value="45.13" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-bold bg-slate-50 text-slate-800">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">ID / SIP DPJP:</label>
+              <input id="input-dpjp" type="text" value="DPJP-SPPD-8821" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-bold bg-slate-50 text-slate-800">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1 text-xs">Catatan Sengketa Verifikator BPJS:</label>
+            <div id="dispute-reason-display" class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 font-medium">
+              Indikasi endoskopi tidak tertera pada ringkasan keluar awal. Mohon sertakan bukti perburukan atau kegawatan klinis.
+            </div>
+          </div>
+
+          <!-- Preset 1-Click Buttons for Testing -->
+          <div class="space-y-1.5">
+            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Pilih Template Uji Klinis:</span>
+            <div class="flex flex-wrap gap-2 text-xs">
+              <button onclick="loadSnippetTemplate('evidence')" class="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-bpjs-green border border-emerald-300 font-bold transition flex items-center gap-1">
+                <i class="ti ti-check"></i> 1. Uji Ada Bukti Medis (Hb &amp; EGD)
+              </button>
+              <button onclick="loadSnippetTemplate('dash')" class="px-2.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-300 font-bold transition flex items-center gap-1">
+                <i class="ti ti-minus"></i> 2. Uji Teks Strip (-)
+              </button>
+              <button onclick="loadSnippetTemplate('cliche')" class="px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-300 font-bold transition flex items-center gap-1">
+                <i class="ti ti-message-exclamation"></i> 3. Uji Teks Klise ("Sesuai SPO")
+              </button>
+            </div>
+          </div>
+
+          <!-- Text Snippet Input Area -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="block font-bold text-slate-700 text-xs">
+                Kutipan Catatan CPPT / DPJP (Text Snippet):
+                <span class="text-red-500">*</span>
+              </label>
+              <span id="char-count" class="text-[11px] text-slate-400">0 karakter</span>
+            </div>
+            <textarea id="input-snippet" rows="5" oninput="updateCharCount()" class="w-full p-3 rounded-2xl border border-slate-300 focus:border-bpjs-green focus:ring-1 focus:ring-bpjs-green text-xs font-mono leading-relaxed" placeholder="Masukkan kutipan langsung catatan medis pasien dari SIMRS..."></textarea>
+            <p class="text-[11px] text-slate-500 flex items-center gap-1">
+              <i class="ti ti-info-circle text-bpjs-green"></i>
+              Masukkan parameter objektif: nilai lab, tanda vital, dan prosedur darurat yang dilakukan.
+            </p>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-2">
+            <button id="btn-submit-clarification" onclick="submitHospitalClarification()" class="w-full py-3 rounded-2xl bg-bpjs-green hover:bg-bpjs-darkgreen text-white font-black text-sm shadow-md transition flex items-center justify-center gap-2">
+              <i class="ti ti-send"></i>
+              <span>Kirim Klarifikasi &bull; Evaluasi Semantik AI</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Kolom Kanan: Hasil Evaluasi Semantik AI (5 cols) -->
+        <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+              <h3 class="font-black text-base text-bpjs-navy flex items-center gap-2">
+                <i class="ti ti-brain text-bpjs-green"></i>
+                Hasil Evaluasi AI Semantik
+              </h3>
+              <span id="eval-status-pill" class="px-2.5 py-1 rounded-full text-xs font-black bg-slate-100 text-slate-600">
+                Menunggu Input
+              </span>
+            </div>
+
+            <!-- Dynamic Result Card -->
+            <div id="eval-result-card" class="space-y-4 text-xs">
+              <div class="p-8 text-center text-slate-400 border-2 border-dashed border-slate-200 rounded-2xl">
+                <i class="ti ti-file-search text-3xl mb-2 text-slate-300"></i>
+                <p>Silakan isi formulir klarifikasi di sebelah kiri dan klik kirim untuk melihat analisis AI.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Engine Status Footnote -->
+          <div class="pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
+            <span class="flex items-center gap-1">
+              <i class="ti ti-shield-check text-bpjs-green"></i>
+              Audit Terverifikasi Digital
+            </span>
+            <span id="eval-provider-badge" class="font-mono text-[10px] bg-slate-100 px-2 py-0.5 rounded">
+              AI ENGINE: READY
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 2: FORMULA HYBRID AI SCORING (40:60) -->
+    <!-- ======================================================================= -->
+    <section id="section-hybrid" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Explanation & Math Breakdown (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-5">
+          <div class="pb-3 border-b border-slate-100">
+            <h3 class="font-black text-base text-bpjs-navy flex items-center gap-2">
+              <i class="ti ti-math-symbols text-bpjs-green"></i>
+              Formula Pembobotan Hybrid AI (Seksi 2.1)
+            </h3>
+            <p class="text-xs text-slate-500">Pemisahan On-Premise vs Cloud Foundation Model demi Privasi &amp; Efisiensi</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-slate-800 text-center space-y-2">
+            <div class="text-xs font-bold text-bpjs-navy uppercase tracking-wider">Formula Komposit:</div>
+            <div class="text-xl sm:text-2xl font-black font-mono text-bpjs-green">
+              Confidence = (C<sub>offline</sub> &times; 0.40) + (C<sub>online</sub> &times; 0.60)
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <!-- Offline Card -->
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between font-bold text-bpjs-navy">
+                <span class="flex items-center gap-1.5"><i class="ti ti-cpu text-bpjs-green"></i> C_offline (Bobot 40%)</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-bpjs-green font-mono">0.40</span>
+              </div>
+              <ul class="space-y-1 text-slate-600 list-disc list-inside text-[11px]">
+                <li>Ekstraksi teks OCR / ICR</li>
+                <li>Verifikasi integritas fisik &amp; stempel</li>
+                <li>Validitas string nomor SEP &amp; Rujukan</li>
+                <li>Pencocokan nomor resep obat</li>
+              </ul>
+            </div>
+
+            <!-- Online Card -->
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between font-bold text-bpjs-navy">
+                <span class="flex items-center gap-1.5"><i class="ti ti-cloud-computing text-purple-600"></i> C_online (Bobot 60%)</span>
+                <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-700 font-mono">0.60</span>
+              </div>
+              <ul class="space-y-1 text-slate-600 list-disc list-inside text-[11px]">
+                <li>Penalaran klinis (Clinical Reasoning)</li>
+                <li>Deteksi anomali koding (Upcoding/Unbundling)</li>
+                <li>Kesesuaian rujukan FKTP vs FKRTL</li>
+                <li>Kepatuhan Formularium Nasional (Fornas)</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Tiers Table -->
+          <div class="space-y-2">
+            <span class="text-xs font-bold text-slate-700">Rentang Kategori Keyakinan AI (Confidence Tiers):</span>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden">
+                <thead class="bg-slate-100 text-slate-700 font-bold">
+                  <tr>
+                    <th class="p-2.5">Rentang Akurasi</th>
+                    <th class="p-2.5">Kategori</th>
+                    <th class="p-2.5">Tindakan Sistem</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  <tr class="bg-emerald-50/50">
+                    <td class="p-2.5 font-bold font-mono text-bpjs-green">&ge; 90%</td>
+                    <td class="p-2.5 font-bold">High Confidence</td>
+                    <td class="p-2.5 text-slate-600"><strong>Auto-Approval / Auto-Reject</strong> (Tanpa intervensi manual)</td>
+                  </tr>
+                  <tr class="bg-amber-50/50">
+                    <td class="p-2.5 font-bold font-mono text-amber-600">70% &ndash; 89%</td>
+                    <td class="p-2.5 font-bold">Moderate Confidence</td>
+                    <td class="p-2.5 text-slate-600"><strong>HITL Level 1</strong> (Triage Verifikator dengan visual box)</td>
+                  </tr>
+                  <tr class="bg-red-50/50">
+                    <td class="p-2.5 font-bold font-mono text-red-600">&lt; 70%</td>
+                    <td class="p-2.5 font-bold">Low Confidence</td>
+                    <td class="p-2.5 text-slate-600"><strong>Audit Manual Penuh</strong> / Tiket Klarifikasi Faskes</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Ingestion Tester (5 cols) -->
+        <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <div class="pb-3 border-b border-slate-100">
+            <h3 class="font-black text-base text-bpjs-navy flex items-center gap-2">
+              <i class="ti ti-code text-bpjs-green"></i>
+              Uji Coba Ingestion JSON Terstandar
+            </h3>
+            <p class="text-xs text-slate-500">Kirim payload klaim ternormalisasi ke API evaluasi hybrid</p>
+          </div>
+
+          <textarea id="json-claim-input" rows="10" class="w-full p-3 rounded-2xl border border-slate-300 font-mono text-[11px] bg-slate-50 text-slate-800 leading-relaxed">{
+  "claim_id": "CLM-2026-X01",
+  "sep_number": "0089R0011126V000123",
+  "referral_number": "0112B0010926P000456",
+  "faskes_origin_type": "FKTP",
+  "faskes_destination_type": "FKRTL",
+  "tgl_sep": "2026-11-10",
+  "tgl_rujukan": "2026-10-10",
+  "poli_tujuan": "Poli Penyakit Dalam",
+  "flag_igd": false,
+  "diagnoses": {
+    "primary": "I10",
+    "secondary": ["E11.9"]
+  },
+  "procedures": ["89.52"],
+  "prescriptions": [
+    {
+      "recipe_id": "RXP-9921",
+      "drug_name": "Amlodipine 10mg",
+      "qty": 30
+    }
+  ],
+  "total_tagihan": 2500000.0,
+  "biaya_riil": 2300000.0
+}</textarea>
+
+          <button onclick="testHybridClaimEvaluation()" class="w-full py-2.5 rounded-xl bg-bpjs-navy hover:bg-slate-800 text-white font-bold text-xs transition flex items-center justify-center gap-2">
+            <i class="ti ti-player-play"></i>
+            <span>Hitung Skor Hybrid AI</span>
+          </button>
+
+          <div id="json-eval-result" class="p-3 rounded-2xl bg-slate-50 border border-slate-200 font-mono text-[11px] text-slate-600 max-h-48 overflow-y-auto">
+            Hasil evaluasi hybrid akan muncul di sini...
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 3: VALIDASI RELASI RUJUKAN FKTP -> FKRTL & IGD -->
+    <!-- ======================================================================= -->
+    <section id="section-referral" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-6">
+        <div class="pb-3 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="font-black text-base text-bpjs-navy flex items-center gap-2">
+              <i class="ti ti-route text-bpjs-green"></i>
+              Validasi Aturan Relasi Rujukan Berjenjang (Seksi 3)
+            </h3>
+            <p class="text-xs text-slate-500">Masa berlaku 90 hari, keselarasan poli spesialis, dan bypass kasus IGD</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-700 border border-teal-200">
+            Bridging V-Claim Simulation
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tanggal Surat Rujukan FKTP:</label>
+            <input id="ref-tgl-rujuk" type="date" value="2026-09-01" class="w-full p-2.5 rounded-xl border border-slate-300">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tanggal Pelayanan SEP FKRTL:</label>
+            <input id="ref-tgl-sep" type="date" value="2026-11-10" class="w-full p-2.5 rounded-xl border border-slate-300">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Diagnosa Primer (ICD-10):</label>
+            <input id="ref-diag" type="text" value="H40.1" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold" placeholder="Misal: H40.1 (Glaukoma)">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Poliklinik Tujuan FKRTL:</label>
+            <input id="ref-poli" type="text" value="Poli Mata" class="w-full p-2.5 rounded-xl border border-slate-300 font-bold" placeholder="Misal: Poli Mata">
+          </div>
+        </div>
+
+        <!-- IGD Toggle -->
+        <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg">
+              <i class="ti ti-ambulance"></i>
+            </div>
+            <div>
+              <div class="font-bold text-xs text-amber-900">Pengecualian Gawat Darurat (IGD Bypass):</div>
+              <div class="text-[11px] text-amber-700">Jika aktif, validasi rujukan FKTP diabaikan (Bypass) dan sistem mengaktifkan validasi triase klinis.</div>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="ref-flag-igd" type="checkbox" onchange="testReferralValidation()" class="sr-only peer">
+            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-bpjs-green"></div>
+          </label>
+        </div>
+
+        <button onclick="testReferralValidation()" class="w-full py-2.5 rounded-xl bg-bpjs-green hover:bg-bpjs-darkgreen text-white font-bold text-xs transition flex items-center justify-center gap-2">
+          <i class="ti ti-check"></i>
+          <span>Validasi Integritas Rujukan</span>
+        </button>
+
+        <div id="referral-eval-result" class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
+          Klik tombol validasi untuk memeriksa masa aktif 90 hari dan keselarasan poli.
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- TAB 4: AUDIT TRAIL LOG BPK & KEMENKES -->
+    <!-- ======================================================================= -->
+    <section id="section-audit" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="font-black text-base text-bpjs-navy flex items-center gap-2">
+              <i class="ti ti-history text-bpjs-green"></i>
+              Audit Trail Log (Kepatuhan BPK / Kemenkes RI)
+            </h3>
+            <p class="text-xs text-slate-500">Merekam timestamp, ID petugas RS/verifikator, skor keyakinan AI per siklus verifikasi</p>
+          </div>
+          <button onclick="loadAuditTrail()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1.5">
+            <i class="ti ti-refresh"></i> Refresh
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden">
+            <thead class="bg-slate-100 text-slate-700 font-bold">
+              <tr>
+                <th class="p-3">Waktu (WIB)</th>
+                <th class="p-3">Nomor SEP</th>
+                <th class="p-3">Aktor / Petugas</th>
+                <th class="p-3">Aksi</th>
+                <th class="p-3">Composite AI</th>
+                <th class="p-3">Putusan</th>
+                <th class="p-3">Catatan</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body" class="divide-y divide-slate-200">
+              <tr>
+                <td colspan="7" class="p-6 text-center text-slate-400">Memuat riwayat audit trail...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL LIVE BENCHMARK DUMMY-HITL-001 -->
+  <!-- ========================================================================= -->
+  <div id="benchmarkModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="px-6 py-4 bg-bpjs-navy text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="ti ti-bolt text-yellow-400 text-xl"></i>
+          <h3 class="font-black text-base">Hasil Benchmark Uji Sintetis: DUMMY-HITL-001</h3>
+        </div>
+        <button onclick="closeBenchmarkModal()" class="text-slate-300 hover:text-white p-1">
+          <i class="ti ti-x text-xl"></i>
+        </button>
+      </div>
+
+      <div id="benchmark-modal-content" class="p-6 space-y-4 overflow-y-auto text-xs font-mono">
+        <div class="py-8 text-center text-slate-400">
+          <i class="ti ti-loader animate-spin text-2xl text-bpjs-green mb-2"></i>
+          <p>Menjalankan kalkulasi benchmark...</p>
+        </div>
+      </div>
+
+      <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-end">
+        <button onclick="closeBenchmarkModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-white font-bold text-xs hover:bg-black transition">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT CONTROLLER -->
+  <!-- ========================================================================= -->
+  <script>
+    const TEMPLATES = {
+      evidence: "Pasien mengalami hematemesis melena berulang selama 6 jam di bangsal rawat inap, Hb turun dari 11.2 g/dL ke 7.8 g/dL. Dilakukan esofagogastroduodenoskopi (EGD) darurat untuk hemostasis injeksi adrenalin.",
+      dash: "-",
+      cliche: "Sudah sesuai SPO penanganan rumah sakit."
+    };
+
+    function switchMainTab(tab) {
+      ['clarify', 'hybrid', 'referral', 'audit'].forEach(t => {
+        const sec = document.getElementById(`section-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (sec && btn) {
+          if (t === tab) {
+            sec.classList.remove('hidden');
+            btn.className = "px-4 py-2.5 rounded-xl bg-bpjs-green text-white shadow-sm flex items-center gap-2 transition";
+          } else {
+            sec.classList.add('hidden');
+            btn.className = "px-4 py-2.5 rounded-xl bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 transition";
+          }
+        }
+      });
+      if (tab === 'audit') loadAuditTrail();
+    }
+
+    function loadSnippetTemplate(type) {
+      const textarea = document.getElementById('input-snippet');
+      textarea.value = TEMPLATES[type] || '';
+      updateCharCount();
+    }
+
+    function updateCharCount() {
+      const len = document.getElementById('input-snippet').value.length;
+      document.getElementById('char-count').innerText = `${len} karakter`;
+    }
+
+    // Submit Klarifikasi Teks Faskes
+    async function submitHospitalClarification() {
+      const sep = document.getElementById('input-sep').value.trim();
+      const code = document.getElementById('input-code').value.trim();
+      const dpjp = document.getElementById('input-dpjp').value.trim();
+      const snippet = document.getElementById('input-snippet').value.trim();
+
+      const btn = document.getElementById('btn-submit-clarification');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="ti ti-loader animate-spin"></i> Mengevaluasi Semantik...`;
+
+      try {
+        const payload = {
+          no_sep: sep,
+          timestamp_entry: new Date().toISOString(),
+          dpjp_signature_id: dpjp,
+          hospital_staff_id: "STAFF-KODING-RS",
+          clinical_evidence_snippet: snippet
+        };
+
+        const res = await fetch('/api/hitl/clarify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        renderEvaluationResult(data);
+      } catch (err) {
+        alert("Gagal mengirim klarifikasi: " + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="ti ti-send"></i> Kirim Klarifikasi &bull; Evaluasi Semantik AI`;
+      }
+    }
+
+    function renderEvaluationResult(data) {
+      const pill = document.getElementById('eval-status-pill');
+      const card = document.getElementById('eval-result-card');
+      const badge = document.getElementById('eval-provider-badge');
+
+      const isApproved = data.verdict === 'APPROVED_BY_EVIDENCE';
+      pill.className = isApproved 
+        ? "px-2.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300"
+        : "px-2.5 py-1 rounded-full text-xs font-black bg-red-100 text-red-800 border border-red-300";
+      pill.innerText = isApproved ? "EVIDENCE VALID: DISETUJUI" : "NIHIL: DITOLAK";
+
+      badge.innerText = data.evaluation?.ai_provider || "AI CLASSIFIER";
+
+      let labBadges = "";
+      if (data.evaluation?.lab_values_found) {
+        for (let [k, v] of Object.entries(data.evaluation.lab_values_found)) {
+          labBadges += `<span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold">${k}: ${v}</span> `;
+        }
+      }
+
+      let vitalBadges = "";
+      if (data.evaluation?.vital_signs_found) {
+        for (let [k, v] of Object.entries(data.evaluation.vital_signs_found)) {
+          vitalBadges += `<span class="px-2 py-0.5 rounded bg-teal-100 text-teal-800 font-bold">${k}: ${v}</span> `;
+        }
+      }
+
+      let kwBadges = "";
+      if (data.evaluation?.evidence_detected?.length) {
+        kwBadges = data.evaluation.evidence_detected.map(w => `<span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-mono font-bold">${w}</span>`).join(" ");
+      }
+
+      card.innerHTML = `
+        <div class="p-4 rounded-2xl ${isApproved ? 'bg-emerald-50 border border-emerald-200' : 'bg-red-50 border border-red-200'} space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-extrabold ${isApproved ? 'text-bpjs-green' : 'text-red-700'} text-sm flex items-center gap-1.5">
+              <i class="ti ${isApproved ? 'ti-circle-check' : 'ti-alert-octagon'}"></i>
+              ${data.status_label}
+            </span>
+            <span class="font-mono text-xs font-bold ${isApproved ? 'text-bpjs-green' : 'text-red-700'}">
+              Skor Evidens: ${Math.round((data.evaluation?.objective_evidence_score || 0)*100)}%
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-700 leading-relaxed">${data.evaluation?.ai_reasoning || '-'}</p>
+
+          ${(labBadges || vitalBadges || kwBadges) ? `
+            <div class="pt-2 border-t border-slate-200/60 space-y-1.5">
+              <div class="text-[10px] font-bold text-slate-500 uppercase">Parameter Klinis Terdeteksi:</div>
+              <div class="flex flex-wrap gap-1.5 text-[11px]">${labBadges} ${vitalBadges} ${kwBadges}</div>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1 text-slate-600">
+          <div class="font-bold text-slate-700">Dampak Kepatuhan Klaim:</div>
+          <div class="text-[11px]">
+            Penyesuaian Skor Kepatuhan: <strong class="${isApproved ? 'text-bpjs-green' : 'text-red-600'}">${data.evaluation?.compliance_score_adjustment > 0 ? '+' : ''}${Math.round((data.evaluation?.compliance_score_adjustment || 0)*100)}%</strong>
+          </div>
+          <div class="text-[10px] text-slate-400">Dicatat di Log Audit Trail BPK/Kemenkes secara otomatis.</div>
+        </div>
+      `;
+    }
+
+    // Uji Evaluasi Klaim Hybrid
+    async function testHybridClaimEvaluation() {
+      const raw = document.getElementById('json-claim-input').value;
+      const resBox = document.getElementById('json-eval-result');
+      resBox.innerText = "Menghitung...";
+
+      try {
+        const payload = JSON.parse(raw);
+        const res = await fetch('/api/hitl/evaluate-claim', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        resBox.innerHTML = `
+          <div class="text-bpjs-green font-bold mb-1">Status: ${data.confidence_tier} (${data.tier_action})</div>
+          <div>C_offline: <strong>${data.offline_validity_score}</strong> (40%)</div>
+          <div>C_online: <strong>${data.online_reasoning_score}</strong> (60%)</div>
+          <div>Composite Confidence: <strong class="text-bpjs-navy">${data.composite_confidence}</strong></div>
+          <div class="mt-2 text-slate-500 text-[10px]">${data.tier_description}</div>
+        `;
+      } catch (err) {
+        resBox.innerText = "Error: " + err;
+      }
+    }
+
+    // Uji Validasi Rujukan
+    async function testReferralValidation() {
+      const tglRujuk = document.getElementById('ref-tgl-rujuk').value;
+      const tglSep = document.getElementById('ref-tgl-sep').value;
+      const diag = document.getElementById('ref-diag').value.trim();
+      const poli = document.getElementById('ref-poli').value.trim();
+      const flagIgd = document.getElementById('ref-flag-igd').checked;
+
+      const resBox = document.getElementById('referral-eval-result');
+      resBox.innerText = "Memvalidasi...";
+
+      try {
+        const payload = {
+          claim_id: "TEST-REF-01",
+          sep_number: "0089R0011126V000999",
+          referral_number: "0112B0010926P000888",
+          tgl_sep: tglSep,
+          tgl_rujukan: tglRujuk,
+          poli_tujuan: poli,
+          flag_igd: flagIgd,
+          diagnoses: { primary: diag, secondary: [] }
+        };
+
+        const res = await fetch('/api/hitl/validate-referral', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        resBox.innerHTML = `
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200">
+            <span class="font-black ${data.is_valid ? 'text-bpjs-green' : 'text-red-600'} text-sm">
+              ${data.is_valid ? '✅ RUJUKAN VALID & MEMENUHI SYARAT' : '❌ PELANGGARAN ATURAN RUJUKAN'}
+            </span>
+            <span class="font-mono text-xs px-2 py-0.5 rounded ${data.igd_bypass ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-800'}">
+              ${data.status_code}
+            </span>
+          </div>
+          <p class="leading-relaxed mb-2">${data.details}</p>
+          <div class="text-[11px] text-slate-500 space-y-0.5">
+            <div>&bull; Selisih Hari: <strong>${data.days_diff} hari</strong> (Maks. 90 hari: ${data.within_90_days ? 'Aman' : 'Kedaluwarsa'})</div>
+            <div>&bull; Kesesuaian Poli: <strong>${data.specialty_match ? 'Sesuai' : 'Inkompatibel'}</strong></div>
+            <div>&bull; IGD Emergency Bypass: <strong>${data.igd_bypass ? 'Aktif' : 'Non-aktif'}</strong></div>
+          </div>
+        `;
+      } catch (err) {
+        resBox.innerText = "Error: " + err;
+      }
+    }
+
+    // Load Audit Trail
+    async function loadAuditTrail() {
+      const tbody = document.getElementById('audit-table-body');
+      tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400"><i class="ti ti-loader animate-spin"></i> Mengambil log...</td></tr>`;
+
+      try {
+        const res = await fetch('/api/hitl/audit-trail');
+        const data = await res.json();
+        const records = data.data || [];
+
+        if (records.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Belum ada riwayat audit trail tercatat.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = records.reverse().slice(0, 15).map(r => `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3 font-mono text-[11px] text-slate-500 whitespace-nowrap">${r.timestamp}</td>
+            <td class="p-3 font-mono font-bold text-bpjs-navy whitespace-nowrap">${r.no_sep}</td>
+            <td class="p-3 font-semibold text-slate-700 whitespace-nowrap">${r.actor}</td>
+            <td class="p-3 text-[11px] text-slate-600">${r.action}</td>
+            <td class="p-3 font-mono font-bold text-bpjs-green">${r.composite_confidence}</td>
+            <td class="p-3 whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${r.verdict.includes('APPROV') ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                ${r.verdict}
+              </span>
+            </td>
+            <td class="p-3 text-slate-500 text-[11px] max-w-xs truncate" title="${r.notes}">${r.notes}</td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-red-500">Error memuat log: ${err}</td></tr>`;
+      }
+    }
+
+    // Modal Live Benchmark
+    async function runLiveBenchmark() {
+      const modal = document.getElementById('benchmarkModal');
+      const content = document.getElementById('benchmark-modal-content');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      content.innerHTML = `
+        <div class="py-8 text-center text-slate-400">
+          <i class="ti ti-loader animate-spin text-2xl text-bpjs-green mb-2"></i>
+          <p>Mengeksekusi DUMMY-HITL-001 terhadap model Hybrid AI...</p>
+        </div>
+      `;
+
+      try {
+        const res = await fetch('/api/hitl/benchmark');
+        const data = await res.json();
+
+        content.innerHTML = `
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-black text-sm text-bpjs-green flex items-center gap-1.5">
+                <i class="ti ti-circle-check"></i> Benchmark Status: ${data.benchmark_status}
+              </span>
+              <span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 font-bold text-[10px]">
+                ${data.test_case_id}
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-600">
+              Evaluasi semantik berhasil memvalidasi bukti klinis perdarahan gastrointestinal dan tindakan EGD darurat.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-slate-100 space-y-1">
+              <div class="font-bold text-slate-700">Target Spesifikasi:</div>
+              <div>Offline Validity: <strong>${data.expected_ai_evaluation.offline_validity_score}</strong></div>
+              <div>Online Reasoning: <strong>${data.expected_ai_evaluation.online_reasoning_score}</strong></div>
+              <div>Composite Score: <strong class="text-bpjs-navy">${data.expected_ai_evaluation.composite_confidence}</strong></div>
+              <div>Verdict: <strong>${data.expected_ai_evaluation.audit_verdict}</strong></div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-100 space-y-1">
+              <div class="font-bold text-slate-700">Hasil Evaluasi Aktual:</div>
+              <div>Offline Validity: <strong>${data.evaluated_result.offline_validity_score}</strong></div>
+              <div>Online Reasoning: <strong>${data.evaluated_result.online_reasoning_score}</strong></div>
+              <div>Composite Score: <strong class="text-bpjs-green">${data.evaluated_result.composite_confidence}</strong></div>
+              <div>Verdict: <strong class="text-bpjs-green">${data.evaluated_result.audit_verdict}</strong></div>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-slate-600 text-[11px]">
+            <div class="font-bold text-slate-700">Bukti Terdeteksi:</div>
+            <div>&bull; Keyword Kritis: ${data.clarification_details.evidence_detected.join(", ")}</div>
+            <div>&bull; Nilai Lab: Hb ${data.clarification_details.lab_values.hemoglobin || '-'}</div>
+            <div>&bull; AI Reasoning: ${data.clarification_details.ai_reasoning}</div>
+          </div>
+        `;
+      } catch (err) {
+        content.innerHTML = `<div class="p-4 text-red-500 font-sans">Gagal mengeksekusi benchmark: ${err}</div>`;
+      }
+    }
+
+    function closeBenchmarkModal() {
+      const modal = document.getElementById('benchmarkModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSnippetTemplate('evidence');
+      testReferralValidation();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "0089R0011126V000123": {
+    "ticket_id": "TCK-000123-ACT",
+    "no_sep": "0089R0011126V000123",
+    "disputed_code": "CLINICAL_EVAL",
+    "dispute_reason": "Sengketa kelayakan koding klinis faskes",
+    "hospital_clarification": {
+      "claim_id": null,
+      "no_sep": "0089R0011126V000123",
+      "timestamp_entry": "2026-11-10T10:15:00+07:00",
+      "dpjp_signature_id": "DPJP-TEST-01",
+      "hospital_staff_id": "STAFF-01",
+      "clinical_evidence_snippet": "Perdarahan gastrointestinal masif, Hb 7.2 g/dL, TD 90/60 mmHg. EGD darurat berhasil hemostasis."
+    },
+    "ai_evaluation": {
+      "is_nihil": false,
+      "nihil_reason": null,
+      "evidence_detected": [
+        "PERDARAHAN",
+        "EGD",
+        "HEMOSTASIS"
+      ],
+      "vital_signs_found": {
+        "tekanan_darah": "90/60"
+      },
+      "lab_values_found": {
+        "hemoglobin": "7.2 g/dL"
+      },
+      "objective_evidence_score": 1.0,
+      "verdict": "APPROVED_BY_EVIDENCE",
+      "ai_provider": "Gemini Foundation Model (Clinical HITL Evaluator)",
+      "ai_reasoning": "Bukti klinis diverifikasi valid oleh DPJP (DPJP-TEST-01). Terdapat parameter medis objektif: Tanda vital tercatat: {'tekanan_darah': '90/60'}; Nilai laboratorium: {'hemoglobin': '7.2 g/dL'}; Tindakan/kondisi kritis: PERDARAHAN, EGD, HEMOSTASIS.",
+      "compliance_score_adjustment": 0.25
+    },
+    "status": "RESOLVED_APPROVED",
+    "final_verdict": "APPROVED_BY_EVIDENCE",
+    "resolved_at": "2026-11-16 12:49:43"
+  }
+}

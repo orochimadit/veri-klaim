@@ -55,7 +55,7 @@ def record_verification(
         "APPROVED": "Diverifikasi: Layak Bayar",
         "REJECTED": "Diverifikasi: Ditolak (Fraud)",
         "DISPUTED": "Diverifikasi: Dispute / Koreksi",
-        "PENDING": "Menunggu Klarifikasi RS"
+        "PENDING": "Menunggu Klarifikasi Teks RS (CPPT/DPJP)"
     }
     
     norm_status = status.upper() if status.upper() in valid_statuses else "APPROVED"
